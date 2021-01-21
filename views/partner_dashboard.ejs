@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Transfers - Private Transport and Car Hire HTML Template" />
+    <meta name="description" content="Transfers - Private Transport and Car Hire HTML Template">
+    <meta name="author" content="themeenergy.com">
+
+    <title>Suvoyatra | Best Bus Booking Website In India</title>
+
+    <link rel="stylesheet" href="css/styler.css" />
+    <link rel="stylesheet" href="css/theme-pink.css" id="template-color" />
+    <link rel="stylesheet"
+        href="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery-ui.theme.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="css/icons.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'
+        type='text/css'>
+    <link href="css/toaster.css" rel="stylesheet"/>
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+
+    <link rel="stylesheet" href="css/seat.css" type="text/css" />
+
+    <!-- data table css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
+    " />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="wrap">
+            <!-- Logo -->
+            <div class="logo">
+                <a href="index.html" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
+                        class="logo_img" alt="Transfers" /></a>
+            </div>
+            <!-- //Logo -->
+
+            <!-- Main Nav -->
+            <nav role="navigation" class="main-nav" id="mySidenav">
+				<ul>
+					<li><a><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></a></li>
+					<li class="active"><a href="/" title="">Home</a></li>
+					<li><a href="/about" title="about">About Us</a></li>
+					</li>
+					<li><a href="/faq" title="faqs">FAQs</a>
+					</li>
+					<li><a href="/partner" title="Partner">Partner</a></li>
+					<li><a title="user">user</a>
+						<ul>
+							<li><a href="/user-login" title="Login">Login</a></li>
+							<li><a href="/account" title="My account">My account</a></li>
+							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
+						</ul>
+					</li>
+					<li><a href="/contact" title="Contact">Get In Touch</a></li>
+				</ul>
+			</nav>
+            <!-- //Main Nav -->
+            <span style="font-size:30px;cursor:pointer" onclick="openNav()" class="nav_open">&#9776;</span>
+        </div>
+    </header>
+    <!-- //Header -->
+
+    <!-- Main -->
+    <main class="main" role="main">
+        <!-- Page info -->
+        <header class="site-title color">
+            <div class="wrap">
+                <div class="container">
+                    <h1>Partner Account</h1>
+                    <nav role="navigation" class="breadcrumbs">
+                        <ul>
+                            <li><a href="index.html" title="Home">Home</a></li>
+                            <li>Partner Account</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <!-- //Page info -->
+
+
+        <div class="wrap">
+            <div class="row">
+
+                <!--- Sidebar -->
+                <aside class="one-fourth sidebar left">
+                    <!-- Widget -->
+                    <div class="widget">
+                        <ul class="categories">
+                            <li class="active"><a href="#tab1">Account Details</a></li>
+                            <li><a href="#tab2">Add Bus</a></li>
+                            <li><a href="#tab3">Seat Arrangment</a></li>
+                            <li><a href="#tab4">Bus List</a></li>
+                            <li><a href="#tab5">Booking History</a></li>
+                            <li><a href="#tab6">Add User</a></li>
+                            <li><a href="#tab7">Help</a></li>
+                            <li id="logout"><a href="">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="widget need-support">
+                        <h4>Need More Support?</h4>
+                        <div class="textwidget">
+                            <p>Call our customer services team on the number below to speak to one of our advisors who
+                                will help you with all of your needs.</p>
+                            <p class="contact-data"><span class="icon icon-themeenergy_call black"></span> +91 555 555
+                                5555</p>
+                        </div>
+                    </div>
+
+                    <!-- //Widget -->
+                </aside>
+                <!--- //Sidebar -->
+
+                <!--- Content -->
+                <div class="three-fourth content">
+                    <!-- Tab -->
+                    <article class="single" id="tab1">
+                        <div class="box">
+                            <h2>General Details</h2>
+                            <fieldset>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="name">Name and surname</label>
+                                        <input type="text" id="name" placeholder="" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="email">Email address</label>
+                                        <input type="email" id="email" placeholder="" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="number">Mobile number</label>
+                                        <input type="number" id="number" placeholder="" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="address">Street address</label>
+                                        <input type="text" id="address" placeholder="" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="zip">Zip code</label>
+                                        <input type="text" id="zip" placeholder="" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" placeholder="" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <input type="submit" value="Save Changes" id="savePartnerDetails" name="submit"
+                                        class="btn color medium" />
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="box">
+                            <h2>Security Details</h2>
+                            <fieldset>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="username">Username</label>
+                                        <input type="text" id="username" placeholder="" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="password1">Current password</label>
+                                        <input type="password" id="password1" placeholder="" />
+                                    </div>
+                                </div>
+
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="password2">New password</label>
+                                        <input type="password" id="password2" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="password3">Confirm new password</label>
+                                        <input type="password" id="password3" />
+                                    </div>
+                                </div>
+
+                                <div class="f-row">
+                                    <input type="submit" value="Save Changes" id="passwordChange" name="submit"
+                                        class="btn color medium" />
+                                </div>
+                            </fieldset>
+                        </div>
+                    </article>
+                    <!-- //Tab -->
+
+                    <!-- Tab -->
+                    <article class="single hentry" id="tab2">
+                        <div class="box">
+                            <h2>Bus Details</h2>
+                            <fieldset>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="name">Bus Name</label>
+                                        <input type="text" id="name" placeholder="Enter Bus Name" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="bus-number">Bus Number</label>
+                                        <input type="text" id="bus-num" placeholder="Enter Bus Name" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="journey-from">From</label>
+                                        <input type="text" id="journey-from" placeholder="Journey From" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="journey-to">To</label>
+                                        <input type="text" id="journey-to" placeholder="Journey To" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="Departure-Time">Departure Time</label>
+                                        <input type="text" id="Departure-time" placeholder="Departure Time" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="Arrival-Time">Arrival Time</label>
+                                        <input type="text" id="Arrival-Time" placeholder="Arrival Time" />
+                                    </div>
+                                </div>
+
+                                <div class="f-row input_fields_wrap">
+                                    <div class="one-half">
+                                        <label for="via-root-1">Via Root 1</label>
+                                        <input type="text" id="via-root-1" placeholder="Via Root 1(Optional)" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="via-root-2">Via Root 2</label>
+                                        <input type="text" id="via-root-2" placeholder="Via Root 2(Optional)" />
+                                    </div>
+                                </div>
+                                <button class="add_field_button">Add More Fields</button>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="seat-no">No Of Seats</label>
+                                        <input type="text" id="seat-no" placeholder="No Of Seats" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="bus-type">Bus Type</label>
+                                        <select>
+                                            <option selected disabled>Select One</option>
+                                            <option>Regular</option>
+                                            <option>Mini</option>
+                                            <option>Volvo</option>
+                                            <option>Deluxe</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="ac-non-ac">Air-condition Type</label>
+                                        <select>
+                                            <option selected disabled>Select One</option>
+                                            <option>Ac</option>
+                                            <option>Non Ac</option>
+                                        </select>
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="seat-no">Multimedia Type</label>
+                                        <select>
+                                            <option selected disabled>Select One</option>
+                                            <option>Tv And Sound System Both</option>
+                                            <option>Sound System Only</option>
+                                            <option>No Multimedia System</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="Upload-frontside-Photo">Upload Front Side Photo</label>
+                                        <input type="file" id="Upload-front-Photo"
+                                            placeholder="Upload Front Side Photo" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="Upload-left-Photo">Upload Left Side Photo</label>
+                                        <input type="file" id="Upload-left-Photo" placeholder=" Left Side Photo" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="Upload-right-Photo">Upload Right Side Photo</label>
+                                        <input type="file" id="Upload-right-Photo" placeholder=" Right Side Photo" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="Upload-back-Photo">Upload Back Side Photo</label>
+                                        <input type="file" id="Upload-back-Photo" placeholder=" Back Side Photo" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="Upload-cabin-Photo">Upload Inside Driver Cabin Photo</label>
+                                        <input type="file" id="Upload-cabin-Photo"
+                                            placeholder="Inside Driver Cabin Photo" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="Upload-Inside-Photo">Upload Entire Inside Photo</label>
+                                        <input type="file" id="Upload-Inside-Photo"
+                                            placeholder=" Entire Inside Photo" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="full-width">
+                                        <label for="comments">Bus Description</label>
+                                        <textarea id="comments" spellcheck="false"
+                                            placeholder="Type Bus Description Here"></textarea>
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <input type="submit" value="Add Bus" id="submit1" name="submit"
+                                        class="btn color medium" />
+                                </div>
+                            </fieldset>
+                        </div>
+                    </article>
+                    <!-- //Tab -->
+
+                    <!-- Tab -->
+                    <article class="single hentry" id="tab3">
+                        <div class="box seat-arrangment-area">
+                            <h2>Seat Arrangment</h2>
+                            <fieldset>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="name">Select Bus</label>
+                                        <!-- <input type="text" id="name" placeholder="Matribhumi" /> -->
+                                        <select>
+                                            <option selected disabled>Select One</option>
+                                            <option>Matribhumi</option>
+                                            <option>xxxxx</option>
+                                            <option>yyyyy</option>
+                                        </select>
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="name">Choose Template</label>
+                                        <select>
+                                            <option selected disabled>Select One</option>
+                                            <option value="Template1">Template 1</option>
+                                            <option value="Template2">Template 2</option>
+                                        </select>
+                                        <div class="Template1 template-box">
+                                            <div class="seat-container-1">
+                                                <div class="upper-col-left">
+                                                    <span>1</span>
+                                                    <span>1</span>
+                                                    <span>2</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>3</span>
+                                                    <span>4</span>
+                                                    <span>5</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-2">
+                                                <div class="upper-col-left">
+                                                    <span>2</span>
+                                                    <span>6</span>
+                                                    <span>7</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>8</span>
+                                                    <span>9</span>
+                                                    <span>10</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-3">
+                                                <div class="upper-col-left">
+                                                    <span>3</span>
+                                                </div>
+                                                <div class="upper-col-right door-area">
+                                                    <span>11</span>
+                                                    <span>12</span>
+                                                    <span>13</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-4">
+                                                <div class="upper-col-left">
+                                                    <span>4</span>
+                                                    <span>14</span>
+                                                    <span>15</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>16</span>
+                                                    <span>17</span>
+                                                    <span>18</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-5">
+                                                <div class="upper-col-left">
+                                                    <span>5</span>
+                                                    <span>19</span>
+                                                    <span>20</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>21</span>
+                                                    <span>22</span>
+                                                    <span>23</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-6">
+                                                <div class="upper-col-left">
+                                                    <span>6</span>
+                                                    <span>24</span>
+                                                    <span>25</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>26</span>
+                                                    <span>27</span>
+                                                    <span>28</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-7">
+                                                <div class="upper-col-left">
+                                                    <span>7</span>
+                                                    <span>29</span>
+                                                    <span>30</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>31</span>
+                                                    <span>32</span>
+                                                    <span>33</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-8">
+                                                <div class="upper-col-left">
+                                                    <span>8</span>
+                                                    <span>34</span>
+                                                    <span>35</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>36</span>
+                                                    <span>37</span>
+                                                    <span>38</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-9">
+                                                <div class="upper-col-left">
+                                                    <span>9</span>
+                                                    <span>39</span>
+                                                    <span>40</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>41</span>
+                                                    <span>42</span>
+                                                    <span>43</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-10">
+                                                <div class="upper-col-left">
+                                                    <span>10</span>
+                                                    <span>44</span>
+                                                    <span>45</span>
+                                                    <span>46</span>
+                                                </div>
+                                                <div class="upper-col-right last-seat">
+                                                    <span>47</span>
+                                                    <span>48</span>
+                                                    <span>49</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Template2 template-box">
+                                            <div class="seat-container-1">
+                                                <div class="upper-col-left">
+                                                    <span>1</span>
+                                                    <span>1</span>
+                                                    <span>2</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>3</span>
+                                                    <span>4</span>
+                                                    <span>5</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-2">
+                                                <div class="upper-col-left">
+                                                    <span>2</span>
+                                                    <span>6</span>
+                                                    <span>7</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>8</span>
+                                                    <span>9</span>
+                                                    <span>10</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-3">
+                                                <div class="upper-col-left">
+                                                    <span>3</span>
+                                                </div>
+                                                <div class="upper-col-right door-area">
+                                                    <span>11</span>
+                                                    <span>12</span>
+                                                    <span>13</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-4">
+                                                <div class="upper-col-left">
+                                                    <span>4</span>
+                                                    <span>14</span>
+                                                    <span>15</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>16</span>
+                                                    <span>17</span>
+                                                    <span>18</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-5">
+                                                <div class="upper-col-left">
+                                                    <span>5</span>
+                                                    <span>19</span>
+                                                    <span>20</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>21</span>
+                                                    <span>22</span>
+                                                    <span>23</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-6">
+                                                <div class="upper-col-left">
+                                                    <span>6</span>
+                                                    <span>24</span>
+                                                    <span>25</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>26</span>
+                                                    <span>27</span>
+                                                    <span>28</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-7">
+                                                <div class="upper-col-left">
+                                                    <span>7</span>
+                                                    <span>29</span>
+                                                    <span>30</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>31</span>
+                                                    <span>32</span>
+                                                    <span>33</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-8">
+                                                <div class="upper-col-left">
+                                                    <span>8</span>
+                                                    <span>34</span>
+                                                    <span>35</span>
+                                                </div>
+                                                <div class="upper-col-right">
+                                                    <span>36</span>
+                                                    <span>37</span>
+                                                    <span>38</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-9">
+                                                <div class="upper-col-left">
+                                                    <span>9</span>
+                                                </div>
+                                                <div class="upper-col-right door-area">
+                                                    <span>39</span>
+                                                    <span>40</span>
+                                                    <span>41</span>
+                                                </div>
+                                            </div>
+                                            <div class="seat-container-10">
+                                                <div class="upper-col-left">
+                                                    <span>10</span>
+                                                    <span>42</span>
+                                                    <span>43</span>
+                                                    <span>44</span>
+                                                </div>
+                                                <div class="upper-col-right last-seat">
+                                                    <span>45</span>
+                                                    <span>46</span>
+                                                    <span>47</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <input type="submit" value="Submit" id="submit1" name="submit"
+                                        class="btn color medium" />
+                                </div>
+                            </fieldset>
+                        </div>
+                    </article>
+                    <!-- //Tab -->
+                    <article class="single hentry" id="tab4">
+                        <div class="entry-content">
+                            <h2>Bus List</h2></br>
+                            <div class="box partner-bus-list">
+                                <article class="result partner-bus-result">
+                                    <div class="one-fourth heightfix" style="height: 201px;"><img
+                                            src="images/uploads/bus.jpg" alt=""></div>
+                                    <div class="one-half heightfix" style="height: 201px;">
+                                        <h3>Bus Name
+                                        </h3>
+                                        <ul>
+                                            <li>
+                                                <span class="icon icon-themeenergy_user-3"></span>
+                                                <a href="seat-booking/seat-arangment.html" class="bus-list-sear-check">
+                                                    Check Seat available</a>
+                                            </li>
+                                            <li>
+                                                <span class="icon icon-themeenergy_travel-bag"></span>
+                                                <p>Departure Time: 10:05 AM</p>
+                                            </li>
+                                            <li>
+                                                <span class="icon icon-themeenergy_clock"></span>
+                                                <p>Estimated Time: 50 mins</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="one-fourth heightfix" style="height: 201px;">
+                                        <div class="partner-edit-tab">
+                                            <a href="#" class="btn grey small partner-edit">Edit Seat</a>
+                                            <a href="#" class="btn grey small partner-edit">Edit Bus Detail</a>
+                                            <a href="#" class="btn grey small partner-edit">Track</a>
+                                        </div>
+                                    </div>
+                                    <div class="full-width  moretext">
+                                        <p class="p-bus-e-date">Entry Date :<span> 10.12.2020</span></p>
+                                        <div class="extra-fetures">
+                                            <a>Non AC</a> |
+                                            <a>Mini</a> |
+                                            <a>No TV</a> |
+                                            <a>No Sound System</a>
+                                        </div>
+                                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
+                                            nibh
+                                            euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum
+                                            dolor
+                                            sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+                                            tincidunt ut
+                                            laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet,
+                                            consectetuer
+                                            adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+                                            magna
+                                            aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                            elit, sed
+                                            diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+                                            volutpat.
+                                        </p>
+                                        <p>Root 1 : <span> AAAAA</span></p>
+                                        <p>Root 2 : <span> AAAAA</span></p>
+                                        <p>Root 3 : <span> AAAAA</span></p>
+                                        <div class="uploded-bus-img">
+                                            <img src="images/lost.jpg">
+                                            <img src="images/lost.jpg">
+                                            <img src="images/lost.jpg">
+                                        </div>
+                                        <div class="uploded-bus-img-2nd">
+                                            <img src="images/lost.jpg">
+                                            <img src="images/lost.jpg">
+                                            <img src="images/lost.jpg">
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                        <button class="moreless-button">Read More</button>
+                    </article>
+                    <!-- Tab -->
+                    <article class="single" id="tab5">
+                        <p class="filter-booking">Filter Your Bookings</p>
+                        <div class="partner-booking-filter">
+                            <div>
+                                <label>From</label>
+                                <input type="date">
+                            </div>
+
+                            <div>
+                                <label>To</label>
+                                <input type="date">
+                            </div>
+                            <div>
+                                <label>Fliter With Bus Name</label>
+                                <select>
+                                    <option>XXAABB</option>
+                                    <option>XXAABB</option>
+                                    <option>XXAABB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Item -->
+                        <div class="box history">
+                            <h6>28.08.2014 <small>at</small> 10:00<br>Berlin Schonefeld Airport <small>to</small>
+                                Central Train Station</h6>
+                            <div class="row">
+                                <div class="one-third">
+                                    <p><span>Vehicle:</span> Private shuttle</p>
+                                </div>
+                                <div class="two-third">
+                                    <p><span>No Of Tickit :</span>3</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //Item -->
+                        <div class="box history">
+                            <h6>28.08.2014 <small>at</small> 10:00<br>Berlin Schonefeld Airport <small>to</small>
+                                Central Train Station</h6>
+                            <div class="row">
+                                <div class="one-third">
+                                    <p><span>Vehicle:</span> Private shuttle</p>
+                                </div>
+                                <div class="two-third">
+                                    <p><span>No Of Tickit :</span>1</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //Item -->
+                        <div class="box history">
+                            <h6>28.08.2014 <small>at</small> 10:00<br>Berlin Schonefeld Airport <small>to</small>
+                                Central Train Station</h6>
+                            <div class="row">
+                                <div class="one-third">
+                                    <p><span>Vehicle:</span> Private shuttle</p>
+                                </div>
+                                <div class="two-third">
+                                    <p><span>No Of Tickit :</span>2</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- Tab -->
+                    <article class="single hentry" id="tab6">
+                        <div class="box ">
+                            <h2 class="user-add-d">Add User (Driver)</h2>
+                            <fieldset>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="name">Select Bus</label>
+                                        <select>
+                                            <option selected disabled>Select One</option>
+                                            <option>Matribhumi</option>
+                                            <option>xxxxx</option>
+                                            <option>yyyyy</option>
+                                        </select>
+                                    </div>
+                                    <div class="f-row">
+                                        <div class="one-half">
+                                            <label for="u-name">Name</label>
+                                            <input type="text" id="u-name" placeholder="" class="uniform-input text">
+                                        </div>
+                                        <div class="one-half">
+                                            <label for="number">Mobile number</label>
+                                            <input type="number" id="number" placeholder=""
+                                                class="uniform-input number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <input type="submit" value="Submit" id="submit1" name="submit"
+                                        class="btn color medium" />
+                                </div>
+                            </fieldset>
+                            <h2 class="user-add-c">Add User (Conductor)</h2>
+                            <fieldset>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="name">Select Bus</label>
+                                        <select>
+                                            <option selected disabled>Select One</option>
+                                            <option>Matribhumi</option>
+                                            <option>xxxxx</option>
+                                            <option>yyyyy</option>
+                                        </select>
+                                    </div>
+                                    <div class="f-row">
+                                        <div class="one-half">
+                                            <label for="u-name">Name</label>
+                                            <input type="text" id="u-name" placeholder="" class="uniform-input text">
+                                        </div>
+                                        <div class="one-half">
+                                            <label for="number">Mobile number</label>
+                                            <input type="number" id="number" placeholder=""
+                                                class="uniform-input number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <input type="submit" value="Submit" id="submit1" name="submit"
+                                        class="btn color medium" />
+                                </div>
+                            </fieldset>
+
+                            <div id="example_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <h2 class="user-list-h">User List</h2>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="example" class="table table-striped table-bordered dataTable">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Bus Name</th>
+                                                    <th>User Name</th>
+                                                    <th>Designation</th>
+                                                    <th>Asign Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr role="row" class="odd bl-table-data">
+                                                    <td class="sorting_1">vgted bhd</td>
+                                                    <td>John Doe</td>
+                                                    <td>Driver</td>
+                                                    <td>10.05.2020</td>
+                                                    <td><button>Active</button></td>
+                                                </tr>
+                                                <tr role="row" class="odd bl-table-data">
+                                                    <td class="sorting_1">vgted bhd</td>
+                                                    <td>John Doe</td>
+                                                    <td>Conductor</td>
+                                                    <td>10.05.2020</td>
+                                                    <td><button>Active</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- //Tab -->
+                    <article class="single hentry" id="tab7">
+                        <div class="box seat-arrangment-area">
+                            <h2>Leave A Message</h2>
+                            <fieldset>
+                                <div class="f-row">
+                                    <div class="one-half">
+                                        <label for="name">Name</label>
+                                        <input type="text" id="name" placeholder="Enter Your Name" />
+                                    </div>
+                                    <div class="one-half">
+                                        <label for="sub">Subject</label>
+                                        <input type="text" id="sub" placeholder="Enter Subjetc" />
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <div class="full-width">
+                                        <label for="comments">Message</label>
+                                        <textarea id="comments"></textarea>
+                                    </div>
+                                </div>
+                                <div class="f-row">
+                                    <input type="submit" value="Submit" id="submit1" name="submit"
+                                        class="btn color medium" />
+                                </div>
+                            </fieldset>
+                        </div>
+                    </article>
+                    <!-- //Tab -->
+                </div>
+                <!--- //Content -->
+            </div>
+        </div>
+    </main>
+    <!-- //Main -->
+
+    <!-- Footer -->
+    <footer class="footer black" role="contentinfo">
+        <div class="wrap">
+            <div class="row">
+                <!-- Column -->
+                <article class="one-half">
+                    <h6>About us</h6>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+                        ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+                        tation nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+                        sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+                </article>
+                <!-- //Column -->
+
+                <!-- Column -->
+                <article class="one-fourth">
+                    <h6>Need help?</h6>
+                    <p>Contact us via phone or email:</p>
+                    <p class="contact-data"><span class="icon icon-themeenergy_call"></span><a
+                            href="tel:+91 7869 4673 90">+91 7869 4673 90</a< /p>
+                            <p class="contact-data"><span class="icon icon-themeenergy_mail-2"></span> <a
+                                    href="mailto:support@suvoyatra.in">support@suvoyatra.in</a></p>
+                </article>
+                <!-- //Column -->
+
+                <!-- Column -->
+                <article class="one-fourth">
+                    <h6>Follow us</h6>
+                    <ul class="social">
+                        <li><a href="#" title="facebook"><i class="fa fa-fw fa-facebook"></i></a></li>
+                        <li><a href="#" title="twitter"><i class="fa fa-fw fa-twitter"></i></a></li>
+                        <li><a href="#" title="gplus"><i class="fa fa-fw fa-instagram"></i></a></li>
+                    </ul>
+                </article>
+                <!-- //Column -->
+            </div>
+
+            <div class="copy">
+                <p>Copyright 2020, suvoyatra. All rights reserved. </p>
+
+                <nav role="navigation" class="foot-nav">
+                    <ul>
+                        <li><a href="index.html" title="Home">Home</a></li>
+                        <li><a href="about.html" title="About us">About us</a></li>
+                        <li><a href="partner.html" title="partner">Partner</a></li>
+                        <li><a href="contact.html" title="Contact us">Get In Touch</a></li>
+                        <li><a href="#" title="Terms of use">Terms & Conditions</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </footer>
+    <!-- //Footer -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.uniform.min.js"></script>
+    <script src="js/jquery.slicknav.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.single').hide().first().show();
+            $('.categories li:first').addClass('active');
+
+            $('.categories a').on('click', function (e) {
+                e.preventDefault();
+                $(this).closest('li').addClass('active').siblings().removeClass('active');
+                $($(this).attr('href')).show().siblings('.single').hide();
+            });
+
+            var hash = $.trim(window.location.hash);
+            if (hash) $('.categories a[href$="' + hash + '"]').trigger('click');
+        });
+    </script>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    </script>
+    <script src="js/styler.js"></script>
+    <script src="js/select-template.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+        $(document).ready(function () {
+            $('.moreless-button').click(function () {
+                $('.moretext').toggle();
+                if ($('.moreless-button').text() == "Read more") {
+                    $(this).text("Read less")
+                } else {
+                    $(this).text("Read more")
+                }
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+    <script src="js/toaster.min.js"></script>
+    <script src="js/partner_dashboard.js"></script>
+</body>
+
+</html>

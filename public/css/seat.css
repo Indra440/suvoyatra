@@ -1,0 +1,63 @@
+.Template1, .Template2{
+    padding: 30px 0 0 0;
+    position: relative;
+}
+.seat-container-1 {
+    display: flex;
+    justify-content: center;
+}
+
+.seat-container-2, .seat-container-3, .seat-container-4, .seat-container-5, .seat-container-6, .seat-container-7, .seat-container-8, .seat-container-9, .seat-container-10 {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 0 0;
+}
+
+.upper-col-left span,
+.upper-col-right span {
+    background: #2483F7;
+    transition: 0.3s;
+    color: #fff;
+    height: 35px;
+    width: 35px;
+    line-height: 35px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.upper-col-left span:first-child {
+    padding: 0;
+    background: transparent;
+    color: #000;
+}
+
+.upper-col-left span:hover,
+.upper-col-right span:hover {
+    background: #307701;
+    cursor: pointer;
+}
+
+.upper-col-right {
+    padding: 0 0 0 45px;
+}
+
+.door-area{
+    padding: 0 0 0 123px;
+}
+
+.last-seat{
+    padding: 0 0 0 4px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 980px) {
+    .Template1, .Template2 {
+         right: 0;
+        }  /* show it on small screens */
+  }
+  
+  @media screen and (min-width: 981px) and (max-width: 99999px) {
+    .Template1, .Template2 {
+         right: 50%;
+        }   /* hide it elsewhere */
+  }

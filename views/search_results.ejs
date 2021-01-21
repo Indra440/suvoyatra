@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="Transfers - Private Transport and Car Hire HTML Template" />
+	<meta name="description" content="Transfers - Private Transport and Car Hire HTML Template">
+	<meta name="author" content="themeenergy.com">
+
+	<title>Suvoyatra | Best Bus Booking Website In India</title>
+
+	<link rel="stylesheet" href="css/styler.css" />
+	<link rel="stylesheet" href="css/theme-pink.css" id="template-color" />
+	<link rel="stylesheet"
+		href="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="css/jquery-ui.theme.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/icons.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'
+		type='text/css'>
+	<link rel="shortcut icon" href="images/favicon.ico" />
+	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+	<!-- Header -->
+	<header class="header" role="banner">
+		<div class="wrap">
+			<!-- Logo -->
+			<div class="logo">
+				<a href="index.html" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
+						class="logo_img" alt="Transfers" /></a>
+			</div>
+			<!-- //Logo -->
+
+			<!-- Main Nav -->
+			<nav role="navigation" class="main-nav" id="mySidenav">
+				<ul>
+					<li><a><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></a></li>
+					<li class="active"><a href="/" title="">Home</a></li>
+					<li><a href="/about" title="about">About Us</a></li>
+					</li>
+					<li><a href="/faq" title="faqs">FAQs</a>
+					</li>
+					<li><a href="/partner" title="Partner">Partner</a></li>
+					<li><a title="user">user</a>
+						<ul>
+							<li><a href="/user-login" title="Login">Login</a></li>
+							<li><a href="/account" title="My account">My account</a></li>
+							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
+						</ul>
+					</li>
+					<li><a href="/contact" title="Contact">Get In Touch</a></li>
+				</ul>
+			</nav>
+			<!-- //Main Nav -->
+			<span style="font-size:30px;cursor:pointer" onclick="openNav()" class="nav_open">&#9776;</span>
+		</div>
+	</header>
+	<!-- //Header -->
+
+	<!-- Main -->
+	<main class="main" role="main">
+		<!-- Search -->
+		<div class="advanced-search color" id="booking">
+			<div class="wrap">
+				<form role="form" action="search-results.html" method="post">
+					<!-- Row -->
+					<div class="f-row search-main-area">
+						<div class="form-group datepicker one-fourth">
+							<label for="dep-date">Departure date</label>
+							<input type="date" id="dep-date" />
+						</div>
+						<div class="form-group timepicker one-fourth">
+							<label for="dep-time">Departure time</label>
+							<input type="time" id="dep-time" />
+						</div>
+						<div class="form-group select one-fourth">
+							<label>Pick up location</label>
+							<select>
+								<option selected>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+									<option value="Bari Port">Bari Port</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+									<option value="Barcelona Airport">Barcelona Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+						<i class="fa fa-exchange" aria-hidden="true" id="toggle-arrow-img"></i>
+						<div class="form-group select one-fourth">
+							<label>Drop off location</label>
+							<select>
+								<option selected>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									<option value="Frankfurt International Airport">Frankfurt International Airport
+									</option>
+									<option value="Friedrichshafen Airport">Friedrichshafen Airport</option>
+									<option value="Hamburg Finkenwerder Airport">Hamburg Finkenwerder Airport</option>
+									<option value="Hamburg Port">Hamburg Port</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+					</div>
+					<!-- //Row -->
+
+					<!-- Row -->
+					<div class="f-row return" id="return" style="display: none;">
+						<div class="form-group datepicker one-fourth">
+							<label for="dep-date">Departure date</label>
+							<input type="date" id="dep-date" />
+						</div>
+						<div class="form-group timepicker one-fourth">
+							<label for="dep-time">Departure time</label>
+							<input type="time" id="dep-time" />
+						</div>
+						<div class="form-group select one-fourth">
+							<label>Pick up location</label>
+							<select>
+								<option selected>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
+									<option value="Frankfurt International Airport">Frankfurt International Airport
+									</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+									<option value="Bari Port">Bari Port</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+									<option value="Barcelona Airport">Barcelona Airport</option>
+									<option value="Granada Airport">Granada Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+						<div class="form-group select one-fourth">
+							<label>Drop off location</label>
+							<select>
+								<option selected>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
+									<option value="Bremen Airport">Bremen Airport</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+									<option value="Bari Port">Bari Port</option>
+									<option value="Bergamo Airport">Bergamo Airport</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+									<option value="Barcelona Airport">Barcelona Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+					</div>
+					<!-- //Row -->
+
+					<!-- Row -->
+					<div class="f-row">
+						<div class="form-group select one-third">
+							<select id="journey_selector">
+								<option selected disabled>Select Return Process</option>
+								<option value="one way">One Way</option>
+								<option value="return">Return</option>
+							</select>
+						</div>
+						<div class="form-group select one-third">
+							<select>
+								<option selected disabled>Select AC or Non AC</option>
+								<option value="Ac">AC</option>
+								<option value="Non AC">Non AC</option>
+							</select>
+						</div>
+						<div class="form-group one-third">
+							<button type="submit" class="btn large black find-transfer">Find a transfer</button>
+						</div>
+					</div>
+					<!--// Row -->
+				</form>
+			</div>
+		</div>
+		<!-- //Search -->
+		<div class="wrap">
+			<div class="row">
+				<!--- Content -->
+				<div class="full-width content">
+					<h2>Select bus for your DEPARTURE</h2>
+
+					<div class="results">
+						<!-- Item -->
+						<article class="result">
+							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
+							<div class="one-half heightfix">
+								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
+								</h3>
+								<ul>
+									<li>
+										<span class="icon icon-themeenergy_user-3"></span>
+										<p> 3 Seat available</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_travel-bag"></span>
+										<p>Departure Time: 10:05 AM</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_clock"></span>
+										<p>Estimated Time: 50 mins</p>
+									</li>
+								</ul>
+							</div>
+							<div class="one-fourth heightfix">
+								<div>
+									<div class="price">120 <small>INR</small></div>
+									<span class="meta">per passenger</span>
+									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
+								</div>
+							</div>
+							<div class="full-width information">
+								<div class="extra-fetures">
+									<a>AC</a> |
+									<a>Deluxe</a> |
+									<a>TV</a> |
+									<a>Sound System</a>
+								</div>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
+									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
+									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+								</p>
+							</div>
+						</article>
+						<!-- //Item -->
+						<!-- Item -->
+						<article class="result">
+							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
+							<div class="one-half heightfix">
+								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
+								</h3>
+								<ul>
+									<li>
+										<span class="icon icon-themeenergy_user-3"></span>
+										<p> 3 Seat available</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_travel-bag"></span>
+										<p>Departure Time: 10:05 AM</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_clock"></span>
+										<p>Estimated Time: 50 mins</p>
+									</li>
+								</ul>
+							</div>
+							<div class="one-fourth heightfix">
+								<div>
+									<div class="price">120 <small>INR</small></div>
+									<span class="meta">per passenger</span>
+									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
+								</div>
+							</div>
+							<div class="full-width information">
+								<div class="extra-fetures">
+									<a>Non AC</a> |
+									<a>Volvo</a> |
+									<a>TV</a> |
+									<a>Sound System</a>
+								</div>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
+									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
+									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+								</p>
+							</div>
+						</article>
+						<!-- //Item -->
+						<!-- Item -->
+						<article class="result">
+							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
+							<div class="one-half heightfix">
+								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
+								</h3>
+								<ul>
+									<li>
+										<span class="icon icon-themeenergy_user-3"></span>
+										<p> 3 Seat available</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_travel-bag"></span>
+										<p>Departure Time: 10:05 AM</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_clock"></span>
+										<p>Estimated Time: 50 mins</p>
+									</li>
+								</ul>
+							</div>
+							<div class="one-fourth heightfix">
+								<div>
+									<div class="price">120 <small>INR</small></div>
+									<span class="meta">per passenger</span>
+									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
+								</div>
+							</div>
+							<div class="full-width information">
+								<div class="extra-fetures">
+									<a>Non AC</a> |
+									<a>Mini</a> |
+									<a>No TV</a> |
+									<a>No Sound System</a>
+								</div>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
+									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
+									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+								</p>
+							</div>
+						</article>
+						<!-- //Item -->
+						<!-- Item -->
+						<article class="result">
+							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
+							<div class="one-half heightfix">
+								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
+								</h3>
+								<ul>
+									<li>
+										<span class="icon icon-themeenergy_user-3"></span>
+										<p> 3 Seat available</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_travel-bag"></span>
+										<p>Departure Time: 10:05 AM</p>
+									</li>
+									<li>
+										<span class="icon icon-themeenergy_clock"></span>
+										<p>Estimated Time: 50 mins</p>
+									</li>
+								</ul>
+							</div>
+							<div class="one-fourth heightfix">
+								<div>
+									<div class="price">120 <small>INR</small></div>
+									<span class="meta">per passenger</span>
+									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
+								</div>
+							</div>
+							<div class="full-width information">
+								<div class="extra-fetures">
+									<a>Non AC</a> |
+									<a>Mini</a> |
+									<a>No TV</a> |
+									<a>No Sound System</a>
+								</div>
+								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
+									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
+									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
+									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+								</p>
+							</div>
+						</article>
+						<!-- //Item -->
+					</div>
+				</div>
+				<!--- //Content -->
+			</div>
+		</div>
+	</main>
+	<!-- //Main -->
+
+	<!-- Footer -->
+	<footer class="footer black" role="contentinfo">
+		<div class="wrap">
+			<div class="row">
+				<!-- Column -->
+				<article class="one-half">
+					<h6>About us</h6>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+						tation nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+						sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Need help?</h6>
+					<p>Contact us via phone or email:</p>
+					<p class="contact-data"><span class="icon icon-themeenergy_call"></span><a
+							href="tel:+91 7869 4673 90">+91 7869 4673 90</a< /p>
+							<p class="contact-data"><span class="icon icon-themeenergy_mail-2"></span> <a
+									href="mailto:support@suvoyatra.in">support@suvoyatra.in</a></p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Follow us</h6>
+					<ul class="social">
+						<li><a href="#" title="facebook"><i class="fa fa-fw fa-facebook"></i></a></li>
+						<li><a href="#" title="twitter"><i class="fa fa-fw fa-twitter"></i></a></li>
+						<li><a href="#" title="gplus"><i class="fa fa-fw fa-instagram"></i></a></li>
+					</ul>
+				</article>
+				<!-- //Column -->
+			</div>
+
+			<div class="copy">
+				<p>Copyright 2020, suvoyatra. All rights reserved. </p>
+
+				<nav role="navigation" class="foot-nav">
+					<ul>
+						<li><a href="index.html" title="Home">Home</a></li>
+						<li><a href="about.html" title="About us">About us</a></li>
+						<li><a href="partner.html" title="partner">Partner</a></li>
+						<li><a href="contact.html" title="Contact us">Get In Touch</a></li>
+						<li><a href="#" title="Terms of use">Terms & Conditions</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</footer>
+	<!-- //Footer -->
+
+	<!-- jQuery -->
+	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script
+		src="../../../../cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.js"></script>
+	<script src="js/jquery.uniform.min.js"></script>
+	<script src="js/jquery.slicknav.min.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/jquery-ui-sliderAccess.js"></script>
+	<script src="js/search.js"></script>
+	<script src="js/scripts.js"></script>
+	<script>
+		function openNav() {
+			document.getElementById("mySidenav").style.width = "250px";
+		}
+
+		function closeNav() {
+			document.getElementById("mySidenav").style.width = "0";
+		}
+	</script>
+	<script>
+		$(function () {
+			$('#journey_selector').change(function () {
+				$('.return').hide();
+				$('#' + $(this).val()).show();
+			});
+		});
+	</script>
+	<script src="js/styler.js"></script>
+</body>
+
+</html>

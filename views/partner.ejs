@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Transfers - Private Transport and Car Hire HTML Template" />
+    <meta name="description" content="Transfers - Private Transport and Car Hire HTML Template">
+    <meta name="author" content="themeenergy.com">
+
+    <title>Suvoyatra | Best Bus Booking Website In India</title>
+
+    <link rel="stylesheet" href="css/styler.css" />
+    <link rel="stylesheet" href="css/theme-pink.css" id="template-color" />
+    <link rel="stylesheet"
+        href="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery-ui.theme.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="css/icons.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'
+        type='text/css'>
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+		<div class="wrap">
+			<!-- Logo -->
+			<div class="logo">
+				<a href="index.html" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
+						class="logo_img" alt="Transfers" /></a>
+			</div>
+			<!-- //Logo -->
+
+			<!-- Main Nav -->
+			<nav role="navigation" class="main-nav" id="mySidenav">
+				<ul>
+					<li><a><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></a></li>
+					<li><a href="/" title="">Home</a></li>
+					<li><a href="/about" title="about">About Us</a></li>
+					</li>
+					<li><a href="/faq" title="faqs">FAQs</a>
+					</li>
+					<li class="active"><a href="/partner" title="Partner">Partner</a></li>
+					<li><a title="user">user</a>
+						<ul>
+							<li><a href="/user-login" title="Login">Login</a></li>
+							<li><a href="/account" title="My account">My account</a></li>
+							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
+						</ul>
+					</li>
+					<li><a href="/contact" title="Contact">Get In Touch</a></li>
+				</ul>
+			</nav>
+			<!-- //Main Nav -->
+			<span style="font-size:30px;cursor:pointer" onclick="openNav()" class="nav_open">&#9776;</span>
+		</div>
+	</header>
+    <!-- //Header -->
+
+    <!-- Main -->
+    <main class="main" role="main">
+        <% if(message){ %>
+            <div class="center alert-<%= message.type %>" id="flash-message">
+                <button type="button" id= "close" class= "close" data-dismiss="alert">&times;</button>
+                <strong><%= message.intro %> </strong>&nbsp;&nbsp;<%= message.message %>
+            </div>
+        <% } %>
+        <!-- Page info -->
+        <header class="site-title color">
+            <div class="wrap">
+                <div class="container">
+                    <h1>Registration</h1>
+                    <nav role="navigation" class="breadcrumbs">
+                        <ul>
+                            <li><a href="index.html" title="Home">Home</a></li>
+                            <li>Partner Registration</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <!-- //Page info -->
+
+        <div class="wrap">
+            <div class="row">
+                <!--- Content -->
+                <div class="content one-half modal modal-left">
+                    <!--Login-->
+                    <div class="box">
+                        <form method="POST" action="/partnerRouter/create-partner">
+                            <div class="f-row">
+                                <div class="full-width">
+                                    <label for="name">Your Name</label>
+                                    <input type="text" name="name" id="name" />
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="full-width">
+                                    <label for="phone">Your phone number</label>
+                                    <input type="number" name="phone" id="phone" />
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="full-width">
+                                    <label for="email">Your email address</label>
+                                    <input type="email" name="email" id="email" />
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="full-width">
+                                    <label for="password">Your password</label>
+                                    <input type="password" name="password" id="password" />
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="full-width">
+                                    <label for="password2">Repeat password</label>
+                                    <input type="password" name="password2" id="password2" />
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="full-width check">
+                                    <input type="checkbox" id="checkbox" name="checkbox" class="reg_chkbx" />
+                                    <label for="checkbox">I agree with terms and conditions.</label>
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="full-width">
+                                    <input type="submit" id="create_account" value="Create an account" class="btn color medium full" />
+                                </div>
+                            </div>
+
+                            <p>Already have an account? <a href="/partner-login">Login</a>.</p>
+                            <p>Partner Dashboard<a href="/partner-dashboard"><span id="partner_dashboard"> Click </span></a>.</p>
+                        </form>
+                    </div>
+                    <!--//Login-->
+                </div>
+                <div class="content one-half modal modal-right">
+                    <div class="box partner-features">
+                        <div class="wow fadeIn" data-wow-delay=".2s"
+                            style="visibility: visible; animation-delay: 0.2s; animation-name: fadeIn;">
+                            <span class="circle">
+                                <span>
+                                    <img src="https://ik.imagekit.io/tz42dgwpw/Live-Tracking-application_bc6aiX6-G.jpg" class="partner-faclity-img">
+                                </span>
+                            </span>
+                            <h3>Live Tracking</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore
+                                magna.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="box partner-features">
+                        <div class="wow fadeIn" data-wow-delay=".2s"
+                            style="visibility: visible; animation-delay: 0.2s; animation-name: fadeIn;">
+                            <span class="circle">
+                                <span>
+                                    <img src="https://ik.imagekit.io/tz42dgwpw/12_2OoTG2qZO.jpg" class="partner-faclity-img">
+                                </span>
+                            </span>
+                            <h3>Easy & Multiple Payment</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore
+                                magna.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="box partner-features">
+                        <div class="wow fadeIn" data-wow-delay=".2s"
+                            style="visibility: visible; animation-delay: 0.2s; animation-name: fadeIn;">
+                            <span class="circle">
+                                <span>
+                                    <img src="https://ik.imagekit.io/tz42dgwpw/image__1__EBETJigqm.png" class="partner-faclity-img">
+                                </span>
+                            </span>
+                            <h3>Live Tickit Booking</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore
+                                magna.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="box partner-features">
+                        <div class="wow fadeIn" data-wow-delay=".2s"
+                            style="visibility: visible; animation-delay: 0.2s; animation-name: fadeIn;">
+                            <span class="circle">
+                                <span>
+                                    <img src="https://ik.imagekit.io/tz42dgwpw/fds_ZycFbLrRH.jpg" class="partner-faclity-img">
+                                </span>
+                            </span>
+                            <h3>Easy Calculation</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore
+                                magna.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--- //Content -->
+            </div>
+        </div>
+    </main>
+    <!-- //Main -->
+
+    <!-- Footer -->
+    <footer class="footer black" role="contentinfo">
+		<div class="wrap">
+			<div class="row">
+				<!-- Column -->
+				<article class="one-half">
+					<h6>About us</h6>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+						tation nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+						sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Need help?</h6>
+					<p>Contact us via phone or email:</p>
+					<p class="contact-data"><span class="icon icon-themeenergy_call"></span><a
+							href="tel:+91 7869 4673 90">+91 7869 4673 90</a< /p>
+							<p class="contact-data"><span class="icon icon-themeenergy_mail-2"></span> <a
+									href="mailto:support@suvoyatra.in">support@suvoyatra.in</a></p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Follow us</h6>
+					<ul class="social">
+						<li><a href="#" title="facebook"><i class="fa fa-fw fa-facebook"></i></a></li>
+						<li><a href="#" title="twitter"><i class="fa fa-fw fa-twitter"></i></a></li>
+						<li><a href="#" title="gplus"><i class="fa fa-fw fa-instagram"></i></a></li>
+					</ul>
+				</article>
+				<!-- //Column -->
+			</div>
+
+			<div class="copy">
+				<p>Copyright 2020, suvoyatra. All rights reserved. </p>
+
+				<nav role="navigation" class="foot-nav">
+					<ul>
+						<li><a href="index.html" title="Home">Home</a></li>
+						<li><a href="about.html" title="About us">About us</a></li>
+						<li><a href="partner.html" title="partner">Partner</a></li>
+						<li><a href="contact.html" title="Contact us">Get In Touch</a></li>
+						<li><a href="#" title="Terms of use">Terms & Conditions</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</footer>
+    <!-- //Footer -->
+
+    <!-- jQuery -->
+    <!-- <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.uniform.min.js"></script>
+    <script src="js/jquery.slicknav.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+    <script src="js/scripts.js"></script>
+    
+    <script>
+        const basicUrl = "http://localhost:3000";
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+        $("#close").click(function(){
+            $(this).closest('div').addClass('hide');
+        })
+        $("#partner_dashboard").click(function(){
+            console.log("Its hitting here");
+            const token = window.localStorage.getItem("partnerToken");
+            if(!token || token == ""){
+                window.location.href = basicUrl +'/partner-login';
+            }else{
+                console.log("Its hitting here");
+                window.location.href = basicUrl +'/partner-dashboard';
+            }
+
+        })
+    </script>
+    <script src="js/styler.js"></script>    
+</body>
+
+</html>

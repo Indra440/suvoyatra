@@ -1,0 +1,18 @@
+{
+    "database":{
+        "mongodb":{
+            "host":"localhost",
+            "db_name":"suvoyatra",
+            "port":"27017"
+        }
+    },
+    "partnertokenSecret":"partnerloginToken",
+    "imagekit":{
+        "storage":{
+            "publicKey":"public_uhhIGWg93O9QPM/HZCwF8Gjp1qI=",
+            "privateKey":"private_UjdpQcBqyYkSNY7sa1yP93fzle0=",
+            "urlEndpoint":"https://ik.imagekit.io/suvoyatra123",
+            "imagekitID":"suvoyatra123"
+        }
+    }
+}

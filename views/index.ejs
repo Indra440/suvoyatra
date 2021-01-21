@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="Transfers - Private Transport and Car Hire HTML Template" />
+	<meta name="description" content="Transfers - Private Transport and Car Hire HTML Template">
+	<meta name="author" content="themeenergy.com">
+
+	<title>Suvoyatra | Best Bus Booking Website In India</title>
+
+	<link rel="stylesheet" href="css/styler.css" />
+	<link rel="stylesheet" href="css/theme-pink.css" id="template-color" />
+	<!-- <link rel="stylesheet"href="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"> -->
+	<link rel="stylesheet" href="css/jquery-ui.theme.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/icons.css" />
+	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'type='text/css'>
+	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- <script src="../../../../use.fontawesome.com/e808bf9397.js"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+</head>
+
+<body class="home">
+
+	<!-- Header -->
+	<header class="header" role="banner">
+		<div class="wrap">
+			<!-- Logo -->
+			<div class="logo">
+				<a href="index.ejs" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
+						class="logo_img" alt="Transfers" /></a>
+			</div>
+			<!-- //Logo -->
+
+			<!-- Main Nav -->
+			<nav role="navigation" class="main-nav" id="mySidenav">
+				<ul>
+					<li><a><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></a></li>
+					<li class="active"><a href="/" title="">Home</a></li>
+					<li><a href="/about" title="about">About Us</a></li>
+					</li>
+					<li><a href="/faq" title="faqs">FAQs</a>
+					</li>
+					<li><a href="/partner" title="Partner">Partner</a></li>
+					<li><a title="user">user</a>
+						<ul>
+							<li><a href="/user-login" title="Login">Login</a></li>
+							<li><a href="/account" title="My account">My account</a></li>
+							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
+						</ul>
+					</li>
+					<li><a href="/contact" title="Contact">Get In Touch</a></li>
+				</ul>
+			</nav>
+			<!-- //Main Nav -->
+			<span style="font-size:30px;cursor:pointer" onclick="openNav()" class="nav_open">&#9776;</span>
+		</div>
+	</header>
+	<!-- //Header -->
+
+	<!-- Main -->
+	<main class="main" role="main">
+		<!-- Intro -->
+		<div class="intro">
+			<div class="wrap">
+				<div class="textwidget">
+					<h1 class="wow fadeInDown">Need a ride?</h1>
+					<h2 class="wow fadeInUp">You've come to the right place.</h2>
+					<div class="actions">
+						<a href="/about" title="About Uss" class="btn large white wow fadeInLeft anchor">About
+							Us</a>
+						<a href="#booking" title="Make a booking" class="btn large color wow fadeInRight anchor">Make a
+							booking</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- //Intro -->
+
+		<!-- Search -->
+		<div class="advanced-search color" id="booking">
+			<div class="wrap">
+				<form role="form" action="/search-result" method="post">
+					<!-- Row -->
+					<div class="f-row search-main-area">
+						<div class="form-group datepicker one-fourth">
+							<label for="dep-date">Departure date</label>
+							<input type="date" id="dep-date" />
+						</div>
+						<div class="form-group timepicker one-fourth">
+							<label for="dep-time">Departure time</label>
+							<input type="time" id="dep-time" />
+						</div>
+						<div class="form-group select one-fourth">
+							<label>Pick up location</label>
+							<select>
+								<option selected disabled>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+									<option value="Bari Port">Bari Port</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+									<option value="Barcelona Airport">Barcelona Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+						<i class="fa fa-exchange" aria-hidden="true" id="toggle-arrow-img"></i>
+						<div class="form-group select one-fourth">
+							<label>Drop off location</label>
+							<select>
+								<option selected disabled>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									<option value="Frankfurt International Airport">Frankfurt International Airport
+									</option>
+									<option value="Friedrichshafen Airport">Friedrichshafen Airport</option>
+									<option value="Hamburg Finkenwerder Airport">Hamburg Finkenwerder Airport</option>
+									<option value="Hamburg Port">Hamburg Port</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+					</div>
+					<!-- //Row -->
+
+					<!-- Row -->
+					<div class="f-row return" id="return" style="display: none;">
+						<div class="form-group datepicker one-fourth">
+							<label for="dep-date">Departure date</label>
+							<input type="date" id="dep-date" />
+						</div>
+						<div class="form-group timepicker one-fourth">
+							<label for="dep-time">Departure time</label>
+							<input type="time" id="dep-time" />
+						</div>
+						<div class="form-group select one-fourth">
+							<label>Pick up location</label>
+							<select>
+								<option selected disabled>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
+									<option value="Frankfurt International Airport">Frankfurt International Airport
+									</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+									<option value="Bari Port">Bari Port</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+									<option value="Barcelona Airport">Barcelona Airport</option>
+									<option value="Granada Airport">Granada Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+						<div class="form-group select one-fourth">
+							<label>Drop off location</label>
+							<select>
+								<option selected disabled>Select One</option>
+								<optgroup label="Germany">
+									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
+									<option value="Bremen Airport">Bremen Airport</option>
+								</optgroup>
+								<optgroup label="Italy">
+									<option value="Alghero Airport">Alghero Airport</option>
+									<option value="Bari Airport">Bari Airport</option>
+									<option value="Bari Port">Bari Port</option>
+									<option value="Bergamo Airport">Bergamo Airport</option>
+								</optgroup>
+								<optgroup label="Spain">
+									<option value="Alicante Airport">Alicante Airport</option>
+									<option value="Almeria Airport">Almeria Airport</option>
+									<option value="Barcelona Airport">Barcelona Airport</option>
+								</optgroup>
+								<optgroup label="United Kingdom">
+									<option value="Belfast City Airport">Belfast City Airport</option>
+									<option value="Belfast International Airport">Belfast International Airport</option>
+									<option value="Bristol Airport">Bristol Airport</option>
+								</optgroup>
+							</select>
+						</div>
+					</div>
+					<!-- //Row -->
+
+					<!-- Row -->
+					<div class="f-row">
+						<div class="form-group select one-third">
+							<select id="journey_selector">
+								<option selected disabled>Select Return Process</option>
+								<option value="one way">One Way</option>
+								<option value="return">Return</option>
+							</select>
+						</div>
+						<div class="form-group select one-third">
+							<select>
+								<option selected disabled>Select AC or Non AC</option>
+								<option value="Ac">AC</option>
+								<option value="Non AC">Non AC</option>
+							</select>
+						</div>
+						<div class="form-group one-third">
+							<button type="submit" class="btn large black find-transfer">Find a transfer</button>
+						</div>
+					</div>
+					<!--// Row -->
+				</form>
+			</div>
+		</div>
+		<!-- //Search -->
+
+		<!-- Services iconic -->
+		<div class="services iconic white">
+			<div class="wrap">
+				<div class="row">
+
+					<!-- Item -->
+					<div class="one-third wow fadeIn" data-wow-delay=".2s">
+						<span class="circle"><span class="icon icon-themeenergy_plus"></span></span>
+						<h3>Seafty transfers</h3>
+						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore magna.
+						</p>
+					</div>
+					<!-- //Item -->
+
+					<!-- Item -->
+					<div class="one-third wow fadeIn" data-wow-delay=".4s">
+						<span class="circle"><span class="icon icon-themeenergy_open-wallet"></span></span>
+						<h3>Low booking fees</h3>
+						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore magna.
+						</p>
+					</div>
+					<!-- //Item -->
+
+
+					<!-- Item -->
+					<div class="one-third wow fadeIn" data-wow-delay=".2s">
+						<span class="circle"><span class="icon icon-themeenergy_magic-trick"></span></span>
+						<h3>Booking flexibility</h3>
+						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore magna.
+						</p>
+					</div>
+					<!-- //Item -->
+
+					<!-- Item -->
+					<div class="one-third wow fadeIn" data-wow-delay=".4s">
+						<span class="circle"><span class="icon icon-themeenergy_call"></span></span>
+						<h3>24h customer service</h3>
+						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore magna.
+						</p>
+					</div>
+					<!-- //Item -->
+
+					<!-- Item -->
+					<div class="one-third wow fadeIn" data-wow-delay=".2s">
+						<span class="circle"><span class="icon icon-themeenergy_attach"></span></span>
+						<h3>Benefits for partners</h3>
+						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore magna.
+						</p>
+					</div>
+					<!-- //Item -->
+
+					<!-- Item -->
+					<div class="one-third wow fadeIn" data-wow-delay=".4s">
+						<span class="circle"><span class="icon icon-themeenergy_bus"></span></span>
+						<h3>RELIABLE TRANSFERS</h3>
+						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy tinc dolore magna.
+						</p>
+					</div>
+					<!-- //Item -->
+				</div>
+			</div>
+		</div>
+		<!-- //Services iconic -->
+		<!-- tracking area -->
+		<div class="services iconic grey ">
+			<div class="wrap">
+				<div class="row">
+					<!--- Content -->
+					<div class="four-fourth content">
+						<div class="row">
+
+							<!-- Post -->
+							<div class="full-width">
+								<article class="hentry">
+									<div class="entry-featured track-img">
+										<img src="images/autronicals.gif" alt="" class="track-image-main">
+										<div class="overlay">
+											<a href="blog-single.html" class="expand">+</a>
+										</div>
+									</div>
+									<div class="entry-content track-desc">
+										<h2><a href="blog-single.html">Track Your Bus</a></h2>
+										<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
+											nibh
+											euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi
+											enim ad
+											minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. </p>
+
+									</div>
+								</article>
+							</div>
+							<!-- //Post -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- tracking area -->
+		<!-- Call to action -->
+		<div class="purple cta">
+			<div class="wrap">
+				<p class="wow fadeInLeft">Like what you see? Are you ready to stand out? You know what to do.</p>
+				<a href="about.html" class="btn huge color right wow fadeInRight">About Us</a>
+			</div>
+		</div>
+		<!-- //Call to action -->
+
+		<!-- Services -->
+		<div class="services boxed white" id="services">
+			<!-- Item -->
+			<article class="one-fourth wow fadeIn">
+				<figure class="featured-image">
+					<img src="images/vol.jpg" alt="" />
+					<div class="overlay">
+						<a href="services.html" class="expand">+</a>
+					</div>
+				</figure>
+				<div class="details">
+					<h4><a href="services.html">Deluxe</a></h4>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat.</p>
+				</div>
+			</article>
+			<!-- //Item -->
+
+			<!-- Item -->
+			<article class="one-fourth wow fadeIn" data-wow-delay=".2s">
+				<figure class="featured-image">
+					<img src="images/deluxe.jpg" alt="" />
+					<div class="overlay">
+						<a href="services.html" class="expand">+</a>
+					</div>
+				</figure>
+				<div class="details">
+					<h4><a href="services.html">Volvo</a></h4>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat.</p>
+				</div>
+			</article>
+			<!-- //Item -->
+
+			<!-- Item -->
+			<article class="one-fourth wow fadeIn" data-wow-delay=".4s">
+				<figure class="featured-image">
+					<img src="images/reg.jpg" alt="" />
+					<div class="overlay">
+						<a href="services.html" class="expand">+</a>
+					</div>
+				</figure>
+				<div class="details">
+					<h4><a href="services.html">Regular</a></h4>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat.</p>
+				</div>
+			</article>
+			<!-- //Item -->
+
+			<!-- Item -->
+			<article class="one-fourth wow fadeIn" data-wow-delay=".6s">
+				<figure class="featured-image">
+					<img src="images/min.jpg" alt="" />
+					<div class="overlay">
+						<a href="services.html" class="expand">+</a>
+					</div>
+				</figure>
+				<div class="details">
+					<h4><a href="services.html">Mini</a></h4>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat.</p>
+				</div>
+			</article>
+			<!-- //Item -->
+		</div>
+		<!-- //Services -->
+		<!-- download area -->
+		<div class="services iconic grey download-app-area">
+			<div class="wrap">
+				<div class="row">
+					<!--- Content -->
+					<div class="four-fourth content">
+						<div class="row">
+
+							<!-- Post -->
+							<div class="full-width">
+								<article class="hentry download-app">
+									<div class="entry-featured">
+										<img src="images/New Project.png" alt="">
+										<div class="overlay">
+											<a href="blog-single.html" class="expand">+</a>
+										</div>
+									</div>
+									<div class="entry-content">
+										<h2><a>Track Your Bus</a></h2>
+										<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
+											nibh
+											euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi
+											enim ad
+											minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.
+										</p>
+										<img src="images/app.png" class="download-app-img">
+										<input type="text" placeholder="Enter Phone No And Get App Download Link"
+											class="get-app-download-link" />
+										<p class="download-btn">Get Link</p>
+									</div>
+								</article>
+							</div>
+							<!-- //Post -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- download area -->
+
+
+		<div class="diaries">
+			<div class="wrap tab-areas">
+				<div class="row">
+					<div class="tab-slide-area">
+						<div class="tab">
+							<button class="tablinks" onclick="openCity(event, 'partners')" id="defaultOpen">Partner
+								Diaries</button>
+							<button class="tablinks" onclick="openCity(event, 'customers')">Customer Diaries</button>
+						</div>
+
+						<div id="partners" class="tabcontent">
+							<div class="slider owl-carousel">
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="slider owl-carousel">
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="customers" class="tabcontent">
+							<div class="slider owl-carousel">
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="slider owl-carousel">
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+								<div class="card">
+									<div class="content">
+										<div class="p-logo">
+											<img src="images/HuskyFullLogo.svg" />
+											<a href="contact.html">Get In Touch</a>
+										</div>
+										<div class="p-content">
+											<p class="p-name">Aniruddha Jana</p>
+											<p class="p-desc">You people did an amazing work.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<!-- Testimonials -->
+		<div class="business-accle white center">
+			<div class="wrap">
+
+				<div class="one-half wow fadeInLeft">
+					<div class="wrap left-col ">
+						<div class="wow fadeIn">
+							<h2 class="accelerate-bh">Join with us and accelerate your bussiness.</h2>
+							<a href="partner.html" class="apply-now">Apply Now</a>
+						</div>
+						<div class="wow fadeIn" data-wow-delay=".2s">
+							<div class="accle-card">
+								<div class="ace-card-details">
+									<h2>Find Possiblities</h2>
+									<p>Like what you see? Are you ready to stand out?</p>
+								</div>
+								<div class="ace-card-img">
+									<img src="images/create-possibilitis.jpg">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="one-half wow fadeInRight">
+					<div class="wrap right-col ">
+						<div class="wow fadeIn">
+							<div class="wow fadeIn" data-wow-delay=".2s">
+								<div class="accle-card">
+									<div class="ace-card-details">
+										<h2>Start Smart</h2>
+										<p>Like what you see? Are you ready to stand out?</p>
+									</div>
+									<div class="ace-card-img">
+										<img src="images/start-smart.jpg">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="wow fadeIn" data-wow-delay=".2s">
+							<div class="wow fadeIn" data-wow-delay=".2s">
+								<div class="accle-card">
+									<div class="ace-card-details">
+										<h2>Increase Growth</h2>
+										<p>Like what you see? Are you ready to stand out?</p>
+									</div>
+									<div class="ace-card-img">
+										<img src="images/bgro.jpg">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- //Testimonials -->
+
+		<div class="partners white center">
+			<div class="wrap">
+				<h2 class="wow fadeIn">Our partners</h2>
+				<div class="one-fifth wow fadeIn"><a href="#"><img src="images/uploads/logo1.jpg" alt="" /></a></div>
+				<div class="one-fifth wow fadeIn" data-wow-delay=".2s"><a href="#"><img src="images/uploads/logo2.jpg"
+							alt="" /></a></div>
+				<div class="one-fifth wow fadeIn" data-wow-delay=".4s"><a href="#"><img src="images/uploads/logo3.jpg"
+							alt="" /></a></div>
+				<div class="one-fifth wow fadeIn" data-wow-delay=".6s"><a href="#"><img src="images/uploads/logo4.jpg"
+							alt="" /></a></div>
+				<div class="one-fifth" data-wow-delay=".8s"><a href="#"><img src="images/uploads/logo5.jpg"
+							alt="" /></a></div>
+			</div>
+		</div>
+
+
+		<!-- Call to action -->
+		<div class="color cta">
+			<div class="wrap">
+				<p class="wow fadeInLeft">Like what you see? Are you ready to stand out? You know what to do.</p>
+				<a href="contact.html" class="btn huge black right wow fadeInRight">Get In Touch</a>
+			</div>
+		</div>
+		<!-- //Call to action -->
+	</main>
+	<!-- //Main -->
+
+	<!-- Footer -->
+	<footer class="footer black" role="contentinfo">
+		<div class="wrap">
+			<div class="row">
+				<!-- Column -->
+				<article class="one-half">
+					<h6>About us</h6>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+						tation nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+						sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Need help?</h6>
+					<p>Contact us via phone or email:</p>
+					<p class="contact-data"><span class="icon icon-themeenergy_call"></span><a
+							href="tel:+91 7869 4673 90">+91 7869 4673 90</a< /p>
+							<p class="contact-data"><span class="icon icon-themeenergy_mail-2"></span> <a
+									href="mailto:support@suvoyatra.in">support@suvoyatra.in</a></p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Follow us</h6>
+					<ul class="social">
+						<li><a href="#" title="facebook"><i class="fa fa-fw fa-facebook"></i></a></li>
+						<li><a href="#" title="twitter"><i class="fa fa-fw fa-twitter"></i></a></li>
+						<li><a href="#" title="gplus"><i class="fa fa-fw fa-instagram"></i></a></li>
+					</ul>
+				</article>
+				<!-- //Column -->
+			</div>
+
+			<div class="copy">
+				<p>Copyright 2020, suvoyatra. All rights reserved. </p>
+
+				<nav role="navigation" class="foot-nav">
+					<ul>
+						<li><a href="index.html" title="Home">Home</a></li>
+						<li><a href="about.html" title="About us">About us</a></li>
+						<li><a href="partner.html" title="partner">Partner</a></li>
+						<li><a href="contact.html" title="Contact us">Get In Touch</a></li>
+						<li><a href="#" title="Terms of use">Terms & Conditions</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</footer>
+	<!-- //Footer -->
+
+	<!-- jQuery -->
+	
+	<!-- <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script src="../../../../cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.js"></script> -->
+	<script src="js/jquery.uniform.min.js"></script>
+	<script src="js/jquery.slicknav.min.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/jquery-ui-sliderAccess.js"></script>
+	<script src="js/search.js"></script>
+	<script src="js/scripts.js"></script>
+	<script src="js/styler.js"></script>
+	<script>
+		function openNav() {
+			document.getElementById("mySidenav").style.width = "250px";
+		}
+
+		function closeNav() {
+			document.getElementById("mySidenav").style.width = "0";
+		}
+	</script>
+	<script>
+		$(function () {
+			$('#journey_selector').change(function () {
+				$('.return').hide();
+				$('#' + $(this).val()).show();
+			});
+		});
+	</script>
+	<script>
+		function openCity(evt, cityName) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(cityName).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+
+		// Get the element with id="defaultOpen" and click on it
+		document.getElementById("defaultOpen").click();
+	</script>
+</body>
+
+</html>
