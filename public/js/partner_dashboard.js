@@ -26,7 +26,7 @@ $(document).ready(function(){
         console.log("Its clicking here");
         console.log("partnerDetails ",partnerDetails);
         const data = {
-            name: $("#name").val() ? $("#name").val() : "",
+            name : $("#name").val() ? $("#name").val() : "",
             email : $("#email").val() ? $("#email").val() : "",
             phone : $("#number").val() ? $("#number").val() : "",
             address : $("#address").val() ? $("#address").val() : "",
@@ -120,6 +120,79 @@ $(document).ready(function(){
                 $("#password2").val("");
                 $("#password3").val("");
             } 
+        })
+    })
+
+
+    $("#AddBus").click(function(){
+        console.log("Its clicking here");
+        var fd = new FormData();
+        fd.append( 'front_side',$("#Upload-front-Photo")[0].files[0]);
+        fd.append( 'left_side',$("#Upload-left-Photo")[0].files[0]);
+        fd.append( 'right_side',$("#Upload-right-Photo")[0].files[0]);
+        fd.append( 'back_side',$("#Upload-back-Photo")[0].files[0]);
+        fd.append( 'driver_cabin',$("#Upload-cabin-Photo")[0].files[0]);
+        fd.append( 'entire_inside',$("#Upload-Inside-Photo")[0].files[0]);
+        fd.append( 'busName', $("#busname").val());
+        fd.append( 'busnumber', $("#bus-num").val());
+        fd.append( 'journeyForm', $("#journey-from").val());
+        fd.append( 'journeyTo', $("#journey-to").val());
+        fd.append( 'departureTime', $("#Departure-time").val());
+        fd.append( 'rrivalTime', $("#Arrival-Time").val());
+        fd.append( 'viaRoot1', $("#via-root-1").val());
+        fd.append( 'viaRoot2', $("#via-root-2").val());
+        fd.append( 'noOfSeat', $("#seat-no").val());
+        fd.append( 'busType', $("#Bus-Type").val());
+        fd.append( 'acType', $("#AC-Type").val());
+        fd.append( 'multimediaType', $("#Mul-Type").val());
+        fd.append( 'busDescription', $("#comments").val());
+        // Display the key/value pairs
+        for (var pair of fd.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+        // const formdata = {
+        //     busName : $("#busname val() ? $("#busname").val() : "",
+        //     busnumber : $("#bus-num").val() ? $("#bus-num").val() : "",
+        //     journeyForm : $("#journey-from").val() ? $("#journey-from").val() : "",
+        //     journeyTo : $("#journey-to").val() ? $("#journey-to").val() : "",
+        //     departureTime : $("#Departure-time").val() ? $("#Departure-time").val() : "",
+        //     arrivalTime : $("#Arrival-Time").val() ? $("#Arrival-Time").val() : "",
+        //     viaRoot1 : $("#via-root-1").val() ? $("#via-root-1").val() : "",
+        //     viaRoot2 : $("#via-root-2").val() ? $("#via-root-2").val() : "",
+        //     noOfSeat : $("#seat-no").val() ? $("#seat-no").val() : "",
+        //     busType : $("#Bus-Type").val() ? $("#Bus-Type").val() : "",
+        //     acType : $("#AC-Type").val() ? $("#AC-Type").val() : "",
+        //     multimediaType : $("#Mul-Type").val() ? $("#Mul-Type").val() : "",
+        //     front_side : $("#Upload-front-Photo").prop('files'),
+        //     left_side : $('#Upload-left-Photo').prop('files'),
+        //     right_side : $("#Upload-right-Photo").prop('files'),
+        //     back_side : $("#Upload-back-Photo").prop('files'),
+        //     driver_cabin: $("#Upload-cabin-Photo").prop('files'),
+        //     entire_inside : $("#Upload-Inside-Photo").prop('files'),
+        //     busDescription : $("#comments").val() ? $("#comments").val() : "",
+
+        // }
+        // console.log("data ", formdata);
+        $.ajax({
+             url:basicUrl+'/busRouter/addBus',
+            type: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorizationToken", partnerToken);
+            },
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(result){
+                console.log("result ",result);
+                if(result.status == true){
+                    toastr.success('Data saved successfully');
+                }
+            },
+            error: function(response) {
+                toastr.error('some error is comming');
+                console.log("Response ",response);
+            }
         })
     })
     
