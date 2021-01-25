@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 let queriesSchema = new Schema({
     name:{
         type:String,
-        ref:''
+        default : "",
+        required:false
     },
     subject:{
         type:String,
@@ -18,7 +19,7 @@ let queriesSchema = new Schema({
     },
     mobile:{
         type:String,
-        default:'one way',
+        default:null,
         required:true
     },
     message:{

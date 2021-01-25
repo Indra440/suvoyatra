@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 let busesSchema = new Schema({
-    partnetId:{
+    partnerId:{
         type:mongoose.Types.ObjectId,
         ref:'partner'
     },
@@ -19,6 +19,11 @@ let busesSchema = new Schema({
         default:null,
         required:true
     },
+    is_active:{
+        type:Boolean,
+        default:true,
+        required:false
+    },
     busRoadMap:{
         journeyForm:{
             type:String,
@@ -30,14 +35,20 @@ let busesSchema = new Schema({
             default:'one way',
             required:true
         },
-        viaRoot1:{
-            type:String,
-            default:''
-        },
-        viaroot2:{
-            type:String,
-            default:''
-        }
+        viaRoot:[
+            {
+                rootName:{
+                    type:String,
+                    default:null,
+                    required:false
+                },
+                rootFare :{
+                    type:Number,
+                    default:null,
+                    required:false
+                }
+            }
+        ]
     },
     busTiming:{
         departureTime:{
@@ -103,26 +114,41 @@ let busesSchema = new Schema({
             required:true
         }
     },
+    seatTemplate:{
+        type:String,
+        default:null,
+        required:false
+    },
     drivers:[
         {
-            driverName:{
+            name:{
                 type:String,
                 default:''
             },
-            driverMobile:{
-                type:Number,
+            mobile:{
+                type:String,
                 default:''
+            },
+            is_active:{
+                type:Boolean,
+                default:true,
+                required:false
             }
         }
     ],
-    conductor:[
-        {   conductorName:{
+    conductors:[
+        {   name:{
                 type:String,
                 default:''
             },
-            conductorMobile:{
-                type:Number,
+            mobile:{
+                type:String,
                 default:''
+            },
+            is_active:{
+                type:Boolean,
+                default:true,
+                required:false
             }
         }
     ]

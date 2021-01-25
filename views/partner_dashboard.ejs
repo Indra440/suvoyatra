@@ -101,10 +101,10 @@
                         <ul class="categories">
                             <li class="active"><a href="#tab1">Account Details</a></li>
                             <li><a href="#tab2">Add Bus</a></li>
-                            <li><a href="#tab3">Seat Arrangment</a></li>
+                            <li id="seat-arrangement"><a href="#tab3">Seat Arrangment</a></li>
                             <li><a href="#tab4">Bus List</a></li>
                             <li><a href="#tab5">Booking History</a></li>
-                            <li><a href="#tab6">Add User</a></li>
+                            <li id="add-user"><a href="#tab6">Add User</a></li>
                             <li><a href="#tab7">Help</a></li>
                             <li id="logout"><a href="">Logout</a></li>
                         </ul>
@@ -205,7 +205,7 @@
                     <article class="single hentry" id="tab2">
                         <div class="box">
                             <h2>Bus Details</h2>
-                            <fieldset>
+                            <fieldset id="addBusForm">
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="name">Bus Name</label>
@@ -213,7 +213,7 @@
                                     </div>
                                     <div class="one-half">
                                         <label for="bus-number">Bus Number</label>
-                                        <input type="text" id="bus-num" placeholder="Enter Bus Name" />
+                                        <input type="text" id="bus-num" placeholder="Enter Bus Number" />
                                     </div>
                                 </div>
                                 <div class="f-row">
@@ -229,20 +229,20 @@
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="Departure-Time">Departure Time</label>
-                                        <input type="text" id="Departure-time" placeholder="Departure Time" />
+                                        <input type="time" id="Departure-time" placeholder="Departure Time" />
                                     </div>
                                     <div class="one-half">
                                         <label for="Arrival-Time">Arrival Time</label>
-                                        <input type="text" id="Arrival-Time" placeholder="Arrival Time" />
+                                        <input type="time" id="Arrival-Time" placeholder="Arrival Time" />
                                     </div>
                                 </div>
 
                                 <div class="f-row input_fields_wrap">
-                                    <div class="one-half">
+                                    <div class="one-half viaroot_input">
                                         <label for="via-root-1">Via Root 1</label>
                                         <input type="text" id="via-root-1" placeholder="Via Root 1(Optional)" />
                                     </div>
-                                    <div class="one-half">
+                                    <div class="one-half viaroot_input">
                                         <label for="via-root-2">Via Root 2</label>
                                         <input type="text" id="via-root-2" placeholder="Via Root 2(Optional)" />
                                     </div>
@@ -341,17 +341,17 @@
                                     <div class="one-half">
                                         <label for="name">Select Bus</label>
                                         <!-- <input type="text" id="name" placeholder="Matribhumi" /> -->
-                                        <select>
-                                            <option selected disabled>Select One</option>
-                                            <option>Matribhumi</option>
+                                        <select id="busname_dropdown">
+                                            <option selected disabled value="">Select One</option>
+                                            <!-- <option>Matribhumi</option>
                                             <option>xxxxx</option>
-                                            <option>yyyyy</option>
+                                            <option>yyyyy</option> -->
                                         </select>
                                     </div>
                                     <div class="one-half">
                                         <label for="name">Choose Template</label>
-                                        <select>
-                                            <option selected disabled>Select One</option>
+                                        <select id="template_dropdown">
+                                            <option selected disabled value="">Select One</option>
                                             <option value="Template1">Template 1</option>
                                             <option value="Template2">Template 2</option>
                                         </select>
@@ -598,7 +598,7 @@
                                     </div>
                                 </div>
                                 <div class="f-row">
-                                    <input type="submit" value="Submit" id="submit1" name="submit"
+                                    <input type="submit" value="Submit" id="saveTemplate" name="submit"
                                         class="btn color medium" />
                                 </div>
                             </fieldset>
@@ -750,11 +750,11 @@
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="name">Select Bus</label>
-                                        <select>
+                                        <select id="driver_busname_dropdown">
                                             <option selected disabled>Select One</option>
-                                            <option>Matribhumi</option>
+                                            <!-- <option>Matribhumi</option>
                                             <option>xxxxx</option>
-                                            <option>yyyyy</option>
+                                            <option>yyyyy</option> -->
                                         </select>
                                     </div>
                                     <div class="f-row">
@@ -779,11 +779,11 @@
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="name">Select Bus</label>
-                                        <select>
+                                        <select id="conductor_busname_dropdown">
                                             <option selected disabled>Select One</option>
-                                            <option>Matribhumi</option>
+                                            <!-- <option>Matribhumi</option>
                                             <option>xxxxx</option>
-                                            <option>yyyyy</option>
+                                            <option>yyyyy</option> -->
                                         </select>
                                     </div>
                                     <div class="f-row">
@@ -944,6 +944,7 @@
             $('.categories a').on('click', function (e) {
                 e.preventDefault();
                 $(this).closest('li').addClass('active').siblings().removeClass('active');
+                $(this).closest('li').addClass('active').siblings().removeClass('clicked');
                 $($(this).attr('href')).show().siblings('.single').hide();
             });
 

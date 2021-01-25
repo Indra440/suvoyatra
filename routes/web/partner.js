@@ -7,7 +7,8 @@ const config = require('config');
 const { response } = require('express');
 
 
-router.post('/create-partner',middleware.api.partner.createPartner,
+router.post('/create-partner',
+    middleware.api.partner.createPartner,
     middleware.api.partner.checkPartnerEmail,
 async (req,res)=>{
     let partnerDetails = {
@@ -36,7 +37,9 @@ async (req,res)=>{
     }
 })
 
-router.post('/partner-login',middleware.api.partner.partnerLogin,async (req,res,next)=>{
+router.post('/partner-login',
+    middleware.api.partner.partnerLogin,
+    async (req,res,next)=>{
     console.log("Its comming here");
     let partnerLogin = await controller.partnerLogin(req.body);
     if(partnerLogin.status == false){
@@ -85,7 +88,7 @@ router.post('/save-partner-details',
             console.log("Error for saving details of partner");
             return res.status(500).send(e);
         }
-})
+});
 
 router.post('/change-password',
     middleware.api.partner.validatePartner,
@@ -103,7 +106,6 @@ router.post('/change-password',
         }catch(err){
             return res.status(500).send(err);
         }
-    }
-)
+    });
 
 module.exports = router;

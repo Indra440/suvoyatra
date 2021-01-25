@@ -22,7 +22,7 @@ $(document).ready(function () {
         e.preventDefault();
         if (x < max_fields) { //max input box allowed
             x++; //text box increment
-            $(wrapper).append('<div class="f-row"><div class="one-half"><input type="text" id="" name="via-root" placeholder="Via Root(Optional)" /></div><div class="one-half"><input type="text" id="" name="via-root" placeholder="Via Root(Optional)" /></div><a href="#" class="remove_field">Remove</a></div>'); //add input box
+            $(wrapper).append('<div class="f-row"><div class="one-half viaroot_input"><input type="text" id="" name="via-root" placeholder="Via Root(Optional)" /></div><div class="one-half viaroot_input"><input type="text" id="" name="via-root" placeholder="Via Root(Optional)" /></div><a href="#" class="remove_field">Remove</a></div>'); //add input box
         }
     });
 
