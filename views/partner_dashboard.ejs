@@ -848,21 +848,21 @@
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="name">Name</label>
-                                        <input type="text" id="name" placeholder="Enter Your Name" />
+                                        <input type="text" id="help_name" placeholder="Enter Your Name" />
                                     </div>
                                     <div class="one-half">
                                         <label for="sub">Subject</label>
-                                        <input type="text" id="sub" placeholder="Enter Subjetc" />
+                                        <input type="text" id="help_sub" placeholder="Enter Subjetc" />
                                     </div>
                                 </div>
                                 <div class="f-row">
                                     <div class="full-width">
                                         <label for="comments">Message</label>
-                                        <textarea id="comments"></textarea>
+                                        <textarea id="help_comments"></textarea>
                                     </div>
                                 </div>
                                 <div class="f-row">
-                                    <input type="submit" value="Submit" id="submit1" name="submit"
+                                    <input type="submit" value="Submit" id="help_submit" name="submit"
                                         class="btn color medium" />
                                 </div>
                             </fieldset>
@@ -945,7 +945,7 @@
                 e.preventDefault();
                 $(this).closest('li').addClass('active').siblings().removeClass('active');
                 $(this).closest('li').addClass('active').siblings().removeClass('clicked');
-                $($(this).attr('href')).show().siblings('.single').hide();
+                    $($(this).attr('href')).show().siblings('.single').hide();
             });
 
             var hash = $.trim(window.location.hash);

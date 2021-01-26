@@ -91,7 +91,8 @@ router.post("/sendQuery",
     middleware.api.common.sendQuery,
     async (req,res) =>{
         try{
-            const sendQuery = await controller.sendQuery(req.body,req.is_partner);
+            const partnerDetails = req.partner ? req.partner :"";
+            const sendQuery = await controller.sendQuery(req.body,req.is_partner,partnerDetails);
             if(sendQuery.status == false){
                 return res.status(500).send(sendQuery);
             }else if(sendQuery.status == true){

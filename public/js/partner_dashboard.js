@@ -269,6 +269,42 @@ $(document).ready(function(){
             } 
         })
     })
+    $("#help_submit").click(function(){
+        console.log("Its clicking here");7
+        const name = $("#help_name").val();
+        const subject = $("#help_sub").val();
+        const message = $("#help_comments").val();
+
+        if(name == "" || name == null || name == undefined ||
+        subject == "" || subject == null || subject == undefined || 
+        message == "" || message == null || message == undefined
+        ){
+            toastr.error("Please fill all the fields with valid details");
+            return;
+        }
+        const data = {
+            name : name,
+            subject : subject,
+            message : message
+        }
+        console.log("Data ",data);
+        $.ajax({
+            url:basicUrl+'/busRouter/sendQuery',
+            type: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorizationToken", partnerToken);
+            },
+            data: data,
+            dataType: "JSON",
+            success: function(result){
+                toastr.success('Message Sent successfully');
+                console.log("result ",result);
+            },
+            error: function(response) {
+                toastr.error('some error is comming');
+            }
+        })
+    });
 
 })
 

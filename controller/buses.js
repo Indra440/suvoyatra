@@ -188,7 +188,7 @@ const updateSeatTemplate= async(busdetails,updateTemplate) =>{
     }
 }
 
-const sendQuery = async(queryDetails,is_partner)=>{
+const sendQuery = async(queryDetails,is_partner,partnerDetails)=>{
     let response = {
         status:false,
         message : "",
@@ -197,8 +197,8 @@ const sendQuery = async(queryDetails,is_partner)=>{
         var {name,phone,email,subject,message} = queryDetails;
         const payload = {
             name : (name && name !="") ? name : "",
-            mobile : phone,
-            email : email,
+            mobile : is_partner == true ? partnerDetails.partner_Ph_Number : phone,
+            email : is_partner == true ? partnerDetails.partenrEmail : email,
             subject : subject,
             message :message,
             isPartner : is_partner

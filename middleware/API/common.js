@@ -23,14 +23,15 @@ module.exports.checkQueriesFrom = async (req,res,next) =>{
 
 module.exports.sendQuery = async (req,res,next) =>{
     var {name,phone,email,subject,message} = req.body;
-    if(req.is_partner == true){
+    if(req.is_partner == false){
         email,req.body.email = req.partner.partenrEmail;
         phone,req.body.phone = req.partner.partner_Ph_Number;
+    
+        if(!email || email == "" || email == undefined || !(emailRegexp.test(email)) || 
+            !phone || phone == "" || phone == undefined || (phone.length !=10)) {
+                res.status(500).send({status:false,message: "Please provide your valid contact info to reach you"});
+            }
     }
-    if(!email || email == "" || email == undefined || !(emailRegexp.test(email)) || 
-        !phone || phone == "" || phone == undefined || (phone.length !=10)) {
-            res.status(500).send({status:false,message: "Please provide your valid contact info to reach you"});
-        }
     if(!subject || subject == "" || subject == undefined||
         !message || message == "" || message == undefined){
             res.status(500).send({status:false,message: "Please add your query subject and message"});
