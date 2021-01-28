@@ -1,4 +1,3 @@
-
 const basicUrl = "http://localhost:3000";
 const partnerToken = localStorage.getItem("partnerToken");
 const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -140,7 +139,7 @@ $(document).ready(function(){
             try{
                 const result = await fetchBusList();
                 console.log("result ",result);
-                if(fetchBusList != false){
+                if(result != false){
                     console.log("Result is here");
                     // console.log("result ",result);
                     let busList = '<option selected disabled value="">Select One</option>';
@@ -161,6 +160,28 @@ $(document).ready(function(){
         }
     })
 
+    $("#bus-List").click(async function(){
+        if(!$(this).hasClass("clicked")){
+            $(this).closest("li").addClass("clicked");
+            console.log("Its comming here");
+            try{
+                await showBusList(1);
+            }catch(e){
+                console.log("Error in getting bus list ",e);
+            } 
+        }
+    })
+
+    // $('.moreless-button').click(function () {
+    //     console.log("Its clicking here");
+    //     // $('.moretext').toggle();
+    //     // if ($('.moreless-button').text() == "Read More") {
+    //     //     $(this).text("Read less")
+    //     // } else {
+    //     //     $(this).text("Read more")
+    //     // }
+    // });
+
     $("#add-user").click( async function(){
         if(!$(this).hasClass("clicked")){
             $(this).closest("li").addClass("clicked");
@@ -168,7 +189,7 @@ $(document).ready(function(){
             try{
                 const result = await fetchBusList();
                 console.log("result ",result);
-                if(fetchBusList != false){
+                if(result != false){
                     console.log("Result is here");
                     // console.log("result ",result);
                     let busList = '<option selected disabled value="">Select One</option>';
@@ -182,6 +203,7 @@ $(document).ready(function(){
                     $("#conductor_busname_dropdown").val("").click();
                     $("#driver_busname_dropdown").html(busList);
                     $("#driver_busname_dropdown").val("").click();
+                    await fetchUsersList();
                 }
             }catch(e){
                 console.log("Error in getting bus list ",e);
@@ -307,6 +329,14 @@ $(document).ready(function(){
     });
 
 })
+function moreLess(cur_button){
+    $(cur_button).closest(".partner-bus-result").find(".moretext").toggle();
+    if ($(cur_button).val() == "Read More") {
+        $(cur_button).val("Read less");
+    } else {
+        $(cur_button).val("Read More");
+    }
+}
 
 function validateAndCreatedataForAddBusForm(){
     var fd = new FormData();
@@ -378,9 +408,9 @@ function validateAndCreatedataForAddBusForm(){
         fd.append( 'busDescription', busDescription);
 
         // Display the key/value pairs
-        for (var pair of fd.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
+        // for (var pair of fd.entries()) {
+        //     console.log(pair[0]+ ', ' + pair[1]); 
+        // }
         return fd
 }
 
@@ -393,10 +423,17 @@ function resetingAddBusForm(){
     })
 }
 
-async function fetchBusList(){
+async function fetchBusList(page){
+    console.log("Page is here ",page);
+     fetchBusListUrl = basicUrl+'/busRouter/fetchBuslist';
+    if(page != undefined){
+        console.log("Its inside");
+        fetchBusListUrl = fetchBusListUrl + '?page='+page;
+    }
+    console.log("fetchBusListUrl ",fetchBusListUrl);
     return new Promise((resolve,reject) =>{
         $.ajax({
-            url:basicUrl+'/busRouter/fetchBuslist',
+            url:fetchBusListUrl,
             type:'GET',
             beforeSend: function(request) {
                 request.setRequestHeader("authorizationToken", partnerToken);
@@ -415,6 +452,88 @@ async function fetchBusList(){
         })
     })
 }
+ async function showBusList(page){
+    try{
+        const result = await fetchBusList(page);
+        console.log("result ",result);
+        if(result != false){
+            let busList = "";
+            if(result.payload && result.payload.length > 0){
+                result.payload.map((cur_bus) =>{
+                    busList += '<article class="result partner-bus-result">';
+                    busList += '<div class="one-fourth heightfix" style="height: 201px;"><img src="'+cur_bus.busImages.front_side+'"alt=""></div>';
+
+                    busList += '<div class="one-half heightfix" style="height: 201px;">';
+                    busList += '<h3>'+cur_bus.busName +'  ('+ cur_bus.busRoadMap.journeyForm +'-'+ cur_bus.busRoadMap.journeyTo +') </h3>';
+                    busList += '<ul><li><span class="icon icon-themeenergy_user-3"></span><a href="seat-booking/seat-arangment.html" class="bus-list-sear-check">Check Seat available</a></li>';
+                    busList += '<li><span class="icon icon-themeenergy_travel-bag"></span><p>Departure Time: '+cur_bus.busTiming.departureTime+ (Number(cur_bus.busTiming.departureTime.split(":")[0]) < 12 ? ' AM' :' PM')+'</p></li>';
+                    let timeDifference = diff(cur_bus.busTiming.departureTime,cur_bus.busTiming.arrivalTime).split(":");
+                    let  finalTimeDiff = Number(timeDifference[0]) > 0 ? Number(timeDifference[0])+ "hrs " : " ";
+                    finalTimeDiff = finalTimeDiff + (Number(timeDifference[1]) > 0 ? Number(timeDifference[1])+ "mins" : "");
+                    console.log("Time difference ",timeDifference);
+                    busList += '<li><span class="icon icon-themeenergy_clock"></span><p>Estimated Time: ' + finalTimeDiff + '</p></li></ul></div>';
+                    
+                    busList += '<div class="one-fourth heightfix" style="height: 201px;"><div class="partner-edit-tab">';
+                    busList += '<a href="#" class="btn grey small partner-edit">Edit Seat</a><a href="#" class="btn grey small partner-edit">Edit Bus Detail</a><a href="#" class="btn grey small partner-edit">Track</a><input type="button" onclick="moreLess(this)" class="btn grey small partner-edit moreless-button" value ="Read More"/>';
+                    busList += '</div></div>';
+                    
+                    busList += '<div class="full-width  moretext"><p class="p-bus-e-date">Entry Date :<span> 10.12.2020</span></p>';
+                    busList += '<div class="extra-fetures">';
+                    busList += '<a>'+cur_bus.busFeature.acType+'</a> |<a>'+cur_bus.busFeature.busType+'</a> |<a>'+cur_bus.busFeature.multimediaType+'</a></div>';
+                    busList += '<p>'+cur_bus.busDescription+'</p>';
+
+                    if(cur_bus.busRoadMap.viaRoot && cur_bus.busRoadMap.viaRoot.length > 0){
+                        cur_bus.busRoadMap.viaRoot.map((cur_root,index) =>{
+                            busList += '<p>Root '+(index+1)+':  <span>'+cur_root.rootName+'</span></p>';
+                        })
+                    }
+                    busList += '<div class="uploded-bus-img">';
+                    busList += '<img src="'+cur_bus.busImages.front_side+'"><img src="'+cur_bus.busImages.right_side+'"><img src="'+cur_bus.busImages.left_side+'"></div>';
+                    
+                    busList += '<div class="uploded-bus-img-2nd">';
+                    busList += '<img src="'+cur_bus.busImages.driver_cabin+'"><img src="'+cur_bus.busImages.entire_inside+'"><img src="'+cur_bus.busImages.back_side+'"></div>'; 
+                    busList += '</div></article>';
+                })
+            }
+            let pages = Number(result.totalPages);
+            let current = Number(result.currentPage);
+            let paginationDetails = "";
+            if (pages > 0) {
+                paginationDetails +='<ul class="pagination text-center" style="margin : 20px 20px;">';   
+                if (current == 1) { 
+                    paginationDetails += '<li class="disabled"><a>First</a></li>';
+                } else { 
+                    paginationDetails += '<li><a href="javascript:showBusList(1)">First</a></li>';
+                } 
+                var i = (Number(current) > 3 ? Number(current) - 2 : 1) 
+                if (i !== 1) { 
+                    paginationDetails += '<li class="disabled"><a>...</a></li>';
+                } 
+                for (; i <= (Number(current) + 4) && i <= pages; i++) { 
+                    if (i == current) { 
+                        paginationDetails += '<li class="active"><a>'+i+'</a></li>';
+                    } else { 
+                        paginationDetails += '<li><a href="javascript:showBusList('+i+')">'+ i +'</a></li>';
+                    } 
+                    if (i == Number(current) + 4 && i < pages) { 
+                        paginationDetails += '<li class="disabled"><a>...</a></li>';
+                    }
+                } 
+                if (current == pages) { 
+                    paginationDetails += '<li class="disabled"><a>Last</a></li>';
+                } else { 
+                    paginationDetails += '<li><a href="javascript:showBusList('+pages+')">Last</a></li>';
+                } 
+                paginationDetails += '</ul>';
+            }  
+            $(".partner-bus-list").html(busList);
+            $("#pagination").html(paginationDetails);
+        }
+    }catch(err){
+        console.log("Error in getting bus list ",err);
+    }
+ }
+
 async function addBus(formData){
     return new Promise((resolve,reject) =>{
         $.ajax({
@@ -476,4 +595,90 @@ function fetchPartnerDetails(){
             window.location.href = basicUrl +'/partner-login';
         }
     })   
+}
+
+function diff(start, end) {
+    start = start.split(":");
+    end = end.split(":");
+    var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+    var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+    var diff = endDate.getTime() - startDate.getTime();
+    var hours = Math.floor(diff / 1000 / 60 / 60);
+    diff -= hours * 1000 * 60 * 60;
+    var minutes = Math.floor(diff / 1000 / 60);
+
+    // If using time pickers with 24 hours format, add the below line get exact hours
+    if (hours < 0)
+       hours = hours + 24;
+
+    return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+}
+
+
+const convertTime12to24 = time12h => {
+    const [time, modifier] = time12h.split(" ");
+    let [hours, minutes] = time.split(":");
+    if (hours === "12") {
+      hours = "00";
+    }
+    if (modifier === "PM") {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return `${hours}:${minutes}`;
+  };
+
+
+async function fetchUsersList(){
+    return new Promise((resolve,reject) =>{
+        $.ajax({
+            url:basicUrl+'/busRouter/fetchUsersList',
+            type: "GET",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorizationToken", partnerToken);
+            },
+            dataType: "JSON",
+            success: function(result){
+                if(result.status == true){
+                    if(result.payload.length > 0){
+                        let userList = "";
+                        extensionwiseUserList = result.payload;
+                        extensionwiseUserList.map((cur_bus) =>{
+                            const drivers = cur_bus.drivers;
+                            if(drivers.length > 0){
+                                drivers.map((cur_driver) =>{
+                                    userList += '<tr role="row" class="odd bl-table-data">';
+                                    userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
+                                    userList += '<td class="sorting_1">'+cur_driver.name+'</td>';
+                                    userList += '<td class="sorting_1">Driver</td>';
+                                    userList += '<td class="sorting_1">10.2.2021</td>';
+                                    cur_driver.is_active == true ? 
+                                    userList += '<td class="sorting_1">Active</td>':
+                                    userList += '<td class="sorting_1">Inactive</td>'
+                                }) 
+                            }
+                            const conductors = cur_bus.conductors;
+                            if(conductors.length > 0){
+                                conductors.map((cur_conductor) =>{
+                                    userList += '<tr role="row" class="odd bl-table-data">';
+                                    userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
+                                    userList += '<td class="sorting_1">'+cur_conductor.name+'</td>';
+                                    userList += '<td class="sorting_1">Conductor</td>';
+                                    userList += '<td class="sorting_1">10.2.2021</td>';
+                                    cur_conductor.is_active == true ? 
+                                    userList += '<td class="sorting_1">Active</td>':
+                                    userList += '<td class="sorting_1">Inactive</td>'
+                                })
+                            }
+                        })
+                        $("#example-body").html(userList);
+                    }else{
+                        $("#example-body").html('<h2>NO Users to Show</h2>');
+                    }
+                }
+            },
+            error: function(response) {
+                const responseJSon = response.responseJSON;
+            }
+        }) 
+    })
 }

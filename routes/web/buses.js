@@ -40,7 +40,9 @@ router.get("/fetchBuslist",
     middleware.api.partner.validatePartner,
 async (req,res) =>{
     try{
-        const fetchBuslist = await controller.getBuslist(req.user);
+        let page = req.query.page;
+        console.log("FetchBuslist router page ",page);
+        const fetchBuslist = await controller.getBuslist(req.user,page);
         console.log("fetchBuslist ",fetchBuslist);
         if(fetchBuslist.status == false){
             return res.status(500).send(fetchBuslist);
@@ -114,6 +116,23 @@ router.post("/addUserToBus",
                 return res.status(500).send(addUserToBus);
             }else if(addUserToBus.status == true){
                 return res.status(200).send(addUserToBus);
+            }
+        }catch(err){
+            return res.status(500).send({status:false,message:err.message});
+        }
+    }
+)
+
+router.get("/fetchUsersList",
+    middleware.api.partner.validatePartner,
+    async (req,res) =>{
+        try{
+            const partner = req.user;
+            const fetchUsersList = await controller.fetchUsersListForPartner(partner);
+            if(fetchUsersList.status == false){
+                return res.status(500).send(fetchUsersList);
+            }else if(fetchUsersList.status == true){
+                return res.status(200).send(fetchUsersList);
             }
         }catch(err){
             return res.status(500).send({status:false,message:err.message});

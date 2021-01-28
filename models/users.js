@@ -45,6 +45,8 @@ let usersSchema = new Schema({
             required:false
         }
     }
+},{
+    timestamps:true
 })
 
 module.exports = mongoose.model("user",usersSchema);

@@ -12,3 +12,15 @@ const unlinkAsync = promisify(fs.unlink);
         files.entire_inside ? await unlinkAsync(files.entire_inside[0].path) : ""
         return true;
     }
+
+    module.exports.convertTime12to24 = async (time12h) =>{
+        const [time, modifier] = time12h.split(" ");
+        let [hours, minutes] = time.split(":");
+        if (hours === "12") {
+          hours = "00";
+        }
+        if (modifier === "PM") {
+          hours = parseInt(hours, 10) + 12;
+        }
+        return `${hours}:${minutes}`;
+    }

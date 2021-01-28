@@ -102,7 +102,7 @@
                             <li class="active"><a href="#tab1">Account Details</a></li>
                             <li><a href="#tab2">Add Bus</a></li>
                             <li id="seat-arrangement"><a href="#tab3">Seat Arrangment</a></li>
-                            <li><a href="#tab4">Bus List</a></li>
+                            <li id="bus-List"><a href="#tab4">Bus List</a></li>
                             <li><a href="#tab5">Booking History</a></li>
                             <li id="add-user"><a href="#tab6">Add User</a></li>
                             <li><a href="#tab7">Help</a></li>
@@ -609,17 +609,14 @@
                         <div class="entry-content">
                             <h2>Bus List</h2></br>
                             <div class="box partner-bus-list">
-                                <article class="result partner-bus-result">
-                                    <div class="one-fourth heightfix" style="height: 201px;"><img
-                                            src="images/uploads/bus.jpg" alt=""></div>
+                                <!-- <article class="result partner-bus-result">
+                                    <div class="one-fourth heightfix" style="height: 201px;"><img src="images/uploads/bus.jpg" alt=""></div>
                                     <div class="one-half heightfix" style="height: 201px;">
-                                        <h3>Bus Name
-                                        </h3>
+                                        <h3>Bus Name</h3>
                                         <ul>
                                             <li>
                                                 <span class="icon icon-themeenergy_user-3"></span>
-                                                <a href="seat-booking/seat-arangment.html" class="bus-list-sear-check">
-                                                    Check Seat available</a>
+                                                <a href="seat-booking/seat-arangment.html" class="bus-list-sear-check">Check Seat available</a>
                                             </li>
                                             <li>
                                                 <span class="icon icon-themeenergy_travel-bag"></span>
@@ -636,6 +633,7 @@
                                             <a href="#" class="btn grey small partner-edit">Edit Seat</a>
                                             <a href="#" class="btn grey small partner-edit">Edit Bus Detail</a>
                                             <a href="#" class="btn grey small partner-edit">Track</a>
+                                            <a href="#" class="btn grey small partner-edit moreless-button">Read More</a>
                                         </div>
                                     </div>
                                     <div class="full-width  moretext">
@@ -675,10 +673,13 @@
                                             <img src="images/lost.jpg">
                                         </div>
                                     </div>
-                                </article>
+                                </article> -->
                             </div>
                         </div>
-                        <button class="moreless-button">Read More</button>
+                        <div id="pagination">
+
+                        </div>
+                        <!-- <button class="moreless-button">Read More</button> -->
                     </article>
                     <!-- Tab -->
                     <article class="single" id="tab5">
@@ -818,8 +819,8 @@
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr role="row" class="odd bl-table-data">
+                                            <tbody id="example-body">
+                                                <!-- <tr role="row" class="odd bl-table-data">
                                                     <td class="sorting_1">vgted bhd</td>
                                                     <td>John Doe</td>
                                                     <td>Driver</td>
@@ -832,7 +833,7 @@
                                                     <td>Conductor</td>
                                                     <td>10.05.2020</td>
                                                     <td><button>Active</button></td>
-                                                </tr>
+                                                </tr> -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -966,16 +967,6 @@
     <script>
         $(document).ready(function () {
             $('#example').DataTable();
-        });
-        $(document).ready(function () {
-            $('.moreless-button').click(function () {
-                $('.moretext').toggle();
-                if ($('.moreless-button').text() == "Read more") {
-                    $(this).text("Read less")
-                } else {
-                    $(this).text("Read more")
-                }
-            });
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>

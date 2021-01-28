@@ -68,8 +68,8 @@ const addBus = async (user,busDetails,files) =>{
                 viaRoot : JSON.parse(viaRoot)
             },
             busTiming :{
-                departureTime : departureTime,
-                arrivalTime : arrivalTime
+                departureTime : departureTime.includes("PM") || departureTime.includes("PM") ? _helper.utility.buses.convertTime12to24(departureTime) : departureTime,
+                arrivalTime : arrivalTime.includes("PM") || arrivalTime.includes("AM") ? _helper.utility.buses.convertTime12to24(arrivalTime) : arrivalTime,
             },
             busFeature : {
                 noOfSeat : Number(noOfSeat),
@@ -107,15 +107,43 @@ const addBus = async (user,busDetails,files) =>{
     }
 }
 
-const getBuslist = async (user) =>{
+const getBuslist = async (user,page) =>{
     let response = {
         status:false,
         message : "",
     }    
     try{
         const pertnerId = user._id;
+        const limit = 1;
         console.log("Partner id",pertnerId);
-        const busList = await busModel.find({partnerId:mongoose.Types.ObjectId(pertnerId),busStatus:'active'})
+        let busListQuery = [
+            {
+                $match:{
+                     partnerId:mongoose.Types.ObjectId(pertnerId),
+                     is_active : true
+                }
+             },
+             {
+                 $project:{
+                     _id:1,
+                     busName :1,
+                     busTiming :1,
+                     busFeature :1,
+                     busImages :1,
+                     busDescription :1,
+                     busRoadMap : 1
+                 }
+             }
+        ];
+        var totalBusList  = (await busModel.aggregate(busListQuery)).length
+        console.log("TotalBusList ",totalBusList);
+        if(page && page != null && page !="" && page !=undefined){
+            busListQuery = [...busListQuery,{ $skip: (page-1) * limit},{ $limit: limit }]
+        }
+        console.log("Page is ",page);
+        console.log("busListQuery ",busListQuery);
+        var busList = await busModel.aggregate(busListQuery);
+        
         if(!busList){
             response.message = "Error occured while getting bus list"
             return response;
@@ -123,6 +151,8 @@ const getBuslist = async (user) =>{
         response.status = true;
         response.message = "Buslist fetch successfully";
         response.payload = busList;
+        response.totalPages = Number(totalBusList/limit);
+        response.currentPage = Number(page);
         return response;
     }catch(err){
         response.message = "Error occured while getting bus list";
@@ -247,11 +277,51 @@ const addUserToBus = async(busDetails,userDetails) =>{
     }
 }
 
+const fetchUsersListForPartner = async (user) =>{
+    let response = {
+        status:false,
+        message : "",
+    }
+    try{
+        let fetchUserList = await busModel.aggregate([
+            {
+                $match:{
+                    partnerId:mongoose.Types.ObjectId(user._id),
+                    is_active : true
+                }
+            },
+            {
+                $project:{
+                    _id:1,
+                    busName : 1,
+                    drivers : 1,
+                    conductors : 1
+                }
+            }
+        ])
+        if(!fetchUserList){
+            response.message = "Error occur while fetching user list ! PLease try again after some time";
+            return response;
+        }
+        response.status = true;
+        response.message = "User list fetch successfully";
+        response.payload = fetchUserList;
+        return response;
+    }catch(err){
+        console.log("Error!!!! ",err);
+        response.message = "Error occured while adding user";
+        response.payload = err;
+        return response;
+    }
+
+}
+
 module.exports = {
     addBus,
     getBuslist,
     getSeatTemplate,
     updateSeatTemplate,
     sendQuery,
-    addUserToBus
+    addUserToBus,
+    fetchUsersListForPartner
 }

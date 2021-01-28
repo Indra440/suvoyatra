@@ -6,10 +6,6 @@ let busesSchema = new Schema({
         type:mongoose.Types.ObjectId,
         ref:'partner'
     },
-    busStatus:{
-        type:String,
-        default:'active'
-    },
     busName:{
         type:String,
         ref:''
@@ -133,6 +129,11 @@ let busesSchema = new Schema({
                 type:Boolean,
                 default:true,
                 required:false
+            },
+            assignDate:{
+                type:Date,
+                default:Date.now(),
+                required:false
             }
         }
     ],
@@ -149,9 +150,16 @@ let busesSchema = new Schema({
                 type:Boolean,
                 default:true,
                 required:false
+            },
+            assignDate:{
+                type:Date,
+                default:Date.now(),
+                required:false
             }
         }
     ]
+},{
+    timestamps:true
 })
 
 module.exports = mongoose.model("buses",busesSchema);
