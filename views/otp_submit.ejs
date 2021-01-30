@@ -10,19 +10,20 @@
 
 	<title>Suvoyatra | Best Bus Booking Website In India</title>
 
-	<link rel="stylesheet" href="css/styler.css" />
-	<link rel="stylesheet" href="css/theme-pink.css" id="template-color" />
+	<link rel="stylesheet" href="../css/styler.css" />
+	<link rel="stylesheet" href="../css/theme-pink.css" id="template-color" />
 	<link rel="stylesheet"
 		href="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-	<link rel="stylesheet" href="css/jquery-ui.theme.css" />
-	<link rel="stylesheet" href="css/style.css" />
-	<link rel="stylesheet" href="css/animate.css" />
-	<link rel="stylesheet" href="css/icons.css" />
+	<link rel="stylesheet" href="../css/jquery-ui.theme.css" />
+	<link rel="stylesheet" href="../css/style.css" />
+	<link rel="stylesheet" href="../css/animate.css" />
+	<link rel="stylesheet" href="../css/icons.css" />
+    <link href="../css/toaster.css" rel="stylesheet"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'
 		type='text/css'>
-	<link rel="shortcut icon" href="images/favicon.ico" />
-	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+	<link rel="shortcut icon" href="../images/favicon.ico" />
+	<script src="../../../../../use.fontawesome.com/e808bf9397.js"></script>
 </head>
 
 <body>
@@ -96,7 +97,8 @@
 							</div>
 							<div class="f-row">
 								<div class="full-width">
-									<input type="submit" value="Submit" class="btn color medium full" />
+									<!-- <input type="text" class="hide" value=" "> -->
+									<input type="button" onclick="submitOtp('<%= id %>')" value="Submit" class="btn color medium full" />
 								</div>
 							</div>
 						</form>
@@ -164,11 +166,13 @@
 	<!-- //Footer -->
 
 	<!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-	<script src="js/jquery.uniform.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/wow.min.js"></script>
-	<script src="js/scripts.js"></script>
+	<script src="../js/jquery.uniform.min.js"></script>
+	<script src="../js/jquery.slicknav.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+    <script src="../js/toaster.min.js"></script>
+	<script src="../js/scripts.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";
@@ -177,8 +181,39 @@
 		function closeNav() {
 			document.getElementById("mySidenav").style.width = "0";
 		}
+		async function submitOtp(id){
+			if(!id || id ==""){
+				toastr.error('Smething is wrong ,please try again');
+			}
+			let otp = $("#otp").val();
+			if(!otp || otp==""){
+				toastr.error('Please submit a valid otp');
+			}
+			const data={
+				user_id : id,
+				otp : otp
+			}
+			const basicUrl = "http://localhost:3000";
+			$.ajax({
+            url:basicUrl+'/users/user-otpchecking',
+            type: "POST",
+            data: data,
+            dataType: "JSON",
+            success: function(result){
+                toastr.success('Data saved successfully');
+                console.log("result ",result);
+                if(result.status == true){
+					window.localStorage.setItem("suvoYatrauserToken", result.payload);
+					window.location.href = basicUrl + "/#booking";
+                }
+            },
+            error: function(response) {
+                toastr.error('some error is comming');
+            }
+        })
+		}
 	</script>
-	<script src="js/styler.js"></script>
+	<script src="../js/styler.js"></script>
 </body>
 
 </html>

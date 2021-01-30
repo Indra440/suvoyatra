@@ -10,18 +10,19 @@
 
 	<title>Suvoyatra | Best Bus Booking Website In India</title>
 
-	<link rel="stylesheet" href="css/styler.css" />
-	<link rel="stylesheet" href="css/theme-pink.css" id="template-color" />
+	<link rel="stylesheet" href="../css/styler.css" />
+	<link rel="stylesheet" href="../css/theme-pink.css" id="template-color" />
 	<link rel="stylesheet"
 		href="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-	<link rel="stylesheet" href="css/jquery-ui.theme.css" />
-	<link rel="stylesheet" href="css/style.css" />
-	<link rel="stylesheet" href="css/animate.css" />
-	<link rel="stylesheet" href="css/icons.css" />
+	<link rel="stylesheet" href="../css/jquery-ui.theme.css" />
+	<link rel="stylesheet" href="../css/style.css" />
+	<link rel="stylesheet" href="../css/animate.css" />
+	<link rel="stylesheet" href="../css/icons.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'
 		type='text/css'>
-	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link rel="shortcut icon" href="../images/favicon.ico" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
@@ -240,188 +241,89 @@
 
 					<div class="results">
 						<!-- Item -->
-						<article class="result">
-							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
-							<div class="one-half heightfix">
-								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
-								</h3>
-								<ul>
-									<li>
-										<span class="icon icon-themeenergy_user-3"></span>
-										<p> 3 Seat available</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_travel-bag"></span>
-										<p>Departure Time: 10:05 AM</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_clock"></span>
-										<p>Estimated Time: 50 mins</p>
-									</li>
-								</ul>
-							</div>
-							<div class="one-fourth heightfix">
-								<div>
-									<div class="price">120 <small>INR</small></div>
-									<span class="meta">per passenger</span>
-									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
-								</div>
-							</div>
-							<div class="full-width information">
-								<div class="extra-fetures">
-									<a>AC</a> |
-									<a>Deluxe</a> |
-									<a>TV</a> |
-									<a>Sound System</a>
-								</div>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
-									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
-									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-								</p>
-							</div>
-						</article>
+						<% if(findTransfer && findTransfer.payload && findTransfer.payload.length > 0){ 
+							let busDetails = findTransfer.payload 
+							busDetails.map((cur_bus) =>{ %>
+								<article class="result">
+									<div class="one-fourth heightfix"><img src="<%= cur_bus.busImages.front_side %>" alt="" /></div>
+									<div class="one-half heightfix">
+										<h3><%= cur_bus.busName %><a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
+										</h3>
+										<ul>
+											<li>
+												<span class="icon icon-themeenergy_user-3"></span>
+												<p> 3 Seat available</p>
+											</li>
+											<li>
+												<span class="icon icon-themeenergy_travel-bag"></span>
+												<p>Departure Time: 
+													<% if(Number(cur_bus.busTiming.departureTime.split(":")[0]) > 12 ){ %>
+														<%=cur_bus.busTiming.departureTime %> PM
+													<% }else{ %>
+														<%=cur_bus.busTiming.departureTime %> AM
+													<% } %></p>
+											</li>
+											<li>
+												<span class="icon icon-themeenergy_clock"></span>
+												<p>Estimated Time: 50 mins</p>
+											</li>
+										</ul>
+									</div>
+									<div class="one-fourth heightfix">
+										<div>
+											<div class="price">120 <small>INR</small></div>
+											<span class="meta">per passenger</span>
+											<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
+										</div>
+									</div>
+									<div class="full-width information">
+										<div class="extra-fetures">
+											<a><%=cur_bus.busFeature.busType %> </a> |
+											<a><%=cur_bus.busFeature.acType %></a> |
+											<a><%=cur_bus.busFeature.multimediaType %></a> |
+											<!-- <a>Sound System</a> -->
+										</div>
+										<p> <%= cur_bus.busDescription %> </p>
+									</div>
+								</article>
+							<% })
+						 } %>
+
+						 <% 
+							 const pages = findTransfer.pages ? findTransfer.pages : 0;
+							 const current = findTransfer.currentPage ? findTransfer.currentPage : 1;
+							 const query = redirectUrl ? redirectUrl : "";  
+						 	if (pages > 0) { %>
+							<ul class="pagination text-center">
+								<% if (current == 1) { %>
+									<li class="disabled"><a>First</a></li>
+								<% } else { %>
+									<li><a href="/search-result/1<%= query %> ">First</a></li>
+								<% } %>
+								<% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+								<% if (i !== 1) { %>
+									<li class="disabled"><a>...</a></li>
+								<% } %>
+								<% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+									<% if (i == current) { %>
+										<li class="active"><a><%= i %></a></li>
+									<% } else { %>
+										<li><a href="/search-result/<%= i %><%= query %>"><%= i %></a></li>
+									<% } %>
+									<% if (i == Number(current) + 4 && i < pages) { %>
+										<li class="disabled"><a>...</a></li>
+									<% } %>
+								<% } %>
+								<% if (current == pages) { %>
+									<li class="disabled"><a>Last</a></li>
+								<% } else { %>
+									<li><a href="/search-result/<%= pages %><%=query %>">Last</a></li>
+								<% } %>
+							</ul>
+						<% } %>
+						
 						<!-- //Item -->
 						<!-- Item -->
-						<article class="result">
-							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
-							<div class="one-half heightfix">
-								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
-								</h3>
-								<ul>
-									<li>
-										<span class="icon icon-themeenergy_user-3"></span>
-										<p> 3 Seat available</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_travel-bag"></span>
-										<p>Departure Time: 10:05 AM</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_clock"></span>
-										<p>Estimated Time: 50 mins</p>
-									</li>
-								</ul>
-							</div>
-							<div class="one-fourth heightfix">
-								<div>
-									<div class="price">120 <small>INR</small></div>
-									<span class="meta">per passenger</span>
-									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
-								</div>
-							</div>
-							<div class="full-width information">
-								<div class="extra-fetures">
-									<a>Non AC</a> |
-									<a>Volvo</a> |
-									<a>TV</a> |
-									<a>Sound System</a>
-								</div>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
-									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
-									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-								</p>
-							</div>
-						</article>
-						<!-- //Item -->
-						<!-- Item -->
-						<article class="result">
-							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
-							<div class="one-half heightfix">
-								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
-								</h3>
-								<ul>
-									<li>
-										<span class="icon icon-themeenergy_user-3"></span>
-										<p> 3 Seat available</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_travel-bag"></span>
-										<p>Departure Time: 10:05 AM</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_clock"></span>
-										<p>Estimated Time: 50 mins</p>
-									</li>
-								</ul>
-							</div>
-							<div class="one-fourth heightfix">
-								<div>
-									<div class="price">120 <small>INR</small></div>
-									<span class="meta">per passenger</span>
-									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
-								</div>
-							</div>
-							<div class="full-width information">
-								<div class="extra-fetures">
-									<a>Non AC</a> |
-									<a>Mini</a> |
-									<a>No TV</a> |
-									<a>No Sound System</a>
-								</div>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
-									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
-									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-								</p>
-							</div>
-						</article>
-						<!-- //Item -->
-						<!-- Item -->
-						<article class="result">
-							<div class="one-fourth heightfix"><img src="images/uploads/bus.jpg" alt="" /></div>
-							<div class="one-half heightfix">
-								<h3>Bus Name <a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
-								</h3>
-								<ul>
-									<li>
-										<span class="icon icon-themeenergy_user-3"></span>
-										<p> 3 Seat available</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_travel-bag"></span>
-										<p>Departure Time: 10:05 AM</p>
-									</li>
-									<li>
-										<span class="icon icon-themeenergy_clock"></span>
-										<p>Estimated Time: 50 mins</p>
-									</li>
-								</ul>
-							</div>
-							<div class="one-fourth heightfix">
-								<div>
-									<div class="price">120 <small>INR</small></div>
-									<span class="meta">per passenger</span>
-									<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
-								</div>
-							</div>
-							<div class="full-width information">
-								<div class="extra-fetures">
-									<a>Non AC</a> |
-									<a>Mini</a> |
-									<a>No TV</a> |
-									<a>No Sound System</a>
-								</div>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
-									sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-									laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer
-									adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-									aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-									diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-								</p>
-							</div>
-						</article>
 						<!-- //Item -->
 					</div>
 				</div>
@@ -490,12 +392,12 @@
 	<script src="../../../../ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 	<script
 		src="../../../../cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.js"></script>
-	<script src="js/jquery.uniform.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/wow.min.js"></script>
-	<script src="js/jquery-ui-sliderAccess.js"></script>
-	<script src="js/search.js"></script>
-	<script src="js/scripts.js"></script>
+	<script src="../js/jquery.uniform.min.js"></script>
+	<script src="../js/jquery.slicknav.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+	<script src="../js/jquery-ui-sliderAccess.js"></script>
+	<script src="../js/search.js"></script>
+	<script src="../js/scripts.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";

@@ -316,6 +316,97 @@ const fetchUsersListForPartner = async (user) =>{
 
 }
 
+const findAtransfer = async (page,queryDetails) =>{
+    let response = {
+        status:false,
+        message : "",
+        payload : []
+    }
+    try{
+        const cur_page = page ? page : 1;
+        const limit = 1;
+        let searchJson = {};
+        let searchQUery = [
+            {
+                $match:{
+                    is_active:true
+                }
+            },
+            {
+                $unwind:{
+                    path:"$busRoadMap.viaRoot",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+               $match:{
+                        $and:[
+                        {$or:[{"busRoadMap.journeyForm":queryDetails.pickupLocation},{"busRoadMap.journeyTo":queryDetails.pickupLocation},{"busRoadMap.viaRoot.rootName":queryDetails.pickupLocation}]},
+                        {$or:[{"busRoadMap.journeyForm":queryDetails.dropLocation},{"busRoadMap.journeyTo":queryDetails.dropLocation},{"busRoadMap.viaRoot.rootName":queryDetails.dropLocation}]}
+                    ]
+                   }
+            },
+            {
+                $group:{
+                    _id:"$_id",
+                    busName:{
+                        $first:"$busName"
+                    },
+                    journeyForm:{
+                            $first:"$busRoadMap.journeyForm"
+                    },
+                    journeyTo:{
+                        $first:"$busRoadMap.journeyTo"
+                    },
+                    journeyFare :{
+                        $first:"$busRoadMap.journeyFare"
+                    },
+                    viaRoot:{
+                        $addToSet:"$busRoadMap.viaRoot"
+                    },
+                    busTiming:{
+                        $first:"$busTiming"
+                    },
+                    busFeature:{
+                        $first:"$busFeature"
+                    },
+                    busImages:{
+                        $first:"$busImages"
+                    },
+                    busDescription :{
+                        $first:"$busDescription"
+                    }   
+                }
+            }
+        ];
+        // searchQUery.push(searchJson);
+        if(queryDetails.acType != "" && queryDetails.acType == "Ac"){
+            searchQUery = [...searchQUery,{$match:{"busFeature.acType":queryDetails.acType}}];
+        }
+        var totalBusList  = (await busModel.aggregate(searchQUery)).length
+        console.log("TotalBusList ",totalBusList);
+        if(cur_page && cur_page != null && cur_page !="" && cur_page !=undefined){
+            searchQUery = [...searchQUery,{ $skip: (cur_page-1) * limit},{ $limit: limit }]
+        }
+        const finalBusList = await busModel.aggregate(searchQUery);
+        if(!finalBusList){
+            response.message = "Error occur while fetching Bus list";
+            return response;
+        }
+        response.status = true;
+        response.message = "User list fetch successfully";
+        response.payload = finalBusList;
+        response.pages = totalBusList/limit;
+        response.currentPage = cur_page;
+        return response;
+
+    }catch(err){
+        response.message = "Error occured while adding user";
+        response.payload = err;
+        return response;
+    }
+}
+
 module.exports = {
     addBus,
     getBuslist,
@@ -323,5 +414,6 @@ module.exports = {
     updateSeatTemplate,
     sendQuery,
     addUserToBus,
-    fetchUsersListForPartner
+    fetchUsersListForPartner,
+    findAtransfer
 }

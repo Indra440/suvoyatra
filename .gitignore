@@ -42,6 +42,9 @@ node_modules/
 package-lock.json
 jspm_packages/
 
+#Optional env file for security
+.env
+
 # TypeScript v1 declaration files
 typings/
 

@@ -31,6 +31,11 @@ let busesSchema = new Schema({
             default:'one way',
             required:true
         },
+        journeyFare:{
+            type:Number,
+            default:null,
+            required:false
+        },
         viaRoot:[
             {
                 rootName:{
@@ -38,7 +43,12 @@ let busesSchema = new Schema({
                     default:null,
                     required:false
                 },
-                rootFare :{
+                journeyFormRootFare :{  
+                    type:Number,
+                    default:null,
+                    required:false
+                },
+                journeyToRootFare:{
                     type:Number,
                     default:null,
                     required:false

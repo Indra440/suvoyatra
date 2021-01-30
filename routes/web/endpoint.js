@@ -3,13 +3,16 @@ var router = express.Router();
 const partnerRouter = require('./partner');
 const busRouter = require('./buses');
 const userRouter = require('./users');
-const jwt = require('jsonwebtoken');
-const config = require('config');
+const middleware = require('../../middleware/middleware');
+const controller = require('../../controller/buses');
+const _helper = require('../../Helpers/helpers');
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('index');
+router.get('/', async function(req, res, next) {
+    const localationList = await _helper.utility.buses.fetchLocationList();
+    console.log("localationList ",{"localationList":localationList});
+    res.render('index',{"localationList":localationList});
 });
 
 router.get('/about', function(req, res, next) {
@@ -25,11 +28,11 @@ router.get('/partner', function(req, res, next) {
 });
 
 router.get('/user-login', function(req, res, next) {
-    res.render('login');
+    res.render('login');fetchLocationList
 });
 
-router.get('/user-otp-submit',function(req,res,next){
-    res.render('otp_submit');
+router.get('/user-otp-submit/:id', async function(req,res,next){
+    res.render('otp_submit',{ "id": req.params.id});
 })
 
 router.get('/account', function(req, res, next) {
@@ -44,8 +47,61 @@ router.get('/contact', function(req, res, next) {
     res.render('contact');
 });
 
-router.get('/search-result', function(req, res, next) {
-    res.render('search_results');
+router.get('/search-result/:p', async function(req, res, next) {
+    console.log("Qury ",req.query);
+    let queryString= "?";
+    try{
+        if(req.query.d_d == "" || req.query.d_d == null){
+            res.render('index',{message:{type:'danger',info:"Please select departure date"}})
+        }
+        if(req.query.p_l == "" || req.query.p_l == null){
+            res.render('index',{message:{type:'danger',info:"Please select Pickup location"}})
+        }
+        if(req.query.d_l == "" || req.query.d_l == null){
+            res.render('index',{message:{type:'danger',info:"Please select drop location",message:""}})
+        }
+        queryString += "d_d=" + req.query.d_d +"&p_l="+ req.query.p_l + "&d_l="+ req.query.d_l;
+        if(req.query.r_p == "return"){
+            if(req.query.d_d2 == ""){
+                res.render('index',{message:{type:'danger',info:"Please select return departure date"}})
+            }
+            if(req.query.p_l2 == ""){
+                res.render('index',{message:{type:'danger',info:"Please select return Pickup location"}})
+            }
+            if(req.query.d_l2 == ""){
+                res.render('index',{message:{type:'danger',info:"Please select drop return location",message:""}})
+            }
+            queryString += "d_d2=" + req.query.d_d2 +"&p_l2="+ req.query.p_l2 + "&d_l2="+ req.query.d_l2;
+        }
+        queryString += req.query.d_t ? "&d_t = "+ req.query.d_t : "";
+        queryString += req.query.d_t2 ? "&d_t2 = "+ req.query.d_t2 : "";
+        queryString += req.query.a_c ? "&a_c = "+ req.query.a_c : " ";
+
+        const page = req.params.p;
+        const payload = {
+            departureDate: req.query.d_d,
+            departureTime : req.query.d_t ? req.query.d_t : "",
+            pickupLocation : req.query.p_l,
+            dropLocation : req.query.d_l,
+            returnProcess : req.query.r_p ? req.query.r_p : "" ,
+            acType: req.query.a_c ? req.query.a_c : "",
+            returnDepartureDate : req.query.d_d2 ? req.query.d_d2 : "",
+            returnDepartureTime : req.query.d_t2 ? req.query.d_t2 : "",
+            returnPickupLocation : req.query.p_l2 ? req.query.p_l2 : "",
+            returnDropLocation : req.query.d_l2 ?  req.query.d_l2 : ""
+        }
+        const findTransfer = await controller.findAtransfer(page,payload);
+        if(findTransfer.status == false){
+            res.render('index',{message:{type:'danger',info:"Error Occur",message:findTransfer.message}})
+        }else if(findTransfer.status == true){
+            console.log("findTransfer ",findTransfer);
+            const redirectUrl = req.params.redirecturl
+            console.log("redirectUrl ",queryString);
+            res.render('search_result',{"findTransfer":findTransfer,"redirectUrl":queryString});
+        }
+    }catch(err){
+        res.render('index',{message:{type:'danger',info:"Errror occur!!",message:"Errror occur!! white fetching bus list!!! Please try again"}})
+    }
 });
 
 // router.get('/search-result', function(req, res, next) {

@@ -39,6 +39,8 @@ let partnersSchema = new Schema({
         type:String,
         default:''
     }
+},{
+    timestamps:true
 })
 
 module.exports = mongoose.model("partner",partnersSchema);

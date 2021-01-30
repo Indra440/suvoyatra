@@ -7,7 +7,8 @@ var logger = require('morgan');
 var webRouter = require('./routes/web/endpoint');
 var appRouter = require('./routes/app/api');
 var session = require('express-session');
-const passport = require('passport');
+require('dotenv').config();
+// const passport = require('passport');
 // var flush = require('connect-flash');
 var databaseConnection = require('./database/mongo');
 

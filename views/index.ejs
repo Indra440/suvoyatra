@@ -86,48 +86,74 @@
 		<!-- Search -->
 		<div class="advanced-search color" id="booking">
 			<div class="wrap">
-				<form role="form" action="/search-result" method="post">
+				<form role="form" action="/search-result/1" method="GET">
 					<!-- Row -->
 					<div class="f-row search-main-area">
 						<div class="form-group datepicker one-fourth">
 							<label for="dep-date">Departure date</label>
-							<input type="date" id="dep-date" />
+							<input type="date" id="dep-date" name="d_d"  />
 						</div>
 						<div class="form-group timepicker one-fourth">
 							<label for="dep-time">Departure time</label>
-							<input type="time" id="dep-time" />
+							<input type="time" id="dep-time" name="d_t" />
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Pick up location</label>
-							<select>
+							<select name="p_l">
 								<option selected disabled>Select One</option>
-								<optgroup label="Germany">
-									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
-									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
-								</optgroup>
-								<optgroup label="Italy">
-									<option value="Alghero Airport">Alghero Airport</option>
-									<option value="Bari Airport">Bari Airport</option>
-									<option value="Bari Port">Bari Port</option>
-								</optgroup>
-								<optgroup label="Spain">
-									<option value="Alicante Airport">Alicante Airport</option>
-									<option value="Almeria Airport">Almeria Airport</option>
-									<option value="Barcelona Airport">Barcelona Airport</option>
-								</optgroup>
-								<optgroup label="United Kingdom">
-									<option value="Belfast City Airport">Belfast City Airport</option>
-									<option value="Belfast International Airport">Belfast International Airport</option>
-									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
-							</select>
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>
+												<% }) 
+											 } %>
+											<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>
+										</optgroup>
+									<% }) 
+								 } %>
+									<!-- <optgroup label="Germany">
+										<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+										<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									</optgroup>
+									<optgroup label="Italy">
+										<option value="Alghero Airport">Alghero Airport</option>
+										<option value="Bari Airport">Bari Airport</option>
+										<option value="Bari Port">Bari Port</option>
+									</optgroup>
+									<optgroup label="Spain">
+										<option value="Alicante Airport">Alicante Airport</option>
+										<option value="Almeria Airport">Almeria Airport</option>
+										<option value="Barcelona Airport">Barcelona Airport</option>
+									</optgroup>
+									<optgroup label="United Kingdom">
+										<option value="Belfast City Airport">Belfast City Airport</option>
+										<option value="Belfast International Airport">Belfast International Airport</option>
+										<option value="Bristol Airport">Bristol Airport</option>
+									</optgroup> -->
+								</select>
 						</div>
 						<i class="fa fa-exchange" aria-hidden="true" id="toggle-arrow-img"></i>
 						<div class="form-group select one-fourth">
 							<label>Drop off location</label>
-							<select>
+							<select name="d_l">
 								<option selected disabled>Select One</option>
-								<optgroup label="Germany">
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>
+												<% }) 
+											 } %>
+											<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>
+										</optgroup>
+									<% }) 
+								 } %>
+								<!-- <optgroup label="Germany">
 									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
 									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
 									<option value="Frankfurt International Airport">Frankfurt International Airport
@@ -148,7 +174,7 @@
 									<option value="Belfast City Airport">Belfast City Airport</option>
 									<option value="Belfast International Airport">Belfast International Airport</option>
 									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
+								</optgroup> -->
 							</select>
 						</div>
 					</div>
@@ -158,17 +184,30 @@
 					<div class="f-row return" id="return" style="display: none;">
 						<div class="form-group datepicker one-fourth">
 							<label for="dep-date">Departure date</label>
-							<input type="date" id="dep-date" />
+							<input type="date" id="dep-date" name="d_d2" />
 						</div>
 						<div class="form-group timepicker one-fourth">
 							<label for="dep-time">Departure time</label>
-							<input type="time" id="dep-time" />
+							<input type="time" id="dep-time" name="d_t2"/>
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Pick up location</label>
-							<select>
+							<select name="p_l2">
 								<option selected disabled>Select One</option>
-								<optgroup label="Germany">
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>
+												<% }) 
+											 } %>
+											<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>
+										</optgroup>
+									<% }) 
+								 } %>
+								<!-- <optgroup label="Germany">
 									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
 									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
 									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
@@ -190,14 +229,28 @@
 									<option value="Belfast City Airport">Belfast City Airport</option>
 									<option value="Belfast International Airport">Belfast International Airport</option>
 									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
+								</optgroup> -->
 							</select>
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Drop off location</label>
-							<select>
+							<select name="d_l2">
 								<option selected disabled>Select One</option>
-								<optgroup label="Germany">
+
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>
+												<% }) 
+											 } %>
+											<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>
+										</optgroup>
+									<% }) 
+								 } %>
+								<!-- <optgroup label="Germany">
 									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
 									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
 									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
@@ -218,7 +271,7 @@
 									<option value="Belfast City Airport">Belfast City Airport</option>
 									<option value="Belfast International Airport">Belfast International Airport</option>
 									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
+								</optgroup> -->
 							</select>
 						</div>
 					</div>
@@ -227,14 +280,14 @@
 					<!-- Row -->
 					<div class="f-row">
 						<div class="form-group select one-third">
-							<select id="journey_selector">
+							<select id="journey_selector" name="r_p">
 								<option selected disabled>Select Return Process</option>
 								<option value="one way">One Way</option>
 								<option value="return">Return</option>
 							</select>
 						</div>
 						<div class="form-group select one-third">
-							<select>
+							<select name="a_c">
 								<option selected disabled>Select AC or Non AC</option>
 								<option value="Ac">AC</option>
 								<option value="Non AC">Non AC</option>

@@ -2,39 +2,43 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 let usersSchema = new Schema({
-    userName:{
-        type:Schema.Types.ObjectId,
-        ref:''
-    },
     user_Ph_Number:{
         type:String,
         default:null,
-        required:true
+        required:false
     },
     userEmail:{
         type:String,
         default:null,
-        required:true
+        required:false
     },
-    password:{
-        type:String,
-        default:'one way',
-        required:true
-    },
+    // password:{
+    //     type:String,
+    //     default:'one way',
+    //     required:true
+    // },
     streetAddress:{
         type:String,
-        default:''
+        default:'',
+        required:false
     },
     zipCode:{
         type:String,
-        default:''
+        default:'',
+        required:false
     },
     city:{
         type:String,
-        default:''
+        default:'',
+        required:false
     },
-    otpVerification:{
-        current_otp:{
+    is_active:{
+        type:Boolean,
+        default:true,
+        required:false
+    },
+    Verification:{
+        last_otp:{
             type:String,
             default : null,
             required :false
@@ -42,6 +46,11 @@ let usersSchema = new Schema({
         otp_generation_time:{
             type:Date,
             default : null,
+            required:false
+        },
+        verified :{
+            type:Boolean,
+            default:false,
             required:false
         }
     }

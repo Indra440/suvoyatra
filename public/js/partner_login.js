@@ -15,7 +15,7 @@ $(document).ready(function(){
             data: data,
             dataType: "JSON",
             success: function(result){
-                window.localStorage.setItem("partnerToken", result.token);
+                window.localStorage.setItem("suvoYatraPartnerToken", result.token);
                 window.location.href = basicUrl +'/partner-dashboard';
               },
             error:function(err){

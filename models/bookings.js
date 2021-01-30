@@ -34,6 +34,7 @@ let bookigsSchema = new Schema({
         type:String,
         default:'pending'  // pending,running,completed
     },
+    bookingSeatNo:[],
     passengersDetails:[{
         passengerName:{
             type:String,

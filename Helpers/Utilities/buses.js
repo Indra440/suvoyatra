@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { promisify } = require("util");
 const unlinkAsync = promisify(fs.unlink);
+const busModel = require('../../models/buses');
 
 
     module.exports.remove_all_images_for_buses = async (files)=>{
@@ -23,4 +24,52 @@ const unlinkAsync = promisify(fs.unlink);
           hours = parseInt(hours, 10) + 12;
         }
         return `${hours}:${minutes}`;
+    }
+
+    module.exports.calculateFare = async () =>{
+
+    }
+
+    module.exports.fetchLocationList = async () =>{
+        try{
+          const fetchLocationList = await busModel.aggregate([
+            {
+              $match:{
+                is_active : true
+              }
+            },
+            {
+              $project:{
+                _id:1,
+                busRoadMap : 1
+              }
+            },
+            {
+                $unwind:{
+                    path:"$busRoadMap.viaRoot",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+              $group:{
+                  _id:"$_id",
+                   journeyForm:{
+                           $first:"$busRoadMap.journeyForm"
+                           },
+                   journeyTo:{
+                          $first:"$busRoadMap.journeyTo"
+                    },
+                   viaRoot:{
+                          $addToSet:"$busRoadMap.viaRoot"
+                    }   
+                  }
+          }
+        ])
+        if(! fetchLocationList ){
+          return false;
+        }
+        return fetchLocationList;
+        }catch(err){
+          return false;
+        }
     }
