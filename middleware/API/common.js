@@ -23,7 +23,7 @@ module.exports.checkQueriesFrom = async (req,res,next) =>{
 
 module.exports.sendQuery = async (req,res,next) =>{
     var {name,phone,email,subject,message} = req.body;
-    if(req.is_partner == false){
+    if(req.is_partner == true){
         email,req.body.email = req.partner.partenrEmail;
         phone,req.body.phone = req.partner.partner_Ph_Number;
     

@@ -50,30 +50,14 @@ $(document).ready(function(){
                 console.log("result ",result);
                 if(result.status == true){
                     fetchPartnerDetails();
-                    // let curpartnerDetails = result.payload;
-                    // $("#name").val(curpartnerDetails.partnerName);
-                    // $("#email").val(curpartnerDetails.partenrEmail);
-                    // $("#username").val(curpartnerDetails.partenrEmail);
-                    // $("#number").val(curpartnerDetails.partner_Ph_Number);
-                    // $("#address").val(curpartnerDetails.streetAddress);
-                    // $("#zip").val(curpartnerDetails.zipCode);
-                    // $("#city").val(curpartnerDetails.city);
                 }
             },
             error: function(response) {
                 toastr.error('some error is comming');
-                // console.log("Response ",response);
                 fetchPartnerDetails();
-                // $("#name").val(partnerDetails.name);
-                // $("#email").val(partnerDetails.email);
-                // $("#number").val(partnerDetails.phone);
-                // $("#address").val(partnerDetails.address);
-                // $("#zip").val(partnerDetails.zipCode);
-                // $("#city").val(partnerDetails.city);
             }
         })
     })
-
     $("#passwordChange").click(function(){
         let payload ={
           username : $("#username").val(),
@@ -171,16 +155,6 @@ $(document).ready(function(){
             } 
         }
     })
-
-    // $('.moreless-button').click(function () {
-    //     console.log("Its clicking here");
-    //     // $('.moretext').toggle();
-    //     // if ($('.moreless-button').text() == "Read More") {
-    //     //     $(this).text("Read less")
-    //     // } else {
-    //     //     $(this).text("Read more")
-    //     // }
-    // });
 
     $("#add-user").click( async function(){
         if(!$(this).hasClass("clicked")){
@@ -291,21 +265,100 @@ $(document).ready(function(){
             } 
         })
     })
-    $("#help_submit").click(function(){
-        console.log("Its clicking here");7
-        const name = $("#help_name").val();
-        const subject = $("#help_sub").val();
-        const message = $("#help_comments").val();
+    $("#driver_submit").click(function(){
+        console.log("Its clicking here");
+        const name = $("#driver_name").val();
+        const mobileNo = $("#driver_number").val();
 
         if(name == "" || name == null || name == undefined ||
-        subject == "" || subject == null || subject == undefined || 
-        message == "" || message == null || message == undefined
+        mobileNo == "" || mobileNo == null || mobileNo == undefined
         ){
             toastr.error("Please fill all the fields with valid details");
             return;
         }
         const data = {
+            busId : $("#driver_busname_dropdown").val() ? $("#driver_busname_dropdown").val() : "",
             name : name,
+            mobileNo : mobileNo,
+            scenario : "driver"
+        }
+        console.log("data ",data);
+        $.ajax({
+            url:basicUrl+'/busRouter/addUserToBus',
+            type: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorizationToken", partnerToken);
+            },
+            data: data,
+            dataType: "JSON",
+            success: function(result){
+                toastr.success('Data saved successfully');
+                console.log("result ",result);
+                $("#driver_busname_dropdown").val("").click();
+                $("#driver_name").val("");
+                $("#driver_number").val("");
+            },
+            error: function(response) {
+                toastr.error('some error is comming');
+            }
+        })
+    })
+        $("#conductor_submit").click(function(){
+            console.log("Its clicking here");
+            const name = $("#conductor_name").val();
+            const mobileNo = $("#conductor_number").val();
+
+            if(name == "" || name == null || name == undefined ||
+        mobileNo == "" || mobileNo == null || mobileNo == undefined
+        ){
+            toastr.error("Please fill all the fields with valid details");
+            return;
+        }
+            const data = {
+            busId : $("#conductor_busname_dropdown").val() ? $("#conductor_busname_dropdown").val() : "",
+            name : name,
+            mobileNo :  mobileNo,
+            scenario : "conductor"
+            }
+            console.log("data ",data);
+        $.ajax({
+            url:basicUrl+'/busRouter/addUserToBus',
+            type: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorizationToken", partnerToken);
+            },
+            data: data,
+            dataType: "JSON",
+            success: function(result){
+                toastr.success('Data saved successfully');
+                console.log("result ",result);
+                $("#conductor_busname_dropdown").val("").click();
+                $("#conductor_name").val("");
+                $("#conductor_number").val("");
+            },
+            error: function(response) {
+                toastr.error('some error is comming');
+            }
+            })
+        })
+        $("#partner-helpname").click(function(){
+            console.log("Its clicking here");
+            $("#help_name").val(partnerDetails.name);
+        })
+    $("#help_submit").click(function(){
+        console.log("Its clicking here");
+        const subject = $("#help_sub").val();
+        const message = $("#help_comments").val();
+
+        if(subject == "" || subject == null || subject == undefined || 
+        message == "" || message == null || message == undefined)
+        
+        {
+            toastr.error("Please fill all the fields with valid details");
+            return;
+        }
+        const data = {
+            // name : name,
             subject : subject,
             message : message
         }
