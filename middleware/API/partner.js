@@ -90,6 +90,7 @@ module.exports.checkPartnerEmail = async (req,res,next) =>{
         }
         next();
     }catch(err){
+        console.log("Error ",err);
         message.intro = "Error !!!"
         message.message = "Some error occured.Please try again"
         req.session.message = message;
