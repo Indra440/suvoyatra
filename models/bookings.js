@@ -34,6 +34,11 @@ let bookigsSchema = new Schema({
         type:String,
         default:'pending'  // pending,running,completed
     },
+    bookingFor:{
+        type:Date,
+        default:new Date(),
+        required:false
+    },
     bookingSeatNo:[],
     passengersDetails:[{
         passengerName:{
@@ -45,4 +50,4 @@ let bookigsSchema = new Schema({
     timestamps:true
 })
 
-module.exports = mongoose.model("booking",bookigsSchema);
+module.exports = mongoose.model("bookings",bookigsSchema);

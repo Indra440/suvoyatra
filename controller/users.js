@@ -103,8 +103,75 @@ const userOptSubmit = async (user,otp) =>{
     }
 }
 
+const checkActiveUser = async(token) =>{
+    let response = {
+        status:false,
+        message : "invalid token",
+        payload : {}
+    }
+    try{
+        if(!token || token ==""){
+            return response;
+        }
+        console.log("Token ",token);
+        const decodedData = await _helper.utility.common.decodeToken(token);
+        console.log("decodedData ",decodedData);
+        if(!decodedData){
+            return response;
+        }
+        const fetChPatrtner = await userModel.findOne({_id:decodedData._id,is_Active:true});
+        console.log("fetChPatrtner ",fetChPatrtner);
+        if(!fetChPatrtner){
+            return response;
+        }
+        response.payload = fetChPatrtner;
+        response.status = true;
+        response.message = "Token Validate";
+        return response;
+    }catch(err){
+        response.message = err.message;
+        return response;
+    }
+}
+
+const saveUserDetails = async(curUserDeatails,oldUserDetails) =>{
+    let response = {
+        status:false,
+        message : "invalid token",
+        payload : {}
+    }
+    try{
+        if(curUserDeatails.email != oldUserDetails.userEmail || curUserDeatails.phone != oldUserDetails.user_Ph_Number){
+            const fetchUser = await userModel.findOne({$and:[{"userEmail":curUserDeatails.email},{"user_Ph_Number":curUserDeatails.phone}],is_Active:true});
+            if(fetchUser == null || fetchUser == undefined){
+                console.log("Its inside this point");
+                response.message = "This email id is already associated with another acconut";
+                return response;
+            }
+        }
+        oldUserDetails.userName =   curUserDeatails.name == "" ? oldUserDetails.userName : curUserDeatails.name;
+        oldUserDetails.user_Ph_Number =   curUserDeatails.phone == "" ? oldUserDetails.user_Ph_Number : curUserDeatails.phone;
+        oldUserDetails.userEmail = curUserDeatails.email == "" ? oldUserDetails.userEmail : curUserDeatails.email;
+        oldUserDetails.streetAddress = curUserDeatails.address == "" ? oldUserDetails.streetAddress : curUserDeatails.address;
+        oldUserDetails.zipCode =  curUserDeatails.zipCode == "" ? oldUserDetails.zipCode : curUserDeatails.zipCode;
+        oldUserDetails.city = curUserDeatails.city == "" ? oldUserDetails.city : curUserDeatails.city;
+    
+        let userDeatsils = new userModel(oldUserDetails); 
+        userDeatsils.save();
+        response.status = true;
+        response.message = "Data saved successfully";
+        response.payload = oldUserDetails;
+        return response;
+    }catch(err){
+        response.message = err.message;
+        return response;
+    }
+}
+
 
 module.exports = {
     userLogin,
-    userOptSubmit
+    userOptSubmit,
+    checkActiveUser,
+    saveUserDetails
 }

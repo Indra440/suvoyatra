@@ -7,7 +7,7 @@ let partnersSchema = new Schema({
         default:null,
         required:true
     },
-    partner_Ph_Number:{
+partner_Ph_Number:{
         type:String,
         default:null,
         required:true

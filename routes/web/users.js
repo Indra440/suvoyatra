@@ -42,4 +42,33 @@ middleware.api.users.userOtpChecking,
     }
 )
 
+router.post('/check-user-status',async(req,res) =>{
+    const checkUser = await controller.checkActiveUser(req.body.token);
+    // console.log("checkPartner ",checkPartner);
+    if(checkUser.status == false){
+        return res.status(500).send(checkUser);
+    }else if(checkUser.status == true){
+        return res.status(200).send(checkUser);
+    }
+})
+
+router.post('/save-user-details',
+    middleware.api.users.validateUser,
+    middleware.api.users.saveUser,
+    async (req,res,next) =>{
+            try{
+                const curUserDetails = req.user;
+                const saveUser = await controller.saveUserDetails(req.body,curUserDetails);
+                if(saveUser.status == false){
+                    return res.status(500).send(saveUser);
+                }else if(saveUser.status == true){
+                    return res.status(200).send(saveUser);
+                }
+            }catch(e){
+                console.log("Error for saving details of partner");
+                return res.status(500).send(e);
+            }
+    }
+)
+
 module.exports = router;

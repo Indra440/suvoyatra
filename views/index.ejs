@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="css/icons.css" />
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'type='text/css'>
 	<link rel="shortcut icon" href="images/favicon.ico" />
+    <link href="css/toaster.css" rel="stylesheet"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<!-- <script src="../../../../use.fontawesome.com/e808bf9397.js"></script> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -66,6 +67,12 @@
 
 	<!-- Main -->
 	<main class="main" role="main">
+		<% if(message){ %>
+            <div class="center alert-<%= message.type %>" id="flash-message">
+                <button type="button" id= "close" class= "close" data-dismiss="alert">&times;</button>
+                <strong><%= message.intro %> </strong>&nbsp;&nbsp;<%= message.message %>
+            </div>
+        <% } %>
 		<!-- Intro -->
 		<div class="intro">
 			<div class="wrap">
@@ -91,17 +98,17 @@
 					<div class="f-row search-main-area">
 						<div class="form-group datepicker one-fourth">
 							<label for="dep-date">Departure date</label>
-							<input type="date" id="dep-date" name="d_d"  />
+							<input type="date" name="d_d" id="departureDate" />
 						</div>
 						<div class="form-group timepicker one-fourth">
 							<label for="dep-time">Departure time</label>
-							<input type="time" id="dep-time" name="d_t" />
+							<input type="time" name="d_t" id="departureTime" />
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Pick up location</label>
-							<select name="p_l">
+							<select name="p_l" id="pickupLocation">
 								<option selected disabled>Select One</option>
-								<% if(localationList.length > 0){ %>
+								<% if(localationList && (localationList.length > 0)){ %>
 									<% localationList.map((cur_loc) =>{ %>
 										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
 											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
@@ -138,9 +145,9 @@
 						<i class="fa fa-exchange" aria-hidden="true" id="toggle-arrow-img"></i>
 						<div class="form-group select one-fourth">
 							<label>Drop off location</label>
-							<select name="d_l">
+							<select name="d_l" id="dropLocation">
 								<option selected disabled>Select One</option>
-								<% if(localationList.length > 0){ %>
+								<% if(localationList && localationList.length > 0){ %>
 									<% localationList.map((cur_loc) =>{ %>
 										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
 											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
@@ -184,17 +191,17 @@
 					<div class="f-row return" id="return" style="display: none;">
 						<div class="form-group datepicker one-fourth">
 							<label for="dep-date">Departure date</label>
-							<input type="date" id="dep-date" name="d_d2" />
+							<input type="date" id="return-dep-date" name="d_d2" />
 						</div>
 						<div class="form-group timepicker one-fourth">
 							<label for="dep-time">Departure time</label>
-							<input type="time" id="dep-time" name="d_t2"/>
+							<input type="time" id="return-dep-time" name="d_t2"/>
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Pick up location</label>
-							<select name="p_l2">
+							<select name="p_l2" id="return-pickup">
 								<option selected disabled>Select One</option>
-								<% if(localationList.length > 0){ %>
+								<% if(localationList && localationList.length > 0){ %>
 									<% localationList.map((cur_loc) =>{ %>
 										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
 											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
@@ -234,10 +241,10 @@
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Drop off location</label>
-							<select name="d_l2">
+							<select name="d_l2" id="return-dropoff">
 								<option selected disabled>Select One</option>
 
-								<% if(localationList.length > 0){ %>
+								<% if(localationList && localationList.length > 0){ %>
 									<% localationList.map((cur_loc) =>{ %>
 										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
 											<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
@@ -280,21 +287,21 @@
 					<!-- Row -->
 					<div class="f-row">
 						<div class="form-group select one-third">
-							<select id="journey_selector" name="r_p">
+							<select id="journey_selector" name="r_p" id="returnProcess">
 								<option selected disabled>Select Return Process</option>
 								<option value="one way">One Way</option>
 								<option value="return">Return</option>
 							</select>
 						</div>
 						<div class="form-group select one-third">
-							<select name="a_c">
+							<select name="a_c" id="acType">
 								<option selected disabled>Select AC or Non AC</option>
 								<option value="Ac">AC</option>
 								<option value="Non AC">Non AC</option>
 							</select>
 						</div>
 						<div class="form-group one-third">
-							<button type="submit" class="btn large black find-transfer">Find a transfer</button>
+							<button type="button" id="findATransfer" class="btn large black find-transfer">Find a transfer</button>
 						</div>
 					</div>
 					<!--// Row -->
@@ -801,6 +808,7 @@
 	<script src="js/wow.min.js"></script>
 	<script src="js/jquery-ui-sliderAccess.js"></script>
 	<script src="js/search.js"></script>
+    <script src="js/toaster.min.js"></script>
 	<script src="js/scripts.js"></script>
 	<script src="js/styler.js"></script>
 	<script>
@@ -838,6 +846,7 @@
 		// Get the element with id="defaultOpen" and click on it
 		document.getElementById("defaultOpen").click();
 	</script>
+	<script src="js/index.js"></script>
 </body>
 
 </html>

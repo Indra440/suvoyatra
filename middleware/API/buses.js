@@ -11,7 +11,7 @@ const _helper = require('../../Helpers/helpers');
 module.exports.uploadBusimages = async (req,res,next) =>{
     var upload = multer({
         dest: 'uploads/',
-        // limits: { fileSize: config.get("image-max-size") },
+        limits: { fileSize: config.get("imagekit.image-max-size") },
         fileFilter: (req, file, cb) => {
             checkFileType(file, cb);
         }

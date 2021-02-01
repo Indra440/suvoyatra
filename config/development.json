@@ -6,15 +6,15 @@
             "port":"27017"
         }
     },
-    "partnertokenSecret":"partnerloginToken",
-    "usertokenSecret":"userLoginToken",
+    "LogintokenSecret":"suvoYatraLoginToken",
     "imagekit":{
         "storage":{
             "publicKey":"public_uhhIGWg93O9QPM/HZCwF8Gjp1qI=",
             "privateKey":"private_UjdpQcBqyYkSNY7sa1yP93fzle0=",
             "urlEndpoint":"https://ik.imagekit.io/suvoyatra123",
             "imagekitID":"suvoyatra123"
-        }
+        },
+        "image-max-size":"100000"
     },
     "mailsendFrom":"indranilshit440@gmail.com"
 }

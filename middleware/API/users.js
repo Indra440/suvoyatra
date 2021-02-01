@@ -3,6 +3,20 @@ const { restart } = require('nodemon');
 const _helper = require('../../Helpers/helpers');
 const userModel = require('../../models/users');
 const mongoose = require('mongoose');
+const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
+module.exports.validateUser = async (req,res,next) =>{
+    const headerToken = req.get('authorizationToken');
+    // console.log("headerToken ",headerToken);
+    const checkActive =  await controller.checkActiveUser(headerToken);
+    if(checkActive.status == false){
+        return res.redirect('/user-login');
+    }
+    req.user = checkActive.payload;
+    next();    
+}
+
 
 module.exports.userLogin = async (req,res,next) =>{
     console.log("Body ",req.body);
@@ -50,4 +64,15 @@ module.exports.userOtpChecking = async (req,res,next) =>{
     req.user = fetchUser;
     console.log("its comming  here",req.user);
     next();
+}
+
+module.exports.saveUser = async (req,res,next) =>{
+    console.log("Body ",req.body);
+    if((req.body.email == "") || !(emailRegexp.test(req.body.email))){
+        return res.status(500).send({status:false,message:"Please check your email"})
+    }
+    if(req.body.phone == "" || String(req.body.phone).length !=10){
+        return res.status(500).send({status:false,message:"Please check Contact number"})
+    }
+    next()
 }

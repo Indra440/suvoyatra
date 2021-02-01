@@ -322,15 +322,42 @@ const findAtransfer = async (page,queryDetails) =>{
         message : "",
         payload : []
     }
+    console.log("Its hitting here ",page,queryDetails);
     try{
         const cur_page = page ? page : 1;
         const limit = 1;
         let searchJson = {};
-        let searchQUery = [
+        var searchQUery = [
             {
                 $match:{
                     is_active:true
                 }
+            },
+            {
+                $lookup:{
+                    from: "bookings",
+                    localField: "_id",
+                    foreignField: "busId",
+                    as: "bookingDetails"
+                }
+            },
+            {
+                $addFields: {
+                    currentDate: { $toDate: queryDetails.departureDate }
+                }
+            },
+            {
+                $unwind:{
+                    path:"$bookingDetails",
+                    preserveNullAndEmptyArrays: true
+                } 
+            },
+            {
+                $match:{
+                        $or:[
+                        { "bookingDetails":{$exists: false}},
+                        { "bookingDetails.bookingFor" : "$currentDate"}
+                    ]}
             },
             {
                 $unwind:{
@@ -345,6 +372,18 @@ const findAtransfer = async (page,queryDetails) =>{
                         {$or:[{"busRoadMap.journeyForm":queryDetails.dropLocation},{"busRoadMap.journeyTo":queryDetails.dropLocation},{"busRoadMap.viaRoot.rootName":queryDetails.dropLocation}]}
                     ]
                    }
+            },
+            {
+                $project:{
+                    _id:1,
+                    busName : 1,
+                    busRoadMap : 1,
+                    busTiming :1,
+                    busFeature :1,
+                    busImages : 1,
+                    busDescription : 1,
+                    seatBooked : {$cond:[{$ifNull: ["$bookingDetails",false]},{"$size":"$bookingDetails.bookingSeatNo"},0]}
+                }
             },
             {
                 $group:{
@@ -375,11 +414,18 @@ const findAtransfer = async (page,queryDetails) =>{
                     },
                     busDescription :{
                         $first:"$busDescription"
+                    },
+                    totalSeatBooked :{
+                        "$sum": "$seatBooked"
                     }   
                 }
-            }
+            }            
         ];
+        console.log("Whole search query",searchQUery);
         // searchQUery.push(searchJson);
+        if(queryDetails.departureTime && queryDetails.departureTime !=""){
+            searchQUery = [...searchQUery,{$match:{"busTiming.departureTime":queryDetails.departureTime}}];
+        }
         if(queryDetails.acType != "" && queryDetails.acType == "Ac"){
             searchQUery = [...searchQUery,{$match:{"busFeature.acType":queryDetails.acType}}];
         }
@@ -398,6 +444,7 @@ const findAtransfer = async (page,queryDetails) =>{
         response.payload = finalBusList;
         response.pages = totalBusList/limit;
         response.currentPage = cur_page;
+        console.log("response ",response);
         return response;
 
     }catch(err){

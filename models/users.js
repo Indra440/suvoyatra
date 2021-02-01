@@ -12,6 +12,11 @@ let usersSchema = new Schema({
         default:null,
         required:false
     },
+    userName:{
+        type:String,
+        default:null,
+        required:false
+    },
     // password:{
     //     type:String,
     //     default:'one way',

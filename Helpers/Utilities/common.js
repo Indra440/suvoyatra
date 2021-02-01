@@ -98,7 +98,7 @@ module.exports.uploadImageToImagekit = async (fileContent,file_key)=>{
 
 module.exports.decodeToken = async (token) =>{
     return new Promise((resolve,reject) =>{
-        jwt.verify(token, config.get("partnertokenSecret"), function(err, decoded) {
+        jwt.verify(token, config.get("suvoYatraLoginToken"), function(err, decoded) {
             console.log("decoded ",decoded);
             console.log("decoded.partnerInfo ",decoded.partnerInfo) // bar
             resolve(decoded.partnerInfo);

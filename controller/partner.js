@@ -43,13 +43,16 @@ const partnerLogin = async (partnerCredentials) =>{
         payload:{}
     }
     try{
-        let findPartner = await partnerModel.findOne({"partenrEmail":partnerCredentials.username,is_Active:true});
+        console.log("partnerCredentials ",partnerCredentials);
+        let findPartner = await partnerModel.findOne({$or:[{"partenrEmail":partnerCredentials.username},{"partner_Ph_Number":partnerCredentials.username}],is_Active:true});
+        console.log("findPartner ",findPartner);
         if(!findPartner){
             response.message = "Un authorised credentials";
             return response;
         }
         let partnerPassword = findPartner.password;
         const isValidPassword = await _helper.utility.common.checkPassword(partnerCredentials.password,partnerPassword)
+        console.log("isValidPassword ",isValidPassword);
         if(!isValidPassword){
             response.message = "Unauthorised credentials";
             return response;
@@ -104,7 +107,7 @@ const savePartnerDetails = async(curpartnerDeatails,oldPartnerDetails) =>{
     }
     try{
         if(curpartnerDeatails.email != oldPartnerDetails.partenrEmail){
-            const fetchPartner = await partnerModel.findOne({"email":curpartnerDeatails.email,is_Active:true});
+            const fetchPartner = await partnerModel.findOne({"partenrEmail":curpartnerDeatails.email,is_Active:true});
             if(fetchPartner == null || fetchPartner == undefined){
                 console.log("Its inside this point");
                 response.message = "This email id is already associated with another acconut";

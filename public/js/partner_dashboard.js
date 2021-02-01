@@ -417,10 +417,13 @@ function validateAndCreatedataForAddBusForm(){
 function resetingAddBusForm(){
     $('input[type=text],input[type=file],textarea', '#addBusForm').each(function() {
         $(this).val("");
-    })
+    });
     $('input[type=time]', '#addBusForm').each(function() {
         $(this).val('--:--');
-    })
+    });
+    $("#Bus-Type").val(" ");
+    $("#AC-Type").val(" ");
+    $("#Mul-Type").val(" ");
 }
 
 async function fetchBusList(page){

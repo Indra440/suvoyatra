@@ -70,48 +70,102 @@
 		<!-- Search -->
 		<div class="advanced-search color" id="booking">
 			<div class="wrap">
-				<form role="form" action="search-results.html" method="post">
+				<form role="form" action="/search-result/1" method="GET">
 					<!-- Row -->
 					<div class="f-row search-main-area">
 						<div class="form-group datepicker one-fourth">
 							<label for="dep-date">Departure date</label>
-							<input type="date" id="dep-date" />
+							<input type="date" id="dep-date" name="d_d" value="<%=queryvalue.d_d %>" />
 						</div>
 						<div class="form-group timepicker one-fourth">
 							<label for="dep-time">Departure time</label>
-							<input type="time" id="dep-time" />
+							<% if(queryvalue.d_t){ %>
+								<input type="time" id="dep-time" name="d_t" value = "<%=queryvalue.d_t%>" />
+							<% }else{ %>
+								<input type="time" id="dep-time" name="d_t" />
+							<% } %>
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Pick up location</label>
-							<select>
-								<option selected>Select One</option>
-								<optgroup label="Germany">
-									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
-									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
-								</optgroup>
-								<optgroup label="Italy">
-									<option value="Alghero Airport">Alghero Airport</option>
-									<option value="Bari Airport">Bari Airport</option>
-									<option value="Bari Port">Bari Port</option>
-								</optgroup>
-								<optgroup label="Spain">
-									<option value="Alicante Airport">Alicante Airport</option>
-									<option value="Almeria Airport">Almeria Airport</option>
-									<option value="Barcelona Airport">Barcelona Airport</option>
-								</optgroup>
-								<optgroup label="United Kingdom">
-									<option value="Belfast City Airport">Belfast City Airport</option>
-									<option value="Belfast International Airport">Belfast International Airport</option>
-									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
-							</select>
+							<select name="p_l">
+								<option selected disabled>Select One</option>
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<% if(queryvalue.p_l == cur_loc.journeyForm){ %>
+												<option value="<%=cur_loc.journeyForm %>" selected><%= cur_loc.journeyForm %></option>
+											<% }else{ %>
+												<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% } %>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<% if(queryvalue.p_l == cur_root.rootName){ %>
+														<option value="<%= cur_root.rootName %>"selected><%= cur_root.rootName %></option>	
+													<% }else{ %>
+														<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>	
+													<% } %>
+												<% }) 
+											 } %>
+											<% if(queryvalue.p_l == cur_loc.journeyTo){ %>
+												<option value="<%= cur_loc.journeyTo %>" selected><%= cur_loc.journeyTo %></option>	
+											<% }else{ %>
+												<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>	
+											<% } %>
+										</optgroup>
+									<% }) 
+								 } %>
+									<!-- <optgroup label="Germany">
+										<option value="Berlin Central Train Station">Berlin Central Train Station</option>
+										<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
+									</optgroup>
+									<optgroup label="Italy">
+										<option value="Alghero Airport">Alghero Airport</option>
+										<option value="Bari Airport">Bari Airport</option>
+										<option value="Bari Port">Bari Port</option>
+									</optgroup>
+									<optgroup label="Spain">
+										<option value="Alicante Airport">Alicante Airport</option>
+										<option value="Almeria Airport">Almeria Airport</option>
+										<option value="Barcelona Airport">Barcelona Airport</option>
+									</optgroup>
+									<optgroup label="United Kingdom">
+										<option value="Belfast City Airport">Belfast City Airport</option>
+										<option value="Belfast International Airport">Belfast International Airport</option>
+										<option value="Bristol Airport">Bristol Airport</option>
+									</optgroup> -->
+								</select>
 						</div>
 						<i class="fa fa-exchange" aria-hidden="true" id="toggle-arrow-img"></i>
 						<div class="form-group select one-fourth">
 							<label>Drop off location</label>
-							<select>
-								<option selected>Select One</option>
-								<optgroup label="Germany">
+							<select name="d_l">
+								<option selected disabled>Select One</option>
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<% if(queryvalue.d_l == cur_loc.journeyForm){ %>
+												<option value="<%=cur_loc.journeyForm %>" selected><%= cur_loc.journeyForm %></option>
+											<% }else{ %>
+												<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% } %>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<% if(queryvalue.d_l == cur_root.rootName){ %>
+														<option value="<%= cur_root.rootName %>"selected><%= cur_root.rootName %></option>	
+													<% }else{ %>
+														<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>	
+													<% } %>
+												<% }) 
+											 } %>
+											<% if(queryvalue.d_l == cur_loc.journeyTo){ %>
+												<option value="<%= cur_loc.journeyTo %>" selected><%= cur_loc.journeyTo %></option>	
+											<% }else{ %>
+												<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>	
+											<% } %>
+										</optgroup>
+									<% }) 
+								 } %>
+								<!-- <optgroup label="Germany">
 									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
 									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
 									<option value="Frankfurt International Airport">Frankfurt International Airport
@@ -132,7 +186,7 @@
 									<option value="Belfast City Airport">Belfast City Airport</option>
 									<option value="Belfast International Airport">Belfast International Airport</option>
 									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
+								</optgroup> -->
 							</select>
 						</div>
 					</div>
@@ -142,17 +196,42 @@
 					<div class="f-row return" id="return" style="display: none;">
 						<div class="form-group datepicker one-fourth">
 							<label for="dep-date">Departure date</label>
-							<input type="date" id="dep-date" />
+							<input type="date" id="dep-date" name="d_d2" />
 						</div>
 						<div class="form-group timepicker one-fourth">
 							<label for="dep-time">Departure time</label>
-							<input type="time" id="dep-time" />
+							<input type="time" id="dep-time" name="d_t2"/>
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Pick up location</label>
-							<select>
-								<option selected>Select One</option>
-								<optgroup label="Germany">
+							<select name="p_l2">
+								<option selected disabled>Select One</option>
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<% if(queryvalue.p_l2 && (queryvalue.p_l2 == cur_loc.journeyForm)){  %>
+												<option value="<%=cur_loc.journeyForm %>" selected><%= cur_loc.journeyForm %></option>
+											<% }else{ %>
+												<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% } %>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<% if( queryvalue.p_l2 && (queryvalue.p_l2 == cur_root.rootName)){ %>
+														<option value="<%= cur_root.rootName %>"selected><%= cur_root.rootName %></option>	
+													<% }else{ %>
+														<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>	
+													<% } %>
+												<% }) 
+											 } %>
+											<% if( queryvalue.p_l2 && (queryvalue.p_l2 == cur_loc.journeyTo)){ %>
+												<option value="<%= cur_loc.journeyTo %>" selected><%= cur_loc.journeyTo %></option>	
+											<% }else{ %>
+												<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>	
+											<% } %>
+										</optgroup>
+									<% }) 
+								 } %>
+								<!-- <optgroup label="Germany">
 									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
 									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
 									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
@@ -174,14 +253,40 @@
 									<option value="Belfast City Airport">Belfast City Airport</option>
 									<option value="Belfast International Airport">Belfast International Airport</option>
 									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
+								</optgroup> -->
 							</select>
 						</div>
 						<div class="form-group select one-fourth">
 							<label>Drop off location</label>
-							<select>
-								<option selected>Select One</option>
-								<optgroup label="Germany">
+							<select name="d_l2">
+								<option selected disabled>Select One</option>
+
+								<% if(localationList.length > 0){ %>
+									<% localationList.map((cur_loc) =>{ %>
+										<optgroup label="<%=cur_loc.journeyForm %> - <%= cur_loc.journeyTo %>">
+											<% if(queryvalue.d_l2 && (queryvalue.d_l2 == cur_loc.journeyForm)){ %>
+												<option value="<%=cur_loc.journeyForm %>" selected><%= cur_loc.journeyForm %></option>
+											<% }else{ %>
+												<option value="<%=cur_loc.journeyForm %>"><%= cur_loc.journeyForm %></option>
+											<% } %>
+											<% if(cur_loc.viaRoot && cur_loc.viaRoot.length > 0){ 
+												cur_loc.viaRoot.map((cur_root) =>{ %>
+													<% if( queryvalue.d_l2 && (queryvalue.d_l2 == cur_root.rootName)){ %>
+														<option value="<%= cur_root.rootName %>"selected><%= cur_root.rootName %></option>	
+													<% }else{ %>
+														<option value="<%= cur_root.rootName %>"><%= cur_root.rootName %></option>	
+													<% } %>
+												<% }) 
+											 } %>
+											<% if( queryvalue.d_l2 && (queryvalue.d_l2 == cur_loc.journeyTo)){ %>
+												<option value="<%= cur_loc.journeyTo %>" selected><%= cur_loc.journeyTo %></option>	
+											<% }else{ %>
+												<option value="<%= cur_loc.journeyTo %>"><%= cur_loc.journeyTo %></option>	
+											<% } %>
+										</optgroup>
+									<% }) 
+								 } %>
+								<!-- <optgroup label="Germany">
 									<option value="Berlin Central Train Station">Berlin Central Train Station</option>
 									<option value="Berlin Schonefeld Airport">Berlin Schonefeld Airport</option>
 									<option value="Berlin Tegel Airport">Berlin Tegel Airport</option>
@@ -202,7 +307,7 @@
 									<option value="Belfast City Airport">Belfast City Airport</option>
 									<option value="Belfast International Airport">Belfast International Airport</option>
 									<option value="Bristol Airport">Bristol Airport</option>
-								</optgroup>
+								</optgroup> -->
 							</select>
 						</div>
 					</div>
@@ -211,17 +316,34 @@
 					<!-- Row -->
 					<div class="f-row">
 						<div class="form-group select one-third">
-							<select id="journey_selector">
+							<select id="journey_selector" name="r_p">
 								<option selected disabled>Select Return Process</option>
-								<option value="one way">One Way</option>
-								<option value="return">Return</option>
+								<% if(queryvalue.r_p && queryvalue.r_p == "one way" ){ %>
+									<option value="one way" selected>One Way</option>
+									<option value="return">Return</option>
+								<% }else if(queryvalue.r_p && queryvalue.r_p == "return"){ %>
+									<option value="one way">One Way</option>
+									<option value="return" selected>Return</option>
+								<% }else{ %>
+									<option value="one way">One Way</option>
+									<option value="return">Return</option>
+								<% } %>
+								
 							</select>
 						</div>
 						<div class="form-group select one-third">
-							<select>
+							<select name="a_c">
 								<option selected disabled>Select AC or Non AC</option>
-								<option value="Ac">AC</option>
-								<option value="Non AC">Non AC</option>
+								<% if(queryvalue.a_c && queryvalue.a_c == "Ac" ){ %>
+									<option value="Ac" selected>AC</option>
+									<option value="Non AC">Non AC</option>
+								<% }else if(queryvalue.a_c && queryvalue.a_c == "Non AC"){ %>
+									<option value="Ac">AC</option>
+									<option value="Non AC" selected>Non AC</option>
+								<% }else{ %>
+									<option value="Ac">AC</option>
+									<option value="Non AC">Non AC</option>
+								<% } %>
 							</select>
 						</div>
 						<div class="form-group one-third">
@@ -252,20 +374,43 @@
 										<ul>
 											<li>
 												<span class="icon icon-themeenergy_user-3"></span>
-												<p> 3 Seat available</p>
+												<p> <%  let seat = Number(cur_bus.busFeature.noOfSeat) - Number(cur_bus.totalSeatBooked) %><%= seat %> Seat available</p>
 											</li>
 											<li>
 												<span class="icon icon-themeenergy_travel-bag"></span>
 												<p>Departure Time: 
-													<% if(Number(cur_bus.busTiming.departureTime.split(":")[0]) > 12 ){ %>
-														<%=cur_bus.busTiming.departureTime %> PM
+													<% if(Number(cur_bus.busTiming.departureTime.split(":")[0]) > 12 ){ 
+														 let pmTime = String(Number(cur_bus.busTiming.departureTime.split(":")[0]) -12) +
+																		":"+ cur_bus.busTiming.departureTime.split(":")[1] %>
+														<%= pmTime %> PM
 													<% }else{ %>
 														<%=cur_bus.busTiming.departureTime %> AM
 													<% } %></p>
 											</li>
 											<li>
 												<span class="icon icon-themeenergy_clock"></span>
-												<p>Estimated Time: 50 mins</p>
+												<% 
+													function diff(start, end) {
+														start = start.split(":");
+														end = end.split(":");
+														var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+														var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+														var diff = endDate.getTime() - startDate.getTime();
+														var hours = Math.floor(diff / 1000 / 60 / 60);
+														diff -= hours * 1000 * 60 * 60;
+														var minutes = Math.floor(diff / 1000 / 60);
+													
+														// If using time pickers with 24 hours format, add the below line get exact hours
+														if (hours < 0)
+														hours = hours + 24;
+													
+														return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+													}
+													let timeDifference = diff(cur_bus.busTiming.departureTime,cur_bus.busTiming.arrivalTime).split(":");
+													let  finalTimeDiff = Number(timeDifference[0]) > 0 ? Number(timeDifference[0])+ "hrs " : " ";
+													finalTimeDiff = finalTimeDiff + (Number(timeDifference[1]) > 0 ? Number(timeDifference[1])+ "mins" : "");
+												%>
+												<p>Estimated Time: <%= finalTimeDiff %></p>
 											</li>
 										</ul>
 									</div>
@@ -273,14 +418,14 @@
 										<div>
 											<div class="price">120 <small>INR</small></div>
 											<span class="meta">per passenger</span>
-											<a href="seat-booking/seat-arangment.html" class="btn grey large">select</a>
+											<a href="/seat-booking" class="btn grey large">select</a>
 										</div>
 									</div>
 									<div class="full-width information">
 										<div class="extra-fetures">
 											<a><%=cur_bus.busFeature.busType %> </a> |
 											<a><%=cur_bus.busFeature.acType %></a> |
-											<a><%=cur_bus.busFeature.multimediaType %></a> |
+											<a><%=cur_bus.busFeature.multimediaType %></a>
 											<!-- <a>Sound System</a> -->
 										</div>
 										<p> <%= cur_bus.busDescription %> </p>
