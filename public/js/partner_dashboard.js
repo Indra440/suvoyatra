@@ -1,4 +1,4 @@
-const basicUrl = "http://localhost:3000";
+const basicUrl = window.location.origin; /*"http://localhost:3000";*/
 const partnerToken = localStorage.getItem("suvoYatraPartnerToken");
 const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 var partnerDetails = {};

@@ -193,7 +193,7 @@
 				user_id : id,
 				otp : otp
 			}
-			const basicUrl = "http://localhost:3000";
+			const basicUrl = window.location.origin; /*"http://localhost:3000";*/
 			$.ajax({
             url:basicUrl+'/users/user-otpchecking',
             type: "POST",

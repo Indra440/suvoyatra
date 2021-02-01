@@ -1,6 +1,6 @@
 $(document).ready(function(){
     console.log("Its comming here");
-    const basicUrl = "http://localhost:3000";
+    const basicUrl = window.location.origin; /*"http://localhost:3000";*/
 
 
     $("#login").click(function(){
