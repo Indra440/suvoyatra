@@ -115,8 +115,8 @@ module.exports.sendMail = async(mailDetails) =>{
             // port: 587,
             // secure: false, // true for 465, false for other ports
             auth: {
-              user: process.env.EMAILUSER, // generated ethereal user
-              pass: process.env.EMAILPASSWORD, // generated ethereal password
+              user: config.get("EMAILUSER"), // generated ethereal user
+              pass: config.get("EMAILPASSWORD"), // generated ethereal password
             },
           });
           console.log("transporter ",transporter);
@@ -143,7 +143,7 @@ module.exports.sendMail = async(mailDetails) =>{
 
 module.exports.sendSms = async(smsDetails) =>{
     try{
-        var options = {authorization : process.env.SMS_API_KEY , message : smsDetails.message ,  numbers : [smsDetails.to]}
+        var options = {authorization : config.get("SMS_API_KEY"), message : smsDetails.message ,  numbers : [smsDetails.to]}
         console.log("Options ",options); 
         const response = await fast2sms.sendMessage(options)
         console.log(response)
