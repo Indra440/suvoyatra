@@ -55,7 +55,7 @@ router.post('/partner-login',
             intro:'Success !!',
             message: partnerLogin.message
         }
-        let token = jwt.sign({'partnerInfo':partnerLogin.payload},config.get('suvoYatraLoginToken'));
+        let token = jwt.sign({'partnerInfo':partnerLogin.payload},config.get('LogintokenSecret'));
         res.status(200).send({"token":token})
         // return res.redirect('/partner-dashboard')
     }

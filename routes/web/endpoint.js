@@ -129,7 +129,7 @@ router.get('/partner-login', function(req, res, next) {
 });
 
 router.get('/partner-dashboard', function(req, res, next) {
-    // jwt.verify(token,config.get('suvoYatraLoginToken'), (err,user) => {
+    // jwt.verify(token,config.get('LogintokenSecret'), (err,user) => {
     //     if (err) return res.sendStatus(403)
     //     console.log("user ",user);
     //     req.user = user;
