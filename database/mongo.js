@@ -5,7 +5,7 @@ const host = config.get('database.mongodb.host');
 const db_name = config.get('database.mongodb.db_name');
 const port = config.get('database.mongodb.port');
 
-const connectionString = `mongodb://${host}:${port}/${db_name}`;
+const connectionString = "mongodb+srv://indra440:9Indranil6$@cluster0.msw1n.mongodb.net/<dbname>?retryWrites=true&w=majority" /*`mongodb://${host}:${port}/${db_name}`;*/
 
 mongoose.connect(connectionString,{useNewUrlParser:true,useUnifiedTopology: true })
 
