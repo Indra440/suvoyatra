@@ -7,6 +7,9 @@
         }
     },
     "LogintokenSecret":"suvoYatraLoginToken",
+    "EMAILUSER" : "indranilshit440@gmail.com",
+    "EMAILPASSWORD" : "9932185343",
+    "SMS_API_KEY" : "LZ6WY0PoqfvUNmS2Q8uJXwjlcVCRnx7MthsreGOF39gbKyzD4aiM3WNhaXcUG8mlDYreEwpRv0OuxTQ4",
     "imagekit":{
         "storage":{
             "publicKey":"public_uhhIGWg93O9QPM/HZCwF8Gjp1qI=",
