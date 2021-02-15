@@ -94,7 +94,7 @@ const userOptSubmit = async (user,otp) =>{
         await user.save();
         response.status = true;
         response.message = "Otp varified successfully";
-        let token = jwt.sign({'userInfo':user},config.get('usertokenSecret'));
+        let token = jwt.sign({'userInfo':user},config.get('LogintokenSecret'));
         response.payload = token
         return response;
     }catch(err){
