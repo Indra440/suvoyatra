@@ -418,7 +418,8 @@
 										<div>
 											<div class="price">120 <small>INR</small></div>
 											<span class="meta">per passenger</span>
-											<a href="/seat-booking" class="btn grey large">select</a>
+											<a href="/seat-booking?busid=<%= cur_bus._id %>" class="btn grey large">select</a>
+											<!-- <input type="button" class="btn grey large " value="select" onclick = "selectBus('<%= cur_bus._id %>')" /> -->
 										</div>
 									</div>
 									<div class="full-width information">
@@ -560,7 +561,8 @@
 			});
 		});
 	</script>
-	<script src="js/styler.js"></script>
+	<!-- <script src="../js/search_result.js"></script> -->
+	<script src="../js/styler.js"></script>
 </body>
 
 </html>

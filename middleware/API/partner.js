@@ -1,7 +1,7 @@
 // var express = require('express');
 // var router = express.Router();
 const session = require('express-session');
-const partnerModel = require('../../models/partners');
+const usersModel = require('../../models/users');
 const controller = require('../../controller/partner');
 const _helper = require('../../Helpers/helpers');
 const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -81,7 +81,7 @@ module.exports.checkPartnerEmail = async (req,res,next) =>{
     }
     try{
         const partnerEmail = req.body.email;
-        const cur_partner = await partnerModel.findOne({"partenrEmail":partnerEmail})
+        const cur_partner = await usersModel.findOne({"email":partnerEmail})
         console.log("cur_partner ",cur_partner);
         if(cur_partner){
             console.log("Its hitting here");

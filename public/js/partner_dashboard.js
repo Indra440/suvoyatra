@@ -1,5 +1,5 @@
 const basicUrl = window.location.origin; /*"http://localhost:3000";*/
-const partnerToken = localStorage.getItem("suvoYatraPartnerToken");
+const partnerToken = localStorage.getItem("suvoyatrausertoken");
 const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 var partnerDetails = {};
 if(!partnerToken || partnerToken == null || partnerToken == undefined){
@@ -51,10 +51,10 @@ $(document).ready(function(){
                 if(result.status == true){
                     fetchPartnerDetails();
                     // let curpartnerDetails = result.payload;
-                    // $("#name").val(curpartnerDetails.partnerName);
-                    // $("#email").val(curpartnerDetails.partenrEmail);
-                    // $("#username").val(curpartnerDetails.partenrEmail);
-                    // $("#number").val(curpartnerDetails.partner_Ph_Number);
+                    // $("#name").val(curpartnerDetails.name);
+                    // $("#email").val(curpartnerDetails.email);
+                    // $("#username").val(curpartnerDetails.email);
+                    // $("#number").val(curpartnerDetails.ph_no);
                     // $("#address").val(curpartnerDetails.streetAddress);
                     // $("#zip").val(curpartnerDetails.zipCode);
                     // $("#city").val(curpartnerDetails.city);
@@ -548,7 +548,6 @@ async function addBus(formData){
             data: formData,
             processData: false,
             contentType: false,
-            type: 'POST',
             success: function(result){
                 console.log("result ",result);
                 if(result.status == true){
@@ -576,11 +575,11 @@ function fetchPartnerDetails(){
             console.log("result ",result);
             console.log("Successfully validate");
             const payload = result.payload;
-            $("#name").val(payload.partnerName);
-            $("#email").val(payload.partenrEmail);
-            $("#username").val(payload.partenrEmail);
+            $("#name").val(payload.name);
+            $("#email").val(payload.email);
+            $("#username").val(payload.email);
             $("#password1").val("");
-            $("#number").val(payload.partner_Ph_Number);
+            $("#number").val(payload.ph_no);
             $("#address").val(payload.streetAddress);
             $("#zip").val(payload.zipCode);
             $("#city").val(payload.city);

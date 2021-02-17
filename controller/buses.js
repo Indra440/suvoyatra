@@ -227,8 +227,8 @@ const sendQuery = async(queryDetails,is_partner,partnerDetails)=>{
         var {name,phone,email,subject,message} = queryDetails;
         const payload = {
             name : (name && name !="") ? name : "",
-            mobile : is_partner == true ? partnerDetails.partner_Ph_Number : phone,
-            email : is_partner == true ? partnerDetails.partenrEmail : email,
+            mobile : is_partner == true ? partnerDetails.ph_no : phone,
+            email : is_partner == true ? partnerDetails.email : email,
             subject : subject,
             message :message,
             isPartner : is_partner

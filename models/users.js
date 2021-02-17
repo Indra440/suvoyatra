@@ -1,66 +1,51 @@
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-let usersSchema = new Schema({
-    user_Ph_Number:{
+let partnersSchema = new Schema({
+    name:{
         type:String,
         default:null,
-        required:false
+        required:true
     },
-    userEmail:{
+    ph_no:{
         type:String,
         default:null,
-        required:false
+        required:true
     },
-    userName:{
+    email:{
         type:String,
         default:null,
-        required:false
+        required:true
     },
-    // password:{
-    //     type:String,
-    //     default:'one way',
-    //     required:true
-    // },
-    streetAddress:{
+    userType:{
         type:String,
-        default:'',
+        default:2, //partner:2,admin:1
         required:false
     },
-    zipCode:{
-        type:String,
-        default:'',
-        required:false
-    },
-    city:{
-        type:String,
-        default:'',
-        required:false
-    },
-    is_active:{
+    is_Active:{
         type:Boolean,
         default:true,
         required:false
     },
-    Verification:{
-        last_otp:{
-            type:String,
-            default : null,
-            required :false
-        },
-        otp_generation_time:{
-            type:Date,
-            default : null,
-            required:false
-        },
-        verified :{
-            type:Boolean,
-            default:false,
-            required:false
-        }
+    password:{
+        type:String,
+        default:'one way',
+        required:true
+    },
+    streetAddress:{
+        type:String,
+        default:''
+    },
+    zipCode:{
+        type:String,
+        default:''
+    },
+    city:{
+        type:String,
+        default:''
     }
 },{
     timestamps:true
 })
 
-module.exports = mongoose.model("user",usersSchema);
+module.exports = mongoose.model("users",partnersSchema);

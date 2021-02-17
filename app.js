@@ -11,11 +11,13 @@ require('dotenv').config();
 // const passport = require('passport');
 // var flush = require('connect-flash');
 var databaseConnection = require('./database/mongo');
+const usersModel = require('./models/users');
+const _helper = require('./Helpers/helpers');
 
 var app = express();
 //Passport config
 
-
+addseeders();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -69,4 +71,26 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+async function addseeders(){
+  const hash =  await _helper.utility.common.encryptPassword(10,'123456')
+  let findAdmin =  await usersModel.findOne({"email":"super@user.in", userType:1,is_Active:true});
+  if(!findAdmin){
+    try{
+      let payload = {
+        name: "Admin",
+        ph_no : "123456",
+        email : "super@user.in",
+        userType : 1,
+        password : hash
+      }
+      let model = new usersModel(payload);
+      let svaedAdmin =  await model.save();
+      console.log("Super admin ",svaedAdmin);
+    }catch(err){
+      console.log("Couldn't save super admin")
+      console.log("Error ",err);
+    }
+  }
+}
 module.exports = app;

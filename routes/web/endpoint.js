@@ -6,6 +6,11 @@ const userRouter = require('./users');
 const middleware = require('../../middleware/middleware');
 const controller = require('../../controller/buses');
 const _helper = require('../../Helpers/helpers');
+const usersModel = require('../../models/users');
+const enduserModel = require('../../models/endusers');
+const busModel = require('../../models/buses');
+const bookingModel = require('../../models/bookings');
+const session = require('express-session');
 
 
 /* GET home page. */
@@ -25,6 +30,67 @@ router.get('/faq', function(req, res, next) {
 
 router.get('/partner', function(req, res, next) {
     res.render('partner');
+});
+
+router.get('/admin', async function(req, res, next) {
+    if(req.session.admin){
+        try{
+            const toatalPartner = await usersModel.find({userType:2});
+            const totalUser = await enduserModel.find({is_Active:true});
+            const toatalBuses = await busModel.find({is_active:true});
+            const totalBookings = await bookingModel.find({});
+            res.render('admin/index',{"partners":toatalPartner,"toatalPartner":toatalPartner.length,
+                            "totalUser":totalUser.length,"toatalBuses":toatalBuses.length,"totalBookings":totalBookings.length});
+        }catch(err){
+            console.log("Admin error ",err);
+            res.render('admin/page-login');
+        }
+    }else{
+        res.render('admin/page-login');
+    }
+});
+
+router.get('/admin-login', function(req, res, next) {
+    res.render('admin/page-login');
+});
+
+router.post('/admin-login', async function(req, res, next) {
+    const {email,password} = req.body;
+    let response = {
+        status:false,
+        message : "",
+        payload:{}
+    }
+    if(!email || !password || email == "" || password == ""){
+        response.message = "Please fill all the fields with valid credentials";
+        res.send(response);
+    }
+    try{
+        // console.log("partnerCredentials ",partnerCredentials);
+        let findAdmin = await usersModel.findOne({"email":email,is_Active:true,userType:1});
+        console.log("findAdmin ",findAdmin);
+        if(!findAdmin){
+            response.message = "Unauthorised credentials";
+            res.send(response);
+        }
+        let adminPassword = findAdmin.password;
+        const isValidPassword = await _helper.utility.common.checkPassword(password,adminPassword)
+        console.log("isValidPassword ",isValidPassword);
+        if(!isValidPassword){
+            response.message = "Unauthorised credentials";
+            res.send(response);
+        }
+        req.session.admin = findAdmin;
+        response.status = true;
+        response.message = "password matched successfully";
+        response.payload = findAdmin;
+        let token = jwt.sign({'partnerInfo':response.payload},config.get('LogintokenSecret'));
+        response.payload = token;
+        res.send(response);
+    }catch(err){
+        response.message = err.message;
+        res.send(response);
+    }
 });
 
 router.get('/user-login', function(req, res, next) {
@@ -117,7 +183,9 @@ router.get('/search-result/:p', async function(req, res, next) {
 });
 
 router.get('/seat-booking',async function(req,res){
-    res.render('seat-booking/seat-arangment');
+    console.log("Bus id ",req.query.busid);
+    
+    res.render('seat-booking/seat-arangment',{busid:req.query.busid});
 })
 
 // router.get('/search-result', function(req, res, next) {

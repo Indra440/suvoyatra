@@ -1,7 +1,7 @@
 
 const { restart } = require('nodemon');
 const _helper = require('../../Helpers/helpers');
-const userModel = require('../../models/users');
+const enduserModel = require('../../models/endusers');
 const mongoose = require('mongoose');
 const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -46,7 +46,7 @@ module.exports.userOtpChecking = async (req,res,next) =>{
         return res.status(500).send({status:false,message:"Invalid otp"});
     }
     console.log("user_id ",user_id);
-    const fetchUser = await userModel.findOne({_id:mongoose.Types.ObjectId(user_id),is_active:true});
+    const fetchUser = await enduserModel.findOne({_id:mongoose.Types.ObjectId(user_id),is_active:true});
     console.log("fetchUser ",fetchUser);
     if(!fetchUser){
         return res.status(500).send({status:false,message:"User is not exist"});

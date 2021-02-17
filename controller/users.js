@@ -1,4 +1,4 @@
-const userModel = require('../models/users');
+const enduserModel = require('../models/endusers');
 var otpGenerator = require('otp-generator');
 const _helper = require('../Helpers/helpers');
 const config = require('config');
@@ -19,7 +19,7 @@ const userLogin = async (username,usernameType)=>{
         if(usernameType == "mobile"){
             findAndSaveUserquery.user_Ph_Number = username;
         }
-        let findUser = await userModel.findOne(findAndSaveUserquery);
+        let findUser = await enduserModel.findOne(findAndSaveUserquery);
         if(!findUser){
             isOldUser = false;
         }
@@ -30,7 +30,7 @@ const userLogin = async (username,usernameType)=>{
                 last_otp : otp,
                 otp_generation_time : new Date()
             }
-            let model = new userModel(findAndSaveUserquery);
+            let model = new enduserModel(findAndSaveUserquery);
             var saveUser = await model.save();
         }else{
             findUser.Verification = {
@@ -119,7 +119,7 @@ const checkActiveUser = async(token) =>{
         if(!decodedData){
             return response;
         }
-        const fetChPatrtner = await userModel.findOne({_id:decodedData._id,is_Active:true});
+        const fetChPatrtner = await enduserModel.findOne({_id:decodedData._id,is_Active:true});
         console.log("fetChPatrtner ",fetChPatrtner);
         if(!fetChPatrtner){
             return response;
@@ -142,7 +142,7 @@ const saveUserDetails = async(curUserDeatails,oldUserDetails) =>{
     }
     try{
         if(curUserDeatails.email != oldUserDetails.userEmail || curUserDeatails.phone != oldUserDetails.user_Ph_Number){
-            const fetchUser = await userModel.findOne({$and:[{"userEmail":curUserDeatails.email},{"user_Ph_Number":curUserDeatails.phone}],is_Active:true});
+            const fetchUser = await enduserModel.findOne({$and:[{"userEmail":curUserDeatails.email},{"user_Ph_Number":curUserDeatails.phone}],is_Active:true});
             if(fetchUser == null || fetchUser == undefined){
                 console.log("Its inside this point");
                 response.message = "This email id is already associated with another acconut";
@@ -156,7 +156,7 @@ const saveUserDetails = async(curUserDeatails,oldUserDetails) =>{
         oldUserDetails.zipCode =  curUserDeatails.zipCode == "" ? oldUserDetails.zipCode : curUserDeatails.zipCode;
         oldUserDetails.city = curUserDeatails.city == "" ? oldUserDetails.city : curUserDeatails.city;
     
-        let userDeatsils = new userModel(oldUserDetails); 
+        let userDeatsils = new enduserModel(oldUserDetails); 
         userDeatsils.save();
         response.status = true;
         response.message = "Data saved successfully";

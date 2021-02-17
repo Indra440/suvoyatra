@@ -1,5 +1,5 @@
 
-const partnerModel = require('../models/partners');
+const usersModel = require('../models/users');
 const _helper = require('../Helpers/helpers');
 
 
@@ -12,13 +12,13 @@ const addPartner = async (partnerDetails) =>{
     // return new Promise((resolve,reject)=>{
         try{
             let obj = {
-                partnerName : partnerDetails.name,
-                partner_Ph_Number : partnerDetails.phone,
-                partenrEmail : partnerDetails.email,
+                name : partnerDetails.name,
+                ph_no : partnerDetails.phone,
+                email : partnerDetails.email,
                 password : hash
             }
             console.log("obj ",obj);
-            let model = new partnerModel(obj);
+            let model = new usersModel(obj);
             let svaedPartner = await model.save();
                 if(!svaedPartner){
                     response.message = "Error while adding partner";
@@ -44,7 +44,7 @@ const partnerLogin = async (partnerCredentials) =>{
     }
     try{
         console.log("partnerCredentials ",partnerCredentials);
-        let findPartner = await partnerModel.findOne({$or:[{"partenrEmail":partnerCredentials.username},{"partner_Ph_Number":partnerCredentials.username}],is_Active:true});
+        let findPartner = await usersModel.findOne({$or:[{"email":partnerCredentials.username},{"ph_no":partnerCredentials.username}],is_Active:true});
         console.log("findPartner ",findPartner);
         if(!findPartner){
             response.message = "Un authorised credentials";
@@ -84,7 +84,7 @@ const checkActivePartner = async(token) =>{
         if(!decodedData){
             return response;
         }
-        const fetChPatrtner = await partnerModel.findOne({_id:decodedData._id,is_Active:true});
+        const fetChPatrtner = await usersModel.findOne({_id:decodedData._id,is_Active:true});
         console.log("fetChPatrtner ",fetChPatrtner);
         if(!fetChPatrtner){
             return response;
@@ -106,22 +106,22 @@ const savePartnerDetails = async(curpartnerDeatails,oldPartnerDetails) =>{
         payload : {}
     }
     try{
-        if(curpartnerDeatails.email != oldPartnerDetails.partenrEmail){
-            const fetchPartner = await partnerModel.findOne({"partenrEmail":curpartnerDeatails.email,is_Active:true});
+        if(curpartnerDeatails.email != oldPartnerDetails.email){
+            const fetchPartner = await usersModel.findOne({"email":curpartnerDeatails.email,is_Active:true});
             if(fetchPartner == null || fetchPartner == undefined){
                 console.log("Its inside this point");
                 response.message = "This email id is already associated with another acconut";
                 return response;
             }
         }
-        oldPartnerDetails.partnerName =   curpartnerDeatails.name == "" ? oldPartnerDetails.partnerName : curpartnerDeatails.name;
-        oldPartnerDetails.partner_Ph_Number =   curpartnerDeatails.phone == "" ? oldPartnerDetails.partner_Ph_Number : curpartnerDeatails.phone;
-        oldPartnerDetails.partenrEmail = curpartnerDeatails.email == "" ? oldPartnerDetails.partenrEmail : curpartnerDeatails.email;
+        oldPartnerDetails.name =   curpartnerDeatails.name == "" ? oldPartnerDetails.name : curpartnerDeatails.name;
+        oldPartnerDetails.ph_no =   curpartnerDeatails.phone == "" ? oldPartnerDetails.ph_no : curpartnerDeatails.phone;
+        oldPartnerDetails.email = curpartnerDeatails.email == "" ? oldPartnerDetails.email : curpartnerDeatails.email;
         oldPartnerDetails.streetAddress = curpartnerDeatails.address == "" ? oldPartnerDetails.streetAddress : curpartnerDeatails.address;
         oldPartnerDetails.zipCode =  curpartnerDeatails.zipCode == "" ? oldPartnerDetails.zipCode : curpartnerDeatails.zipCode;
         oldPartnerDetails.city = curpartnerDeatails.city == "" ? oldPartnerDetails.city : curpartnerDeatails.city;
     
-        let partnerDeatsils = new partnerModel(oldPartnerDetails); 
+        let partnerDeatsils = new usersModel(oldPartnerDetails); 
         partnerDeatsils.save();
         response.status = true;
         response.message = "Data saved successfully";
