@@ -125,6 +125,136 @@ router.post('/actionForPartner',async function(req,res){
     }
 })
 
+router.get('/allpartners',async function(req,res){
+    if(req.session.admin){
+        try{
+            let fetchAllPartners =  await usersModel.aggregate([
+                {
+                    $match:{
+                        is_Active:true,
+                        userType : 2
+                    }
+                },
+                {
+                    $project:{
+                        _id:1,
+                        name : 1,
+                        email : 1,
+                        ph_no : 1,
+                        city : 1,
+                        zipCode : 1,
+                    }
+                }
+            ]);
+            if(!fetchAllPartners){
+                return res.render('admin/all-parners',{partners:[]});
+            }
+            return res.render('admin/all-partners',{partners:fetchAllPartners});
+        }catch(err){
+            console.log("Admin error ",err);
+            return res.render('admin/all-partners',{partners:[]});
+        }
+    }else{
+        return res.render('admin/page-login');
+    }
+})
+
+router.get('/allusers',async function(req,res){
+    if(req.session.admin){
+        try{
+            let fetchAllUsers =  await enduserModel.aggregate([
+                {
+                    $match:{
+                        is_active:true
+                    }
+                },
+                {
+                    $project:{
+                        _id:1,
+                        userName : 1,
+                        userEmail : 1,
+                        user_Ph_Number : 1,
+                        city : 1,
+                        zipCode : 1,
+                        Verification : 1 
+                    }
+                }
+            ]);
+            if(!fetchAllUsers){
+                return res.render('admin/all-users',{users:[]});
+            }
+            return res.render('admin/all-users',{users:fetchAllUsers});
+        }catch(err){
+            console.log("Admin error ",err);
+            return res.render('admin/all-users',{users:[]});
+        }
+    }else{
+        return res.render('admin/page-login');
+    }
+})
+
+router.get('/allbookings',async function(req,res){
+    if(req.session.admin){
+        try{
+            let fetchAllBookings =  await bookingModel.aggregate([
+                {
+                    $lookup:{
+                        from: "endusers",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "enduser_details"
+                    }
+                },
+                {
+                    $lookup:{
+                        from: "buses",
+                        localField: "busId",
+                        foreignField: "_id",
+                        as: "bus_details"
+                    }
+                },
+                {
+                    $unwind:{
+                        path:"enduser_details",
+                        preserveNullAndEmptyArrays : true
+                    }
+                },
+                {
+                    $unwind:{
+                        path:"bus_details",
+                        preserveNullAndEmptyArrays : true
+                    }
+                },    
+                {
+                    $project:{
+                        _id:1,
+                        username: "$enduser_details.userName",
+                        userEmail : "$enduser_details.userEmail",
+                        pickupLocation :1,
+                        dropLocation : 1,
+                        returnProcess : 1,
+                        busname : bus_details.busName,
+                        partnerId : bus_details.partnerId,
+                        bookingAmmount : 1,
+                        bookingStatus : 1,
+                        bookingFor : 1,
+                        bookingSeatNo : 1 
+                    }
+                }
+            ]);
+            if(!fetchAllBookings){
+                return res.render('admin/all-bookings',{bookings:[]});
+            }
+            return res.render('admin/all-bookings',{bookings:fetchAllBookings});
+        }catch(err){
+            console.log("Admin error ",err);
+            return res.render('admin/all-bookings',{bookings:[]});
+        }
+    }else{
+        return res.render('admin/page-login');
+    }
+})
+
 
 //End all Admin routes
 
