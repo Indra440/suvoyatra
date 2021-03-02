@@ -203,7 +203,7 @@
                 toastr.success('Data saved successfully');
                 console.log("result ",result);
                 if(result.status == true){
-					window.localStorage.setItem("suvoyatratoken", result.payload);
+					window.localStorage.setItem("suvoyatratoken", result.payload);	
 					window.location.href = basicUrl + "/#booking";
                 }
             },

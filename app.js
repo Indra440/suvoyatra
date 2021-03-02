@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const cors = require("cors");
 var webRouter = require('./routes/web/endpoint');
 var appRouter = require('./routes/app/api');
 var session = require('express-session');
@@ -14,9 +14,11 @@ var databaseConnection = require('./database/mongo');
 const usersModel = require('./models/users');
 const _helper = require('./Helpers/helpers');
 
+
 var app = express();
 //Passport config
 
+app.use(cors());
 addseeders();
 
 // view engine setup
@@ -82,7 +84,8 @@ async function addseeders(){
         ph_no : "123456",
         email : "super@user.in",
         userType : 1,
-        password : hash
+        password : hash,
+        is_Active : true
       }
       let model = new usersModel(payload);
       let svaedAdmin =  await model.save();

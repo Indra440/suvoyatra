@@ -32,14 +32,29 @@ let bookigsSchema = new Schema({
     },
     bookingStatus:{
         type:String,
-        default:'pending'  // pending,running,completed
+        default:'pending',  // pending,confirmed
+        required:false
     },
     bookingFor:{
         type:Date,
         default:new Date(),
         required:false
     },
-    bookingSeatNo:[],
+    razorpayOrderId:{
+        type:String,
+        default:null,
+        required:false
+    },
+    bookingSeatNo:[{
+        seatId:{
+            type:String,
+            required:true
+        },
+        seatNo:{
+            type:String,
+            required:true
+        }
+    }],
     passengersDetails:[{
         passengerName:{
             type:String,

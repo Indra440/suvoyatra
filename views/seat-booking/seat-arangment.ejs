@@ -11,6 +11,7 @@
 <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="css/css/jquery.seat-charts.css">
 <link href="css/css/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/toaster.css" rel="stylesheet"/>
 <script src="js/js/jquery-1.11.0.min.js"></script>
 <script src="js/js/jquery.seat-charts.js"></script>
 </head>
@@ -29,32 +30,51 @@
 						<ul id="selected-seats" class="scrollbar scrollbar1"></ul>
 						
 						Total: <b>INR <span id="total">0</span></b>
-						
-						<a href="../booking-step2.html"><button class="checkout-button">Pay Now</button></a>
+						<input type="button" id="payNow" class="checkout-button" value="Pay Now">
+						<!-- <a href="../booking-step2.html"><button class="checkout-button" id="payNow">Pay Now</button></a> -->
 			</div>
 			<div class="clear"></div>
 		</div>
 		<script>
 				var firstSeatLabel = 1;
-				
+				let totalSeat = "<%= bookingDetails[0].totalseat %>";
+				let seatTemplate = "<%= bookingDetails[0].seatTemplate %>";
+				let bookedSeats = "<%= bookingDetails[0].bookedSeat %>";
+				let seatMap = [],bookedSeat = [],currentBookedSeat= [];
+				totalrow = parseInt(totalSeat/5) +1
+				for(let i=1;i<=totalrow;i++){
+					if((i==3) ||((seatTemplate == "Template2") && (i ==(totalrow-1))) ){
+						seatMap.push('___fff');
+					}else if(i==totalrow){
+						seatMap.push('ffffff');
+					}else{
+						seatMap.push('ff_fff');
+					}
+				}
+				if(bookedSeats.length > 0){
+					bookedSeats.map(cur_seat =>{
+						bookedSeat.push(cur_seat.seatId);
+					})
+				}
 				$(document).ready(function() {
 					var $cart = $('#selected-seats'),
 						$counter = $('#counter'),
 						$total = $('#total'),
 						sc = $('#seat-map').seatCharts({
 							// seat arrangment is here , you can chang seat arrangment here
-						map: [
-							'ff_fff',
-							'ff_fff',
-							'___fff',
-							'ff_fff',
-							'ff_fff',
-							'ff_fff',
-							'ff_fff',
-							'ff_fff',
-							'ff_fff',
-							'ffffff',
-						],
+						map:seatMap,
+						//  [
+						// 	'ff_fff',
+						// 	'ff_fff',
+						// 	'___fff',
+						// 	'ff_fff',
+						// 	'ff_fff',
+						// 	'ff_fff',
+						// 	'ff_fff',
+						// 	'ff_fff',
+						// 	'ff_fff',
+						// 	'ffffff',
+						// ],
 						seats: {
 							f: {
 								price   : 100,
@@ -93,7 +113,11 @@
 									.attr('id', 'cart-item-'+this.settings.id)
 									.data('seatId', this.settings.id)
 									.appendTo($cart);
-								
+								let curSeat = {
+									seatId : this.settings.id,
+									seatNo : this.settings.label
+								}
+								currentBookedSeat.push(curSeat)
 								/*
 								 * Lets update the counter and total
 								 *
@@ -112,7 +136,11 @@
 							
 								//remove the item from our cart
 								$('#cart-item-'+this.settings.id).remove();
-							
+								currentBookedSeat.map((curseat,index) =>{
+									if(curseat.seatId == this.settings.id){
+										currentBookedSeat.splice(index,1);
+									}
+								})
 								//seat has been vacated
 								return 'available';
 							} else if (this.status() == 'unavailable') {
@@ -130,8 +158,8 @@
 						sc.get($(this).parents('li:first').data('seatId')).click();
 					});
 
-					//let's pretend some seats have already been booked
-					sc.get(['1_2', '4_1', '7_1', '7_2']).status('unavailable');
+					//let's pretend some seats have already been booked ['1_2', '4_1', '7_1', '7_4']
+					sc.get(bookedSeat).status('unavailable');
 			
 			});
 
@@ -149,5 +177,28 @@
 </div>
 <script src="js/js/jquery.nicescroll.js"></script>
 <script src="js/js/scripts.js"></script>
+<script src="js/toaster.min.js"></script>
+<script>
+	const basicUrl = window.location.origin;
+	$(document).ready(()=>{
+		let bookingDetails = '&&b='+"<%= queryvalue.b %>"+ '&&d_d='+"<%= queryvalue.d_d %>"+
+							'&&p_l='+"<%= queryvalue.p_l %>"+
+							'&&d_l='+ "<%= queryvalue.d_l %>";
+
+		$("#payNow").click( async ()=>{
+			let toatalAmmount = $("#total").text();
+			if(currentBookedSeat.length == 0){
+				return toastr.error("Please select at least one Available seat");
+			}
+			let userToken = window.localStorage.getItem("suvoyatratoken");
+			if(!userToken || userToken == null || userToken == ""){
+				return window.location.href = basicUrl +'/user-login';
+			}
+			bookingDetails += '&&seats='+ JSON.stringify(currentBookedSeat);
+			bookingDetails += '&&amount='+ Number(toatalAmmount);
+			window.location.href = basicUrl +'/add-passenger-details?t='+userToken+bookingDetails
+		})
+	})
+</script>
 </body>
 </html>

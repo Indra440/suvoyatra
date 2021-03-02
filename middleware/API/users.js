@@ -4,7 +4,7 @@ const _helper = require('../../Helpers/helpers');
 const enduserModel = require('../../models/endusers');
 const mongoose = require('mongoose');
 const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+const controller = require('../../controller/users');
 
 module.exports.validateUser = async (req,res,next) =>{
     const headerToken = req.get('authorizationToken');
@@ -76,3 +76,20 @@ module.exports.saveUser = async (req,res,next) =>{
     }
     next()
 }
+
+// module.exports.bookTicket = async (req,res,next) =>{
+//     const bookingDetails = req.body;
+//     const userDeatsils = req.user;
+//     if(!userDeatsils || userDeatsils == null || userDeatsils == undefined){
+//         return res.status(500).send({status:false,message:"You have not loggedin yet,Please login and try booking"})
+//     }
+//     console.log("bookingDetails ",bookingDetails);
+//     if(!bookingDetails.id || bookingDetails.id == null || bookingDetails.id == ""||
+//         ! bookingDetails.bookingFor || bookingDetails.bookingFor == null || bookingDetails.bookingFor == "" ||
+//         !bookingDetails.pickupLocation || bookingDetails.pickupLocation == null || bookingDetails.pickupLocation == "" ||
+//         !bookingDetails.dropLocation || bookingDetails.dropLocation == null || bookingDetails.dropLocation == ""){
+//             return res.status(500).send({status:false,message:"Something wrong in the booking.please try to book again"})
+//     }
+//     let bookingFor = new Date(bookingDetails.bookingFor);
+
+// }

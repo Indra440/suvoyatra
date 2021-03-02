@@ -119,12 +119,13 @@ const checkActiveUser = async(token) =>{
         if(!decodedData){
             return response;
         }
-        const fetChPatrtner = await enduserModel.findOne({_id:decodedData._id,is_Active:true});
-        console.log("fetChPatrtner ",fetChPatrtner);
-        if(!fetChPatrtner){
+        let userInfo = decodedData.userInfo;
+        const fetChEnduser = await enduserModel.findOne({_id:userInfo._id,is_active:true});
+        console.log("fetChEnduser ",fetChEnduser);
+        if(!fetChEnduser){
             return response;
         }
-        response.payload = fetChPatrtner;
+        response.payload = fetChEnduser;
         response.status = true;
         response.message = "Token Validate";
         return response;

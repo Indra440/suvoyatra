@@ -20,11 +20,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
     <link rel="stylesheet" href="css/adminCss/cs-skin-elastic.css">
     <link rel="stylesheet" href="css/adminCss/style.css">
+    <link href="css/toaster.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/jqvmap.min.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/weathericons@2.1.0/css/weather-icons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .hide{
+            display: none;
+        }
+    </style>
 
 </head>
 
@@ -35,20 +42,20 @@
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="index.html"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                        <a href="/admin"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
                     </li>
                     <!-- <li class="menu-item">
                         <a href="/admin-login"> <i class="menu-icon fa fa-sign-in"></i>Login</a>
                     </li> -->
-                    <!-- <li class="menu-item">
-                        <a href="tables-data.html"> <i class="menu-icon fa fa-user"></i>All User</a>
+                    <li class="menu-item">
+                        <a href="/table-data"> <i class="menu-icon fa fa-user"></i>All User</a>
                     </li>
                     <li class="menu-item">
-                        <a href="tables-data.html"> <i class="menu-icon fa fa-handshake-o"></i>All Partner</a>
-                    </li> -->
-                    <!-- <li class="menu-item">
+                        <a href="/table-data"> <i class="menu-icon fa fa-handshake-o"></i>All Partner</a>
+                    </li>
+                    <li class="menu-item">
                         <a href="tables-data.html"> <i class="menu-icon fa fa-accessible"></i>Total Booking</a>
-                    </li> -->
+                    </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>
@@ -205,7 +212,7 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="box-title">Partner List </h4>
+                                    <h4 class="box-title"> Recent Partner Request</h4>
                                 </div>
                                 <div class="card-body-- partner-list">
                                     <div class="table-stats order-table ov-h">
@@ -217,18 +224,22 @@
                                                     <th>Name</th>
                                                     <th>Ph-no</th>
                                                     <th>Email</th>
-                                                    <th>Status</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% if(partners && partners.length > 0){ 
-                                                    partners.map((cur_partner,index)=>{ %>
-                                                        <tr>
+                                                <% if(partnerRequest && partnerRequest.length > 0){ 
+                                                    partnerRequest.map((cur_partner,index)=>{ %>
+                                                        <tr class="presentPartner">
+                                                            <!-- <input id="cur_partner_id" value="<%=cur_partner._id %>" style="display: none;"> -->
                                                             <td><%= (index +1) %></td>
                                                             <td><%= cur_partner.name %></td>
                                                             <td><%= cur_partner.ph_no %></td>
                                                             <td><%= cur_partner.email %></td>
-                                                            <td><%= cur_partner.is_Active %></td>
+                                                            <td>
+                                                                <span class="badge badge-danger" style="cursor: pointer;" class="reject" onclick="partnerAction('<%=cur_partner._id %>',false,this)">Reject</span>
+                                                                <span class="badge badge-success" class="approve" style="cursor: pointer;"onclick="partnerAction('<%=cur_partner._id %>',true,this)">Approve</span>
+                                                            </td>
                                                         </tr>
                                                     <% })%>
                                                 <% } %>
@@ -521,6 +532,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="js/adminJs/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
     <!--  Chart js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.bundle.min.js"></script>
@@ -539,6 +551,44 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
     <script src="js/adminJs/init/fullcalendar-init.js"></script>
+    <script src="js/toaster.min.js"></script>
+    <script>
+        const basicUrl = window.location.origin;
+        async function partnerAction(partnerId,action,self){
+            if(!partnerId || partnerId == null || partnerId == ""){
+                return toastr.error('Please select a valid partner');
+            }
+            let data = {
+                partnerId : partnerId,
+                action : action
+            }
+            
+            $.ajax({
+                url:basicUrl+'/actionForPartner',
+                type:'POST',
+                data:data,
+                dataType:'JSON',
+                success:function(result){
+                    if(result.status == true){
+                        toastr.success(result.message);
+                        console.log("self ",self);
+                        self.closest("tr.presentPartner").addClass('hide');
+                    }
+                },
+                error :function (response){
+                    console.log("response ",response);
+                    response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong while fetching the bus list"); 
+                    if(response.responseJSON && response.responseJSON.login == false){
+                        setTimeout(function(){ 
+                            window.location.href = basicUrl + "/admin-login";
+                        }, 2000);
+                    }
+                } 
+            })
+        }
+
+
+    </script>
 
 </body>
 

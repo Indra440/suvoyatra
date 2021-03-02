@@ -24,7 +24,12 @@ let partnersSchema = new Schema({
     },
     is_Active:{
         type:Boolean,
-        default:true,
+        default:false,
+        required:false
+    },
+    verficationstatus:{
+        type:String,
+        default : "pending", // pending,rejected,approved
         required:false
     },
     password:{

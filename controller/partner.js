@@ -47,7 +47,7 @@ const partnerLogin = async (partnerCredentials) =>{
         let findPartner = await usersModel.findOne({$or:[{"email":partnerCredentials.username},{"ph_no":partnerCredentials.username}],is_Active:true});
         console.log("findPartner ",findPartner);
         if(!findPartner){
-            response.message = "Un authorised credentials";
+            response.message = "Un authorised credentials or you are not verified yet!! Try to contact Admin";
             return response;
         }
         let partnerPassword = findPartner.password;
@@ -84,7 +84,8 @@ const checkActivePartner = async(token) =>{
         if(!decodedData){
             return response;
         }
-        const fetChPatrtner = await usersModel.findOne({_id:decodedData._id,is_Active:true});
+        let partnerInfo = decodedData.partnerInfo;
+        const fetChPatrtner = await usersModel.findOne({_id:partnerInfo._id,is_Active:true});
         console.log("fetChPatrtner ",fetChPatrtner);
         if(!fetChPatrtner){
             return response;

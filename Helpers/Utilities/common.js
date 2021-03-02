@@ -5,6 +5,11 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const fast2sms = require('fast-two-sms');
 var moment = require("moment");
+const Razorpay = require("razorpay");
+// const instance = new Razorpay({
+//     key_id: process.env.RAZORPAY_KEY_ID,
+//     key_secret: process.env.RAZORPAY_KEY_SECRET
+//   }) 
 
 module.exports.validatePhonenumber = (phno)=> {
     var phoneno = /^\(?([6-9]{1})\)?[]?([0-9]{8})[]?([0-9]{1})$/;
@@ -100,8 +105,7 @@ module.exports.decodeToken = async (token) =>{
     return new Promise((resolve,reject) =>{
         jwt.verify(token, config.get("LogintokenSecret"), function(err, decoded) {
             console.log("decoded ",decoded);
-            console.log("decoded.partnerInfo ",decoded.partnerInfo) // bar
-            resolve(decoded.partnerInfo);
+            resolve(decoded);
         });
     })
 }

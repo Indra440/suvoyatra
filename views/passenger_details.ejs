@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="Transfers - Private Transport and Car Hire HTML Template" />
+	<meta name="description" content="Transfers - Private Transport and Car Hire HTML Template">
+	<meta name="author" content="themeenergy.com">
+
+	<title>Transfers - Booking step 2</title>
+
+	<link rel="stylesheet" href="css/styler.css" />
+	<link rel="stylesheet" href="css/theme-pink.css" id="template-color" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/icons.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700">
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link href="css/toaster.css" rel="stylesheet"/>
+
+</head>
+
+<body>
+	<!-- Header -->
+	<header class="header" role="banner">
+		<div class="wrap">
+			<!-- Logo -->
+			<div class="logo">
+				<a href="index.html" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
+						class="logo_img" alt="Transfers" /></a>
+			</div>
+			<!-- //Logo -->
+
+			<!-- Main Nav -->
+			<nav role="navigation" class="main-nav" id="mySidenav">
+				<ul>
+					<li><a><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></a></li>
+					<li><a href="/" title="">Home</a></li>
+					<li><a href="/about" title="about">About Us</a></li>
+					<li><a href="/faq" title="faqs">FAQs</a></li>
+					<li><a href="/partner" title="Partner">Partner</a></li>
+					<li><a title="user">user</a>
+						<ul>
+							<li><a href="/user-login" title="Login">Login</a></li>
+							<li><a href="/account" title="My account">My account</a></li>
+							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
+						</ul>
+					</li>
+					<li><a href="/contact" title="Contact">Get In Touch</a></li>
+				</ul>
+			</nav>
+			<!-- //Main Nav -->
+			<span style="font-size:30px;cursor:pointer" onclick="openNav()" class="nav_open">&#9776;</span>
+		</div>
+	</header>
+
+	<!-- Main -->
+	<main class="main" role="main">
+		<!-- Search -->
+		<div class="output color twoway">
+			<div class="wrap">
+				<div>
+					<% if(queryvalue.d_d && queryvalue.d_t){ 
+						var finalDepartureDate = queryvalue.d_d.split("-")[2] + "." + queryvalue.d_d.split("-")[1]+ "." + queryvalue.d_d.split("-")[0];
+						var finalDepartureTime = (queryvalue.d_t.split(":")[0] > 12) ? 
+													((queryvalue.d_t.split(":")[0] -12) + ":" + queryvalue.d_t.split(":")[1] +" PM") :
+													(queryvalue.d_t + " AM");%>
+						<p><%= finalDepartureDate %>  <small>at</small> <%= finalDepartureTime %> </p>
+					<% } else{ %>
+						<p><small>at</small></p>
+					<% } %>
+					<% if(queryvalue.p_l && queryvalue.d_l){ %>
+						<p><%=queryvalue.p_l %>  <small>to</small> <%= queryvalue.d_l %> </p>
+					<% }else{ %>
+						<p><small>to</small></p>
+					<% } %>
+				</div>
+
+				<!-- <div>
+					<p>02.09.2014 <small>at</small> 17:00</p>
+					<p>Berlin Central Train Station <small>to</small> Schonefeld Airport</p>
+				</div> -->
+			</div>
+		</div>
+		<!-- //Search -->
+
+		<div class="wrap">
+			<div class="row">
+				<!--- Content -->
+				<div class="full-width content">
+					<h2>Passenger details</h2>
+					<p>Please ensure all of the required fields are completed at the time of booking. This information
+						is imperative to ensure a smooth journey.<br />All fields are required.</p>
+						<p>You will receive your confirmation and tickit through your phone and email.</p>
+				</div>
+				<!--- //Content -->
+
+				<div class="three-fourth" id="passengerDetailsForm">
+							<form>
+								<div class="f-row">
+									<div class="one-half">
+										<label for="email">Email address</label>
+										<% if(userDetails.userEmail !== ""){ %>
+											<input type="email" id="email" value = "<%=userDetails.userEmail %>" disabled />	
+										<% }else{ %>
+											<input type="email" id="email" />
+										<% } %>
+									</div>
+									<div class="one-half">
+										<label for="number">Mobile number</label>
+										<% if(userDetails.userMobile !== ""){ %>
+											<input type="number" id="number" value = "<%=userDetails.userMobile %>" disabled/>	
+										<% }else{ %>
+											<input type="number" id="number" />
+										<% } %>
+									</div>
+								</div>
+								<% if(queryvalue && queryvalue.seats &&  JSON.parse(queryvalue.seats).length > 0){ 
+									JSON.parse(queryvalue.seats).map((cur_seat,index) =>{ %>
+									</br>&nbsp;
+									<% let passnger;
+										if(index == 0){
+											passnger = (index+1)+"st";
+										}else if(index == 1){
+											passnger = (index+1)+"nd";
+										} else if(index == 2){
+											passnger = (index+1) + "rd";
+										}else{
+											passnger = (index+1)+"th";
+										} %>
+										<p>Enter <%= passnger %> passnger details (seat no- <%= cur_seat.seatNo %> )  </p>
+										<div class="f-row passengerDetails" >
+											<div class="one-half">
+												<label for="name">Name</label>
+												<input type="text" class="name" />
+											</div>
+											<div class="one-half">
+												<label for="email">Age</label>
+												<input type="number" class="age" />
+											</div>
+											<!-- <div class="one-half">
+												<label for="payment">Select payment type</label>
+												<select id="payment">
+													<option selected>Paytm</option>
+													<option >Paypal</option>
+												</select>
+											</div> -->
+										</div>
+										<% })
+								} %>
+							</form>
+
+					<div class="actions">
+						<input type="button" class="btn medium back" onclick="history.back();" value="Go back">
+						<!-- <a href="seat-booking/seat-arangment.html" >Go back</a> -->
+						<input type="button" class="btn medium color right" id="Continue" value="Continue">
+						<!-- <a href="booking-step3.html" class="">Continue</a> -->
+					</div>
+				</div>
+
+				<!--- Sidebar -->
+				<aside class="one-fourth sidebar right">
+					<!-- Widget -->
+					<div class="widget">
+						<h4>Booking summary</h4>
+						<div class="summary">
+							<div>
+								<h5>DEPARTURE</h5>
+								<dl>
+									<dt>Date</dt>
+									<% if(queryvalue.d_d && queryvalue.d_t){ %>
+										<dd><%= finalDepartureDate %>  <%= finalDepartureTime %></dd>
+									<% } %>
+									<dt>From</dt>
+									<% if(queryvalue.p_l){ %>
+										<dd><%=queryvalue.p_l %> </dd>
+									<% } %>	
+									<!-- <dd>London bus station</dd> -->
+									<dt>To</dt>
+									<% if(queryvalue.d_l){ %>
+										<dd><%= queryvalue.d_l %></dd>
+									<% } %>
+									<!-- <dd>London airport</dd> -->
+									<dt>Vehicle</dt>
+									<% if(queryvalue.b_n){ %>
+										<dd><%= queryvalue.b_n %></dd>
+									<% } %>
+									<!-- <dd>Private shuttle</dd> -->
+								</dl>
+							</div>
+
+							<!-- <div>
+								<h5>RETURN</h5>
+								<dl>
+									<dt>Date</dt>
+									<dd>02.09.2014 17:00 PM</dd>
+									<dt>From</dt>
+									<dd>London airport</dd>
+									<dt>To</dt>
+									<dd>London bus station</dd>
+									<dt>Vehicle</dt>
+									<dd>Private shuttle</dd>
+								</dl>
+							</div> -->
+
+							<dl class="total">
+								<dt>Total</dt>
+								<% if(queryvalue.amount){ %>
+									<dd><%= queryvalue.amount %> inr</dd>
+								<% } %> 
+								<!-- <dd>840,00 inr</dd> -->
+							</dl>
+						</div>
+					</div>
+					<!-- //Widget -->
+				</aside>
+				<!--- //Sidebar -->
+			</div>
+		</div>
+	</main>
+	<!-- //Main -->
+
+	<!-- Footer -->
+	<footer class="footer black" role="contentinfo">
+		<div class="wrap">
+			<div class="row">
+				<!-- Column -->
+				<article class="one-half">
+					<h6>About us</h6>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt
+						ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
+						tation nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor
+						sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Need help?</h6>
+					<p>Contact us via phone or email:</p>
+					<p class="contact-data"><span class="icon icon-themeenergy_call"></span> +1 555 555 555</p>
+					<p class="contact-data"><span class="icon icon-themeenergy_mail-2"></span> <a
+							href="mailto:help@transfers.com">help@transfers.com</a></p>
+				</article>
+				<!-- //Column -->
+
+				<!-- Column -->
+				<article class="one-fourth">
+					<h6>Follow us</h6>
+					<ul class="social">
+						<li><a href="#" title="facebook"><i class="fa fa-fw fa-facebook"></i></a></li>
+						<li><a href="#" title="twitter"><i class="fa fa-fw fa-twitter"></i></a></li>
+						<li><a href="#" title="gplus"><i class="fa fa-fw fa-google-plus"></i></a></li>
+						<li><a href="#" title="linkedin"><i class="fa fa-fw fa-linkedin"></i></a></li>
+						<li><a href="#" title="pinterest"><i class="fa fa-fw fa-pinterest-p"></i></a></li>
+						<li><a href="#" title="vimeo"><i class="fa fa-fw fa-vimeo"></i></a></li>
+					</ul>
+				</article>
+				<!-- //Column -->
+			</div>
+
+			<div class="copy">
+				<p>Copyright 2016, Themeenergy. All rights reserved. </p>
+
+				<nav role="navigation" class="foot-nav">
+					<ul>
+						<li><a href="#" title="Home">Home</a></li>
+						<li><a href="#" title="Blog">Blog</a></li>
+						<li><a href="#" title="About us">About us</a></li>
+						<li><a href="#" title="Contact us">Contact us</a></li>
+						<li><a href="#" title="Terms of use">Terms of use</a></li>
+						<li><a href="#" title="Help">Help</a></li>
+						<li><a href="#" title="For partners">For partners</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</footer>
+	<!-- //Footer -->
+
+	<!-- jQuery -->
+	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="js/toaster.min.js"></script>
+	<script src="js/jquery.uniform.min.js"></script>
+	<script src="js/jquery.slicknav.min.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/scripts.js"></script>
+	<script>
+		function openNav() {
+			document.getElementById("mySidenav").style.width = "250px";
+		}
+
+		function closeNav() {
+			document.getElementById("mySidenav").style.width = "0";
+		}
+	</script>
+	<script>
+		$(document).ready(function(){
+			// let queryValue = '<%= queryvalue.seats %>'
+			// console.log("queryValue ",queryValue);
+		})
+	</script>
+	<script>
+		const basicUrl = window.location.origin;
+		$(document).ready(()=>{
+			verifyTotalData();
+			$("#Continue").click(()=>{
+				verifyTotalData();
+				let bookingPayload = {
+					bus_id : "<%= queryvalue.b_id %>" ? "<%= queryvalue.b_id %>" : "",
+					bus_name : "<%= queryvalue.b_n %>" ? "<%= queryvalue.b_n %>" : "",
+					departure_date : "<%= queryvalue.d_d %>" ? "<%= queryvalue.d_d %>" : "",
+					departure_time : "<%= queryvalue.d_t %>" ? "<%= queryvalue.d_t %>" : "",
+					pickup_location : "<%= queryvalue.p_l %>" ? "<%= queryvalue.p_l %>" : "",
+					drop_location : "<%= queryvalue.d_l %>" ? "<%= queryvalue.d_l %>" : "",
+					seats : "<%= queryvalue.seats %>" ? "<%= queryvalue.seats %>" : "",
+					total_ammount : "<%= queryvalue.amount %>" ? "<%= queryvalue.amount %>" : "",
+				}
+				var passengerDetails = [];
+				console.log("Its comming here");
+				$("#passengerDetailsForm").find(".passengerDetails").each( function(){
+					console.log($(this));
+					if($(this).children("div.one-half").children("input.name").val() =="" || $(this).children("div.one-half").children("input.age").val() ==""){
+						return toastr.error("Please fill all passenger details");
+					}
+					let curPassenger = {
+						name : $(this).children("div.one-half").children("input.name").val(),
+						age : $(this).children("div.one-half").children("input.age").val()
+					}
+					passengerDetails.push(curPassenger);
+				})
+				bookingPayload.passengerDetails = passengerDetails;
+				console.log("bookingPayload ",bookingPayload);
+			})
+		})
+		function verifyTotalData(){
+		if(	!"<%= queryvalue.d_d %>"  || "<%= queryvalue.d_d %>"== "" || "<%= queryvalue.d_d %>"== undefined  ||
+			!"<%= queryvalue.d_t %>"  || "<%= queryvalue.d_t %>"== "" || "<%= queryvalue.d_t %>"== undefined  ||
+			!"<%= queryvalue.p_l %>"  || "<%= queryvalue.p_l %>"== "" || "<%= queryvalue.p_l %>"== undefined  ||
+			!"<%= queryvalue.d_l %>"  || "<%= queryvalue.d_l %>"== "" || "<%= queryvalue.d_l %>"== undefined  ||
+			!"<%= queryvalue.seats %>"  || ("<%= queryvalue.seats %>").length == 0 || "<%= queryvalue.seats %>"== undefined  ||
+			!"<%= queryvalue.b_n %>"  || "<%= queryvalue.b_n %>"== "" || "<%= queryvalue.b_n %>"== undefined  ||
+			!"<%= queryvalue.amount %>"  || "<%= queryvalue.amount %>"== 0 || "<%= queryvalue.b_n %>"== undefined ||
+			!"<%= queryvalue.b_id %>"  || "<%= queryvalue.b_id %>"== 0 || "<%= queryvalue.b_id %>"== undefined  
+			){
+				toastr.error(" OOPS!!! Something went wrong during this booking, Please try to book again");
+				return false;
+				setTimeout(function(){ 
+					window.location.href = basicUrl;
+				},3000);
+			}
+		}
+		async function continuebookingProcess(bookingDetails){
+			return new Promise((resolve,reject) =>{
+					$.ajax({
+						url:basicUrl+'/partnerRouter/change-password',
+						type:'POST',
+						beforeSend: function(request) {
+							request.setRequestHeader("authorizationToken", partnerToken);
+						},
+						data:payload,
+						dataType:'JSON',
+						success:function(result){
+							if(result.status == true){
+								toastr.success('Password changed successfully');
+								$("#password1").val("");
+								$("#password2").val("");
+								$("#password3").val("");
+							}
+						},
+						error :function (response){
+							console.log("response ",response);
+							toastr.error(response.message);
+							$("#password1").val("");
+							$("#password2").val("");
+							$("#password3").val("");
+						} 
+					})
+				
+			})
+		}
+	</script>
+	<script src="js/styler.js"></script>
+</body>
+
+</html>

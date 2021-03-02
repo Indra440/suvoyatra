@@ -409,6 +409,10 @@
 													let timeDifference = diff(cur_bus.busTiming.departureTime,cur_bus.busTiming.arrivalTime).split(":");
 													let  finalTimeDiff = Number(timeDifference[0]) > 0 ? Number(timeDifference[0])+ "hrs " : " ";
 													finalTimeDiff = finalTimeDiff + (Number(timeDifference[1]) > 0 ? Number(timeDifference[1])+ "mins" : "");
+
+													let cur_query =  queryvalue;
+													let finalQuery = "d_d="+cur_query.d_d+"&&"+"p_l="+cur_query.p_l+"&&"+"d_l="+cur_query.d_l;
+
 												%>
 												<p>Estimated Time: <%= finalTimeDiff %></p>
 											</li>
@@ -418,8 +422,8 @@
 										<div>
 											<div class="price">120 <small>INR</small></div>
 											<span class="meta">per passenger</span>
-											<a href="/seat-booking?busid=<%= cur_bus._id %>" class="btn grey large">select</a>
-											<!-- <input type="button" class="btn grey large " value="select" onclick = "selectBus('<%= cur_bus._id %>')" /> -->
+											<!-- <a href="/seat-booking?b=<%= cur_bus._id %>&&<%= finalQuery %>" class="btn grey large">select</a> -->
+											<input type="button" class="btn grey large " value="select" onclick = "selectBus('<%= cur_bus._id %>','<%= finalQuery %>')" />
 										</div>
 									</div>
 									<div class="full-width information">
@@ -560,6 +564,21 @@
 				$('#' + $(this).val()).show();
 			});
 		});
+	</script>
+	<script>
+		const basicUrl = window.location.origin;
+		async function selectBus (busId,finalQuery){
+			console.log("Bus id ",busId);
+			if(!busId || busId == ""){
+				console.log("Some error occur")
+			}
+			let userToken = window.localStorage.getItem("suvoyatratoken");
+			if(!userToken || userToken == null || userToken == "" ){
+				window.location.href = basicUrl +'/user-login';
+			}else{
+				window.location.href = basicUrl +'/seat-booking?b='+busId +"&&"+finalQuery;
+			}
+		}
 	</script>
 	<!-- <script src="../js/search_result.js"></script> -->
 	<script src="../js/styler.js"></script>
