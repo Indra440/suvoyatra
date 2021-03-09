@@ -3,6 +3,7 @@ var otpGenerator = require('otp-generator');
 const _helper = require('../Helpers/helpers');
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const bookingModel = require('../models/bookings');
 
 const userLogin = async (username,usernameType)=>{
     var isOldUser = true;
@@ -169,10 +170,49 @@ const saveUserDetails = async(curUserDeatails,oldUserDetails) =>{
     }
 }
 
+const bookTicket = async (userDetails,bookingDetails) =>{
+    let response = {
+        status:false,
+        message : "invalid token",
+        payload : {}
+    }
+    try{
+        bookingPayload = {
+            userId : userDetails._id,
+            pickupLocation :  bookingDetails.pickup_location,
+            dropLocation : bookingDetails.drop_location,
+            busId : bookingDetails.bus_id,
+            bookingAmmount : bookingDetails.total_ammount,
+            bookingFor : new Date(),
+            bookingSeat : JSON.parse(bookingDetails.seats),
+            passengersDetails : JSON.parse(bookingDetails.passengerDetails)
+        }
+        let model = new bookingModel(bookingPayload);
+        console.log("bookingPayload ",bookingPayload);
+        const createBooking = await model.save();
+            if(!createBooking){
+                response.message = "Error occur while booking"
+                return response;
+            }
+        console.log("createBooking ",createBooking);
+        let createRazorpayOrderId = await _helper.utility.common.createRazorpayOrder(createBooking.bookingAmmount)
+        
+        response.status = true;
+        response.message = "Bus booking created";
+        console.log("Response is here ",response);
+        return response;
+
+    }catch(err){
+        response.message = err.message;
+        return response;
+    }
+}
+
 
 module.exports = {
     userLogin,
     userOptSubmit,
     checkActiveUser,
-    saveUserDetails
+    saveUserDetails,
+    bookTicket
 }

@@ -85,7 +85,8 @@ async function addseeders(){
         email : "super@user.in",
         userType : 1,
         password : hash,
-        is_Active : true
+        is_Active : true,
+        verficationstatus : "approved"
       }
       let model = new usersModel(payload);
       let svaedAdmin =  await model.save();

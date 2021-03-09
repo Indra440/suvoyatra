@@ -67,7 +67,7 @@ router.post('/save-user-details',
                     return res.status(200).send(saveUser);
                 }
             }catch(e){
-                console.log("Error for saving details of partner");
+                console.log("Error for saving details of User");
                 return res.status(500).send(e);
             }
     }
@@ -75,18 +75,20 @@ router.post('/save-user-details',
 
 router.post('/book-ticket',
     middleware.api.users.validateUser,
-    // middleware.api.users.bookTicket,
+    middleware.api.users.bookTicket,
     async (req,res,next) =>{
         try{
             const curUserDetails = req.user;
-            const saveUser = await controller.saveUserDetails(req.body,curUserDetails);
-            if(saveUser.status == false){
-                return res.status(500).send(saveUser);
-            }else if(saveUser.status == true){
-                return res.status(200).send(saveUser);
+            console.log("Body ",req.body);
+            console.log("Seats ",JSON.parse(req.body.seats).length);
+            const createBooking = await controller.bookTicket(curUserDetails,req.body);
+            if(createBooking.status == false){
+                return res.status(500).send(createBooking);
+            }else if(createBooking.status == true){
+                return res.status(200).send(createBooking);
             }
         }catch(e){
-            console.log("Error for saving details of partner");
+            console.log("Error during book a Ticket");
             return res.status(500).send(e);
         }
     }

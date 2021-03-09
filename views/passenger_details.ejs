@@ -30,7 +30,7 @@
 		<div class="wrap">
 			<!-- Logo -->
 			<div class="logo">
-				<a href="index.html" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
+				<a href="/" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
 						class="logo_img" alt="Transfers" /></a>
 			</div>
 			<!-- //Logo -->
@@ -113,14 +113,17 @@
 									<div class="one-half">
 										<label for="number">Mobile number</label>
 										<% if(userDetails.userMobile !== ""){ %>
-											<input type="number" id="number" value = "<%=userDetails.userMobile %>" disabled/>	
+											<input type="number" id="number" value = "<%=ulengthserDetails.userMobile %>" disabled/>	
 										<% }else{ %>
 											<input type="number" id="number" />
 										<% } %>
 									</div>
 								</div>
-								<% if(queryvalue && queryvalue.seats &&  JSON.parse(queryvalue.seats).length > 0){ 
-									JSON.parse(queryvalue.seats).map((cur_seat,index) =>{ %>
+								<% if(queryvalue && queryvalue.seats &&  queryvalue.seats.length > 0){ %>
+									<% var seats = [];%>
+									 <% queryvalue.seats.map((cur_seat,index) =>{
+										let cur_seatinfo = cur_seat.seatId + "-"+ cur_seat.seatNo;
+										seats.push(cur_seatinfo) %>
 									</br>&nbsp;
 									<% let passnger;
 										if(index == 0){
@@ -299,18 +302,36 @@
 			document.getElementById("mySidenav").style.width = "0";
 		}
 	</script>
-	<script>
+	<!-- <script>
 		$(document).ready(function(){
-			// let queryValue = '<%= queryvalue.seats %>'
-			// console.log("queryValue ",queryValue);
+			
 		})
-	</script>
+	</script> -->
 	<script>
 		const basicUrl = window.location.origin;
 		$(document).ready(()=>{
 			verifyTotalData();
-			$("#Continue").click(()=>{
+			$("#Continue").click( async ()=>{
 				verifyTotalData();
+				
+				let seatArray = [];
+
+				let seatValue = ('<%= seats %>');
+				if(!seatValue || seatValue == "" || seatValue == null){
+					return toastr.error("Something went wrong please try again");
+					setTimeout(function(){ 
+						window.location.href = basicUrl;
+					},2000);
+				}
+				let selectedSeatsArray = seatValue.split(",");
+				selectedSeatsArray.map((cur_seat)=>{
+					let cur_seatjson = {
+						seatId : cur_seat.split("-")[0],
+						seatNo : cur_seat.split("-")[1]
+					}
+					seatArray.push(cur_seatjson);
+				})
+
 				let bookingPayload = {
 					bus_id : "<%= queryvalue.b_id %>" ? "<%= queryvalue.b_id %>" : "",
 					bus_name : "<%= queryvalue.b_n %>" ? "<%= queryvalue.b_n %>" : "",
@@ -318,26 +339,43 @@
 					departure_time : "<%= queryvalue.d_t %>" ? "<%= queryvalue.d_t %>" : "",
 					pickup_location : "<%= queryvalue.p_l %>" ? "<%= queryvalue.p_l %>" : "",
 					drop_location : "<%= queryvalue.d_l %>" ? "<%= queryvalue.d_l %>" : "",
-					seats : "<%= queryvalue.seats %>" ? "<%= queryvalue.seats %>" : "",
+					seats : seatArray ? JSON.stringify(seatArray): [],
 					total_ammount : "<%= queryvalue.amount %>" ? "<%= queryvalue.amount %>" : "",
 				}
-				var passengerDetails = [];
+				var passengerDetails = [],count=0;
 				console.log("Its comming here");
 				$("#passengerDetailsForm").find(".passengerDetails").each( function(){
+					count++;
 					console.log($(this));
 					if($(this).children("div.one-half").children("input.name").val() =="" || $(this).children("div.one-half").children("input.age").val() ==""){
 						return toastr.error("Please fill all passenger details");
+					}else{
+						let curPassenger = {
+							passengerName : $(this).children("div.one-half").children("input.name").val(),
+							passengerAge : $(this).children("div.one-half").children("input.age").val()
+						}
+						passengerDetails.push(curPassenger);
 					}
-					let curPassenger = {
-						name : $(this).children("div.one-half").children("input.name").val(),
-						age : $(this).children("div.one-half").children("input.age").val()
-					}
-					passengerDetails.push(curPassenger);
 				})
-				bookingPayload.passengerDetails = passengerDetails;
-				console.log("bookingPayload ",bookingPayload);
+				if(passengerDetails.length == count){
+					bookingPayload.passengerDetails = JSON.stringify(passengerDetails) ;
+					console.log("bookingPayload ",bookingPayload);
+					await continuebookingProcess(bookingPayload)
+				}
 			})
 		})
+		// function getUrlVars()
+		// {
+		// 	var vars = [], hash;
+		// 	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		// 	for(var i = 0; i < hashes.length; i++)
+		// 	{
+		// 		hash = hashes[i].split('=');
+		// 		vars.push(hash[0]);
+		// 		vars[hash[0]] = hash[1];
+		// 	}
+		// 	return vars;
+		// }
 		function verifyTotalData(){
 		if(	!"<%= queryvalue.d_d %>"  || "<%= queryvalue.d_d %>"== "" || "<%= queryvalue.d_d %>"== undefined  ||
 			!"<%= queryvalue.d_t %>"  || "<%= queryvalue.d_t %>"== "" || "<%= queryvalue.d_t %>"== undefined  ||
@@ -357,28 +395,26 @@
 		}
 		async function continuebookingProcess(bookingDetails){
 			return new Promise((resolve,reject) =>{
+				let userToken = window.localStorage.getItem("suvoyatratoken");
+				if(!userToken || userToken == null || userToken == "" || userToken == undefined){
+					return window.location.href = basicUrl + "/user-login"
+				}
 					$.ajax({
-						url:basicUrl+'/partnerRouter/change-password',
+						url:basicUrl+'/users/book-ticket',
 						type:'POST',
 						beforeSend: function(request) {
-							request.setRequestHeader("authorizationToken", partnerToken);
+							request.setRequestHeader("authorizationToken", userToken);
 						},
-						data:payload,
+						data:bookingDetails,
 						dataType:'JSON',
 						success:function(result){
 							if(result.status == true){
 								toastr.success('Password changed successfully');
-								$("#password1").val("");
-								$("#password2").val("");
-								$("#password3").val("");
 							}
 						},
 						error :function (response){
 							console.log("response ",response);
 							toastr.error(response.message);
-							$("#password1").val("");
-							$("#password2").val("");
-							$("#password3").val("");
 						} 
 					})
 				

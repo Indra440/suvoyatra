@@ -111,9 +111,10 @@ router.post('/actionForPartner',async function(req,res){
             if(!findPartner){
                 return res.status(500).send({status:false,login:true,message:"Partner not found"})
             }
-            
-            findPartner.is_Active = action == true ? true : false,
-            findPartner.verficationstatus = action == true ? "approved" : "rejected";
+            console.log("Action is here ",action);
+            console.log("Action type ",typeof(action));
+            findPartner.is_Active = (action == "true") ? true : false,
+            findPartner.verficationstatus = (action == "true") ? "approved" : "rejected";
             await findPartner.save();
             return res.status(200).send({status:true,login:true,message:"Partner "+findPartner.verficationstatus+" successfully"})
         }catch(err){
@@ -348,51 +349,18 @@ router.get('/search-result/:p', async function(req, res, next) {
 });
 
 router.get('/seat-booking',async function(req,res){
-    let queryvalue = req.query;
-    console.log("queryvalue ",queryvalue);
-    const bookingDetails = await busModel.aggregate([
-        {
-            $match:{
-                _id:mongoose.Types.ObjectId(String(queryvalue.b)),
-                is_active : true
-            }
-        },
-        {
-            $lookup:{
-                from: "bookings",
-                localField : "_id",
-                foreignField: "busId",
-                as: "bookingDetails"
-            }
-        },
-        {
-            $project:{
-                _id:1,
-                totalseat : "$busFeature.noOfSeat",
-                seatTemplate : "$seatTemplate",
-                bookingDetails : {
-                    $filter:{
-                        input: "$bookingDetails",
-                        as: "booking",
-                        cond: { $eq: [ "$$booking.bookingFor", new Date(queryvalue.d_d) ] }
-                    }
-                }
-            }
-        },
-        {
-            $project:{
-                    _id:1,
-                    totalseat : 1,
-                    seatTemplate :1,
-                    bookedSeat:{
-                            $cond:{if:{$gte:[{$size:"$bookingDetails"},1]},
-                                        then:{ $map:{ input: "$bookingDetails", as: "booking", in:{$sum: "$$booking.bookingSeatNo" }}},else:[]}
-                        }
-                }
+    try{
+        let queryvalue = req.query;
+        console.log("queryvalue ",queryvalue);
+        let bookingDetails = await _helper.utility.buses.fetchBookedSeat(queryvalue.b,queryvalue.d_d);
+        if(bookingDetails.status == false){
+            return res.redirect('/');
         }
-    ])
-    console.log("bookingDetails ",bookingDetails);
-    res.render('seat-booking/seat-arangment',{bookingDetails:bookingDetails,"queryvalue":queryvalue});
+        console.log("bookingDetails ",bookingDetails.bookingDetails);
+        return res.render('seat-booking/seat-arangment',{bookingDetails:bookingDetails.bookingDetails,"queryvalue":queryvalue});
+    }catch(err){
+        return res.redirect('/');
+    }
 })
 
 
@@ -423,6 +391,7 @@ router.get('/add-passenger-details',
         queryvalue.d_t = queryvalue.d_t ? queryvalue.d_t : fetchBus.busTiming.departureTime;
         queryvalue.b_n = queryvalue.b_n ? queryvalue.b_n : fetchBus.busName;
         queryvalue.b_id = queryvalue.b_id ? queryvalue.b_id : fetchBus._id;
+        queryvalue.seats = JSON.parse(queryvalue.seats);
         console.log("Final query value ",queryvalue);   
         res.render('passenger_details',{"queryvalue":queryvalue,"userDetails":userDetails});
 });

@@ -382,7 +382,7 @@ const findAtransfer = async (page,queryDetails) =>{
                     busFeature :1,
                     busImages : 1,
                     busDescription : 1,
-                    seatBooked : {$cond:[{$ifNull: ["$bookingDetails",false]},{"$size":"$bookingDetails.bookingSeatNo"},0]}
+                    seatBooked : {$cond:[{$ifNull: ["$bookingDetails",false]},{"$size":"$bookingDetails.bookingSeat"},0]}
                 }
             },
             {
@@ -421,7 +421,7 @@ const findAtransfer = async (page,queryDetails) =>{
                 }
             }            
         ];
-        console.log("Whole search query",searchQUery);
+        console.log("Whole search query",JSON.stringify(searchQUery));
         // searchQUery.push(searchJson);
         if(queryDetails.departureTime && queryDetails.departureTime !=""){
             searchQUery = [...searchQUery,{$match:{"busTiming.departureTime":queryDetails.departureTime}}];
@@ -439,6 +439,7 @@ const findAtransfer = async (page,queryDetails) =>{
             response.message = "Error occur while fetching Bus list";
             return response;
         }
+        console.log("finalBusList ",finalBusList);
         response.status = true;
         response.message = "User list fetch successfully";
         response.payload = finalBusList;

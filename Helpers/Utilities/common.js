@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const fast2sms = require('fast-two-sms');
 var moment = require("moment");
 const Razorpay = require("razorpay");
+const crypto = require('crypto');
 // const instance = new Razorpay({
 //     key_id: process.env.RAZORPAY_KEY_ID,
 //     key_secret: process.env.RAZORPAY_KEY_SECRET
@@ -154,6 +155,50 @@ module.exports.sendSms = async(smsDetails) =>{
         return true;
     }catch(err){
         return err;
+    }
+}
+
+module.exports.createRazorpayOrder = async(ammount)=>{
+    return new Promise((resolve,reject)=>{
+        try{
+            const instance = new Razorpay({
+                key_id: process.env.RAZORPAY_KEY_ID,
+                key_secret: process.env.RAZORPAY_KEY_SECRET
+              })
+              var params = {
+                  ammount : Number(ammount) * 100,
+                  currency : "INR",
+                  receipt : "suvoyatra007",
+                  payment_capture : "1"
+              }
+              instance.orders
+                    .create(params)
+                    .then((data)=>{
+                        resolve({data:data,status:true})
+                    })
+                    .catch((err)=>{
+                        reject({data:err,status:false})
+                    })
+        }catch(err){
+            reject({data:err,status:false})
+        }
+    })
+    
+}
+
+module.exports.verifyRazorpaSignature = async() =>{
+    try{
+        let body = oredr_id + "|" + payment_id;
+
+        let expectedSignature = crypto
+                .createHmac("sha256",process.env.RAZORPAY_KEY_SECRET)
+                .update(body.toString())
+                .digest("hex");
+        if(expectedSignature === payment_signature){
+            return true;
+        }
+    }catch(err){
+        return false;
     }
 }
 

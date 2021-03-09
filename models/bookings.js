@@ -45,7 +45,7 @@ let bookigsSchema = new Schema({
         default:null,
         required:false
     },
-    bookingSeatNo:[{
+    bookingSeat:[{
         seatId:{
             type:String,
             required:true
@@ -57,6 +57,10 @@ let bookigsSchema = new Schema({
     }],
     passengersDetails:[{
         passengerName:{
+            type:String,
+            required:true
+        },
+        passengerAge:{
             type:String,
             required:true
         }

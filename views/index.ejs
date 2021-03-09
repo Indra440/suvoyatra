@@ -34,7 +34,7 @@
 		<div class="wrap">
 			<!-- Logo -->
 			<div class="logo">
-				<a href="index.ejs" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
+				<a href="/" title="Transfers"><img src="https://ik.imagekit.io/tz42dgwpw/llll_zPE5JoOhCB.png"
 						class="logo_img" alt="Transfers" /></a>
 			</div>
 			<!-- //Logo -->
@@ -97,6 +97,10 @@
 					<!-- Row -->
 					<div class="f-row search-main-area">
 						<div class="form-group datepicker one-fourth">
+							<% 
+								let todaysDate = new Date();
+								console.log("todaysDate ",todaysDate);
+							%>
 							<label for="dep-date">Departure date</label>
 							<input type="date" name="d_d" id="departureDate" />
 						</div>
@@ -786,7 +790,7 @@
 
 				<nav role="navigation" class="foot-nav">
 					<ul>
-						<li><a href="index.html" title="Home">Home</a></li>
+						<li><a href="/" title="Home">Home</a></li>
 						<li><a href="about.html" title="About us">About us</a></li>
 						<li><a href="partner.html" title="partner">Partner</a></li>
 						<li><a href="contact.html" title="Contact us">Get In Touch</a></li>
@@ -826,6 +830,22 @@
 				$('.return').hide();
 				$('#' + $(this).val()).show();
 			});
+
+			var dtToday = new Date();
+			var month = dtToday.getMonth() + 1;
+			var day = dtToday.getDate();
+			var year = dtToday.getFullYear();
+			if(month < 10)
+				month = '0' + month.toString();
+			if(day < 10)
+				day = '0' + day.toString();
+			
+			var maxDate = year + '-' + month + '-' + day;
+			$('#departureDate').attr('min', maxDate);
+
+
+
+
 		});
 	</script>
 	<script>
