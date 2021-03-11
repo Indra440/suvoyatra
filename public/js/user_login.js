@@ -7,8 +7,9 @@ $(document).ready(function(){
         console.log("username ",username);
         if($("#checkbox").prop('checked') != true){
             toastr.error("Please accept our Terms And conditions");
-            return
+            return;
         }
+        toastr.info("Please wait for sometime we are processing your data.");
         $.ajax({
             url:basicUrl+'/users/user-login',
             type:'POST',
@@ -21,7 +22,7 @@ $(document).ready(function(){
                         const finalUrl = basicUrl + "/user-otp-submit/"+ result.payload.id;
                         setTimeout(function(){
                              window.location.href = finalUrl;
-                            }, 2000)
+                            }, 3000)
                     }else{
                         toastr.error("User id not found");
                     }

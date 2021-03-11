@@ -353,10 +353,30 @@ const findAtransfer = async (page,queryDetails) =>{
                 } 
             },
             {
+                $project:{
+                            _id:1,
+                            busName : 1,
+                            busRoadMap : 1,
+                            busTiming :1,
+                            busFeature :1,
+                            busImages : 1,
+                            busDescription : 1,
+                            bookingDetails :1,
+                            bookingDates : {$cond:{ if: { $eq: [ "$bookingDetails", null ] }, then: null, else:
+                                [{"bookingDateYear" : { $year: "$bookingDetails.bookingFor" }},
+                                {"bookingDateMonth": { $month: "$bookingDetails.bookingFor" }},
+                                {"bookingDateMonth": { $dayOfMonth: "$bookingDetails.bookingFor" }}]
+                                 }}
+                        } 
+            },
+            {
                 $match:{
                         $or:[
                         { "bookingDetails":{$exists: false}},
-                        { "bookingDetails.bookingFor" : "$currentDate"}
+                        {$and:[
+                            { "bookingDates.bookingDateYear" : Number(String(queryDetails.departureDate).split("-")[0])},
+                            { "bookingDates.bookingDateMonth" : Number(String(queryDetails.departureDate).split("-")[1])},
+                            { "bookingDates.bookingDateMonth" : Number(String(queryDetails.departureDate).split("-")[2])}]}
                     ]}
             },
             {
