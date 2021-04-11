@@ -50,7 +50,7 @@ const userLogin = async (username,usernameType)=>{
             let EmailDetails = {
                 to:username,
                 subject : "Suvoyatra User verification",
-                message : "Hey User! Thank you for connecting with Suvoyatra.Your login Otp is <b>"+otp+". This Otp is valid for 10 minutes."    
+                message : "Hey User! Thank you for connecting with Suvoyatra.Your login Otp is <b>" + otp + "</b>. This Otp is valid for 10 minutes."    
             }
             const sendMail = await _helper.utility.common.sendMail(EmailDetails);
             console.log("sendMail ",sendMail);
@@ -60,11 +60,11 @@ const userLogin = async (username,usernameType)=>{
             }
         }
         if(usernameType == "mobile"){
-            let EmailDetails = {
+            let MsgDetails = {
                 to:username,
-                message : "Hey User! Thank you for connecting with Suvoyatra.Your login Otp is "+otp+". This Otp is valid for 10 minutes."    
+                message : "Hey User! Thank you for connecting with Suvoyatra.Your login Otp is " + otp + ". This Otp is valid for 10 minutes."    
             }
-            const sendSMS = await _helper.utility.common.sendSms(EmailDetails);
+            const sendSMS = await _helper.utility.common.sendSms(MsgDetails);
             if(sendSMS != true){
                 response.message = "Not able to send an email"
                 return response;
@@ -145,9 +145,9 @@ const saveUserDetails = async(curUserDeatails,oldUserDetails) =>{
     try{
         if(curUserDeatails.email != oldUserDetails.userEmail || curUserDeatails.phone != oldUserDetails.user_Ph_Number){
             const fetchUser = await enduserModel.findOne({$and:[{"userEmail":curUserDeatails.email},{"user_Ph_Number":curUserDeatails.phone}],is_Active:true});
-            if(fetchUser == null || fetchUser == undefined){
+            if(fetchUser != null || fetchUser != undefined){
                 console.log("Its inside this point");
-                response.message = "This email id is already associated with another acconut";
+                response.message = "This email id or phone number is already associated with another acconut";
                 return response;
             }
         }
@@ -173,19 +173,27 @@ const saveUserDetails = async(curUserDeatails,oldUserDetails) =>{
 const bookTicket = async (userDetails,bookingDetails) =>{
     let response = {
         status:false,
-        message : "invalid token",
+        message : "",
         payload : {}
     }
     try{
+        let todayDate = new Date();
+        todayDate.setHours(todayDate.getHours()+5);
+        todayDate.setMinutes(todayDate.getMinutes()+30);
+
         bookingPayload = {
             userId : userDetails._id,
             pickupLocation :  bookingDetails.pickup_location,
             dropLocation : bookingDetails.drop_location,
             busId : bookingDetails.bus_id,
             bookingAmmount : bookingDetails.total_ammount,
-            bookingFor : new Date(),
+            bookingFor : new Date(bookingDetails.departure_date),
             bookingSeat : JSON.parse(bookingDetails.seats),
-            passengersDetails : JSON.parse(bookingDetails.passengerDetails)
+            passengersDetails : JSON.parse(bookingDetails.passengerDetails),
+            ticketFor :{
+                email : bookingDetails.ticketEmail && bookingDetails.ticketEmail != "" ? bookingDetails.ticketEmail : null,
+                mobile_no : bookingDetails.ticketmobile_no && bookingDetails.ticketmobile_no != "" ? bookingDetails.ticketmobile_no : null  
+            }
         }
         let model = new bookingModel(bookingPayload);
         console.log("bookingPayload ",bookingPayload);
@@ -196,12 +204,91 @@ const bookTicket = async (userDetails,bookingDetails) =>{
             }
         console.log("createBooking ",createBooking);
         let createRazorpayOrderId = await _helper.utility.common.createRazorpayOrder(createBooking.bookingAmmount)
-        
+        createBooking.razorpayOrderId = createRazorpayOrderId.data.id;
+        await createBooking.save(); 
+        console.log("createRazorpayOrderId ",createRazorpayOrderId);
         response.status = true;
         response.message = "Bus booking created";
+        response.payload.order_id = createBooking.razorpayOrderId;
+        response.payload.key = process.env.RAZORPAY_KEY_ID;
         console.log("Response is here ",response);
         return response;
 
+    }catch(err){
+        response.message = err.message;
+        return response;
+    }
+}
+function reformatDate(date){
+    let finalDatewithTime = date.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    let finalDate = finalDatewithTime.split(" ")[0];
+    return finalDate;
+}
+
+const confirmBooking = async (userDetails,busDetails,bookingDetails,paymentDetails) =>{
+    let response = {
+        status:false,
+        message : "",
+        payload : {}
+    }
+    try{
+        let checkConfirmBooking = await _helper.utility.common.verifyRazorpaSignature(paymentDetails)
+        console.log("checkConfirmBooking ",checkConfirmBooking);
+        if(!checkConfirmBooking){
+            response.message = "Payment confirmation Failed"
+            return response;
+        }else{
+            let route = bookingDetails.pickupLocation + " to " + bookingDetails.dropLocation;
+            let ticketNo = bookingDetails.ticketNo;
+            let passenger = "";
+            bookingDetails.passengersDetails.map((cur_passenger ,index) =>{
+                passenger += cur_passenger.passengerName + " " + cur_passenger.passengerAge;
+                index != (bookingDetails.passengersDetails.length -1) ?  passenger+= "," : "";
+            })
+            let Travels = busDetails.busName;
+            let departureTime = busDetails.busTiming.departureTime + (busDetails.busTiming.departureTime.split(":")[0] >= 12 ? " PM" : " AM" ) + " " + reformatDate(bookingDetails.bookingFor);
+            let seatNo = "";
+            bookingDetails.bookingSeat.map((cur_seat,index) =>{
+                seatNo += cur_seat.seatNo;
+                index != (bookingDetails.bookingSeat.length -1) ? seatNo += "," : "";
+            })
+
+            if(bookingDetails.ticketFor.email){
+                let finalEmail = "Suvoyatra mTicket !!! <br><br> Route: "+ route + "<br> Ticket No: "+ ticketNo + "<br>Passenger: " + passenger + "<br>Travels: "+ Travels +
+                                "<br>Departure: "+ departureTime + "<br>Seat Numbers: "+ seatNo + "<br>Total fare paid: " + bookingDetails.bookingAmmount + "<br><br><br>" +
+                                "Thank you for using Suvoyatra. Have a safe and happy journey "; 
+                let EmailDetails = {
+                    to:bookingDetails.ticketFor.email,
+                    subject : "Suvoyatra Ticket",
+                    message : finalEmail
+                }
+                const sendMail = await _helper.utility.common.sendMail(EmailDetails);
+                console.log("sendMail ",sendMail);
+                if(sendMail != true){
+                    response.message = "Not able to send an email"
+                    return response;
+                }
+            }
+
+            if(bookingDetails.ticketFor.mobile_no){
+                let MsgDetails = {
+                    to:bookingDetails.ticketFor.mobile_no,
+                    message : "Hey User! Thank you for connecting with Suvoyatra.Your login Otp is " + otp + ". This Otp is valid for 10 minutes."    
+                }
+                const sendSMS = await _helper.utility.common.sendSms(MsgDetails);
+                if(sendSMS != true){
+                    response.message = "Not able to send an email"
+                    return response;
+                }
+            }
+
+            bookingDetails.bookingStatus = "confirmed";
+            await bookingDetails.save();
+            response.status = true;
+            response.message = "Booking confirmed";
+            console.log("Response is here ",response);
+            return response;
+        }
     }catch(err){
         response.message = err.message;
         return response;
@@ -214,5 +301,6 @@ module.exports = {
     userOptSubmit,
     checkActiveUser,
     saveUserDetails,
-    bookTicket
+    bookTicket,
+    confirmBooking
 }

@@ -39,15 +39,18 @@ let partnersSchema = new Schema({
     },
     streetAddress:{
         type:String,
-        default:''
+        default:'',
+        required:false
     },
     zipCode:{
         type:String,
-        default:''
+        default:'',
+        required:false
     },
     city:{
         type:String,
-        default:''
+        default:'',
+        required:false
     }
 },{
     timestamps:true

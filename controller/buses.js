@@ -342,11 +342,6 @@ const findAtransfer = async (page,queryDetails) =>{
                 }
             },
             {
-                $addFields: {
-                    currentDate: { $toDate: queryDetails.departureDate }
-                }
-            },
-            {
                 $unwind:{
                     path:"$bookingDetails",
                     preserveNullAndEmptyArrays: true
@@ -361,23 +356,33 @@ const findAtransfer = async (page,queryDetails) =>{
                             busFeature :1,
                             busImages : 1,
                             busDescription : 1,
-                            bookingDetails :1,
+                            bookingDetails : 1,
                             bookingDates : {$cond:{ if: { $eq: [ "$bookingDetails", null ] }, then: null, else:
-                                [{"bookingDateYear" : { $year: "$bookingDetails.bookingFor" }},
-                                {"bookingDateMonth": { $month: "$bookingDetails.bookingFor" }},
-                                {"bookingDateMonth": { $dayOfMonth: "$bookingDetails.bookingFor" }}]
-                                 }}
+                                {"bookingDateYear" : { $year: "$bookingDetails.bookingFor" },
+                                "bookingDateMonth": { $month: "$bookingDetails.bookingFor" },
+                                "bookingDateDay": { $dayOfMonth: "$bookingDetails.bookingFor" }}
+                                 }},
                         } 
             },
             {
-                $match:{
-                        $or:[
-                        { "bookingDetails":{$exists: false}},
-                        {$and:[
-                            { "bookingDates.bookingDateYear" : Number(String(queryDetails.departureDate).split("-")[0])},
-                            { "bookingDates.bookingDateMonth" : Number(String(queryDetails.departureDate).split("-")[1])},
-                            { "bookingDates.bookingDateMonth" : Number(String(queryDetails.departureDate).split("-")[2])}]}
-                    ]}
+                $project:{
+                            _id:1,
+                            busName : 1,
+                            busRoadMap : 1,
+                            busTiming :1,
+                            busFeature :1,
+                            busImages : 1,
+                            busDescription : 1,
+                            bookingDetails : {$cond:{ if: {
+                                $and:[
+                                    { $ne: [ "$bookingDetails", null ] },
+                                    { $eq:["$bookingDates.bookingDateYear" , Number(String(queryDetails.departureDate).split("-")[0])]},
+                                    { $eq:["$bookingDates.bookingDateMonth" , Number(String(queryDetails.departureDate).split("-")[1])]},
+                                    { $eq:["$bookingDates.bookingDateDay" , Number(String(queryDetails.departureDate).split("-")[2])]},
+                                    { $eq:["$bookingDetails.bookingStatus","confirmed"]}
+                                ]}, then: "$bookingDetails", else:null}
+                            }
+                        } 
             },
             {
                 $unwind:{
@@ -392,18 +397,6 @@ const findAtransfer = async (page,queryDetails) =>{
                         {$or:[{"busRoadMap.journeyForm":queryDetails.dropLocation},{"busRoadMap.journeyTo":queryDetails.dropLocation},{"busRoadMap.viaRoot.rootName":queryDetails.dropLocation}]}
                     ]
                    }
-            },
-            {
-                $project:{
-                    _id:1,
-                    busName : 1,
-                    busRoadMap : 1,
-                    busTiming :1,
-                    busFeature :1,
-                    busImages : 1,
-                    busDescription : 1,
-                    seatBooked : {$cond:[{$ifNull: ["$bookingDetails",false]},{"$size":"$bookingDetails.bookingSeat"},0]}
-                }
             },
             {
                 $group:{
@@ -435,9 +428,50 @@ const findAtransfer = async (page,queryDetails) =>{
                     busDescription :{
                         $first:"$busDescription"
                     },
-                    totalSeatBooked :{
-                        "$sum": "$seatBooked"
-                    }   
+                    bookingDetails :{
+                            $addToSet : "$bookingDetails"
+                    }
+                }
+            },
+            {
+                $unwind:{
+                        path:"$bookingDetails",
+                        preserveNullAndEmptyArrays: true
+                    }
+            },
+            {
+                $group:{
+                    _id:"$_id",
+                    busName:{
+                        $first:"$busName"
+                    },
+                    journeyForm:{
+                            $first:"$journeyForm"
+                    },
+                    journeyTo:{
+                        $first:"$journeyTo"
+                    },
+                    journeyFare :{
+                        $first:"$journeyFare"
+                    },
+                    viaRoot:{
+                        $addToSet:"$viaRoot"
+                    },
+                    busTiming:{
+                        $first:"$busTiming"
+                    },
+                    busFeature:{
+                        $first:"$busFeature"
+                    },
+                    busImages:{
+                        $first:"$busImages"
+                    },
+                    busDescription :{
+                        $first:"$busDescription"
+                    },
+                    totalSeatBooked : {
+                        $sum:{$cond:[{$ifNull: ["$bookingDetails",false]},{"$size":"$bookingDetails.bookingSeat"},0]}
+                    }
                 }
             }            
         ];

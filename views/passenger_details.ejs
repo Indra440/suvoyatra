@@ -44,7 +44,7 @@
 					<li><a href="/faq" title="faqs">FAQs</a></li>
 					<li><a href="/partner" title="Partner">Partner</a></li>
 					<li><a title="user">user</a>
-						<ul>
+						<ul id="userMenu">
 							<li><a href="/user-login" title="Login">Login</a></li>
 							<li><a href="/account" title="My account">My account</a></li>
 							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
@@ -105,7 +105,7 @@
 									<div class="one-half">
 										<label for="email">Email address</label>
 										<% if(userDetails.userEmail !== ""){ %>
-											<input type="email" id="email" value = "<%=userDetails.userEmail %>" disabled />	
+											<input type="email" id="email" value = "<%=userDetails.userEmail %>" />	
 										<% }else{ %>
 											<input type="email" id="email" />
 										<% } %>
@@ -113,7 +113,7 @@
 									<div class="one-half">
 										<label for="number">Mobile number</label>
 										<% if(userDetails.userMobile !== ""){ %>
-											<input type="number" id="number" value = "<%=ulengthserDetails.userMobile %>" disabled/>	
+											<input type="number" id="number" value = "<%=userDetails.userMobile %>"/>	
 										<% }else{ %>
 											<input type="number" id="number" />
 										<% } %>
@@ -286,13 +286,14 @@
 	<!-- //Footer -->
 
 	<!-- jQuery -->
-	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script src="js/toaster.min.js"></script>
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.slicknav.min.js"></script>
 	<script src="js/wow.min.js"></script>
 	<script src="js/scripts.js"></script>
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";
@@ -309,6 +310,7 @@
 	</script> -->
 	<script>
 		const basicUrl = window.location.origin;
+		const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		$(document).ready(()=>{
 			verifyTotalData();
 			$("#Continue").click( async ()=>{
@@ -341,9 +343,28 @@
 					drop_location : "<%= queryvalue.d_l %>" ? "<%= queryvalue.d_l %>" : "",
 					seats : seatArray ? JSON.stringify(seatArray): [],
 					total_ammount : "<%= queryvalue.amount %>" ? "<%= queryvalue.amount %>" : "",
+					ticketEmail : "",
+					ticketmobile_no : ""
 				}
 				var passengerDetails = [],count=0;
 				console.log("Its comming here");
+				if($("#email").val()=="" && $("#number").val()==""){
+					return toastr.error("Please fill atleast one contact details");
+				}
+				if($("#email").val()!=""){
+					if(!(emailRegexp.test($("#email").val()))){
+						return toastr.error("Please Enter a valid email");
+					}else{
+						bookingPayload.ticketEmail = $("#email").val();
+					}
+				}
+				if($("#number").val() != ""){
+					if( isNaN($("#number").val()) || String($("#number").val()).length != 10 ){
+						return toastr.error("Please Enter a valid 10 digit mobile number");
+					}else{
+						bookingPayload.ticketmobile_no = $("#number").val();
+					}
+				}
 				$("#passengerDetailsForm").find(".passengerDetails").each( function(){
 					count++;
 					console.log($(this));
@@ -409,12 +430,59 @@
 						dataType:'JSON',
 						success:function(result){
 							if(result.status == true){
-								toastr.success('Password changed successfully');
+								let options = {
+									"key":result.payload.key,
+									"currency":"INR",
+									"name":"Suvoyatra payment",
+									"description":"Suvoyatra payment process",
+									"order_id":result.payload.order_id,
+									"handler": async function(response){
+										console.log("response is here ",response)
+
+										await confirmBooking (response)
+									}
+								}
+								var rzp1 = new Razorpay(options);
+								rzp1.open()
 							}
 						},
 						error :function (response){
 							console.log("response ",response);
-							toastr.error(response.message);
+							response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong while fetching the bus list"); 
+							// toastr.error(response.message);
+						} 
+					})
+				
+			})
+		}
+
+		async function confirmBooking(paymentDetails){
+			return new Promise((resolve,reject) =>{
+				let userToken = window.localStorage.getItem("suvoyatratoken");
+				if(!userToken || userToken == null || userToken == "" || userToken == undefined){
+					return window.location.href = basicUrl + "/user-login"
+				}
+					$.ajax({
+						url:basicUrl+'/users/confirm-booking',
+						type:'POST',
+						beforeSend: function(request) {
+							request.setRequestHeader("authorizationToken", userToken);
+						},
+						data:paymentDetails,
+						dataType:'JSON',
+						success:function(result){
+							// console.log("result ",result);
+							if(result.status == true){
+								toastr.success(result.message);
+								setTimeout(function(){ 
+										window.location.href = basicUrl;
+								},2000);
+							}
+						},
+						error :function (response){
+							console.log("response ",response);
+							response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong.Please try again"); 
+							// toastr.error(response.message);
 						} 
 					})
 				

@@ -3,7 +3,23 @@
 	"use strict";
 
 	$(document).ready(function () {
+		const basicUrl = window.location.origin;
 		transfers.init();
+		let userToken = window.localStorage.getItem("suvoyatratoken");
+		if(userToken && userToken != null && userToken != "" && userToken != undefined){
+			$("#userMenu").append("<li id='userLogout'><a href='#'>Logout</a></li>")
+		}
+
+		$("#userLogout").click(function(){
+			if (confirm('Are you sure you want to logout from this account ?')) {
+				// Save it!
+				localStorage.removeItem("suvoyatratoken");
+				window.location.href = basicUrl +'/user-login';
+			  } else {
+				// Do nothing!
+				return null;
+			  }
+		})
 	});
 
 	$(window).on('load', function () {

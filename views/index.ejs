@@ -50,7 +50,7 @@
 					</li>
 					<li><a href="/partner" title="Partner">Partner</a></li>
 					<li><a title="user">user</a>
-						<ul>
+						<ul id="userMenu">
 							<li><a href="/user-login" title="Login">Login</a></li>
 							<li><a href="/account" title="My account">My account</a></li>
 							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
@@ -416,7 +416,7 @@
 		<div class="purple cta">
 			<div class="wrap">
 				<p class="wow fadeInLeft">Like what you see? Are you ready to stand out? You know what to do.</p>
-				<a href="about.html" class="btn huge color right wow fadeInRight">About Us</a>
+				<a href="/about" class="btn huge color right wow fadeInRight">About Us</a>
 			</div>
 		</div>
 		<!-- //Call to action -->
@@ -514,7 +514,7 @@
 											minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.
 										</p>
 										<img src="images/app.png" class="download-app-img">
-										<input type="text" placeholder="Enter Phone No And Get App Download Link"
+										<input type="number" maxlength = "10" placeholder="Enter Phone No And Get App Download Link"
 											class="get-app-download-link" />
 										<p class="download-btn">Get Link</p>
 									</div>
@@ -842,10 +842,6 @@
 			
 			var maxDate = year + '-' + month + '-' + day;
 			$('#departureDate').attr('min', maxDate);
-
-
-
-
 		});
 	</script>
 	<script>

@@ -208,7 +208,8 @@
                 }
             },
             error: function(response) {
-                toastr.error('some error is comming');
+				console.log("response ",response);
+                response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong please try again"); 
             }
         })
 		}

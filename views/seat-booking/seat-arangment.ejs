@@ -37,9 +37,11 @@
 		</div>
 		<script>
 				var firstSeatLabel = 1;
+				// let bookingDetails = "<%- bookingDetails %>"
+				// console.log("bookingDetails ",bookingDetails);
 				let totalSeat = "<%= bookingDetails[0].totalseat %>";
 				let seatTemplate = "<%= bookingDetails[0].seatTemplate %>";
-				let bookedSeats = "<%= bookingDetails[0].bookedSeat %>";
+				let bookedSeats = JSON.parse('<%- bookingDetails[0].bookedSeat %>');
 				let seatMap = [],bookedSeat = [],currentBookedSeat= [];
 				totalrow = parseInt(totalSeat/5) +1
 				for(let i=1;i<=totalrow;i++){

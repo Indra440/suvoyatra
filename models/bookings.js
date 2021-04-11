@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
+const {nanoid}  = require("nanoid");
 
 let bookigsSchema = new Schema({
+    ticketNo :{
+       type:String,
+       required:false,
+       default: nanoid(8).toUpperCase()
+    },
     userId:{
         type:mongoose.Types.ObjectId,
         required:true,
@@ -64,7 +70,19 @@ let bookigsSchema = new Schema({
             type:String,
             required:true
         }
-    }]
+    }],
+    ticketFor:{
+        email:{
+            type:String,
+            required:false,
+            default:null
+        },
+        mobile_no:{
+            type:String,
+            required:false,
+            default:null
+        }
+    }
 },{
     timestamps:true
 })

@@ -34,6 +34,10 @@ router.get('/partner', function(req, res, next) {
     res.render('partner');
 });
 
+router.get('/forget-pass',function(req,res,next){
+    res.render('forget-pass');
+})
+
 
 // From here all admin routes start
 router.get('/admin', async function(req, res, next) {
@@ -111,11 +115,24 @@ router.post('/actionForPartner',async function(req,res){
             if(!findPartner){
                 return res.status(500).send({status:false,login:true,message:"Partner not found"})
             }
-            console.log("Action is here ",action);
-            console.log("Action type ",typeof(action));
+            // console.log("Action is here ",action);
+            // console.log("Action type ",typeof(action));
             findPartner.is_Active = (action == "true") ? true : false,
             findPartner.verficationstatus = (action == "true") ? "approved" : "rejected";
             await findPartner.save();
+            let message = (action == "true") ? 
+                            "Hey  "+ findPartner.name + " your Suvoyatra account verified successfully!!!. <br><br><br> Thank you for join with Suvoyatra." 
+                            : "Hey  "+ findPartner.name + " sorry to inform you that your Suvoyatra account verfication got rejected!!!. <br><br><br> Please contact our admin for more info." ;
+            let EmailDetails = {
+                to:findPartner.email,
+                subject : "Suvoyatra partner verification",
+                message : message
+            }
+            const sendMail = await _helper.utility.common.sendMail(EmailDetails);
+            console.log("sendMail ",sendMail);
+            if(sendMail != true){
+                return res.status(200).send({status:true,login:true,message:"Action performed but couldn't send mail"})
+            }
             return res.status(200).send({status:true,login:true,message:"Partner "+findPartner.verficationstatus+" successfully"})
         }catch(err){
             console.log("Admin error ",err);
@@ -393,6 +410,7 @@ router.get('/add-passenger-details',
         queryvalue.b_id = queryvalue.b_id ? queryvalue.b_id : fetchBus._id;
         queryvalue.seats = JSON.parse(queryvalue.seats);
         console.log("Final query value ",queryvalue);   
+        console.log("userDetails",userDetails);   
         res.render('passenger_details',{"queryvalue":queryvalue,"userDetails":userDetails});
 });
 
@@ -412,6 +430,14 @@ router.get('/partner-dashboard', function(req, res, next) {
     //   })
       res.render('partner_dashboard');
 });
+
+// router.post('get-app-link',function(req,res,next){
+//     try{
+
+//     }catch(e){
+
+//     }
+// })
 
 router.use('/partnerRouter', partnerRouter);
 router.use('/busRouter',busRouter);

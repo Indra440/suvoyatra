@@ -18,8 +18,10 @@ $(document).ready(function(){
                 window.localStorage.setItem("suvoyatrausertoken", result.token);
                 window.location.href = basicUrl +'/partner-dashboard';
               },
-            error:function(err){
-                window.location.href = basicUrl +'/partner-login';
+            error:function(response){
+                // console.log("Error ",err);
+                response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong please try again"); 
+                // window.location.href = basicUrl +'/partner-login';
             }
         })
     })

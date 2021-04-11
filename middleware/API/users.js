@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const controller = require('../../controller/users');
 const busModel = require("../../models/buses");
+const bookingModel = require ("../../models/bookings");
 
 module.exports.validateUser = async (req,res,next) =>{
     try{
@@ -59,7 +60,7 @@ module.exports.userOtpChecking = async (req,res,next) =>{
     if(!last_otp || last_otp == null || last_otp == undefined){
         return res.status(500).send({status:false,message:"Looks like user is not requested for verification yet"});
     }
-    if(!String(user_id) == last_otp){
+    if(String(otp) != last_otp){
         return res.status(500).send({status:false,message:"Otp does not matched"});
     }
     if(_helper.utility.common.calulateTime(fetchUser.Verification.otp_generation_time,new Date()) > 10){
@@ -72,10 +73,13 @@ module.exports.userOtpChecking = async (req,res,next) =>{
 
 module.exports.saveUser = async (req,res,next) =>{
     console.log("Body ",req.body);
-    if((req.body.email == "") || !(emailRegexp.test(req.body.email))){
+    if(req.body.email == "" && req.body.phone == ""){
+        return res.status(500).send({status:false,message:"Both contact details can't be removed"})
+    }
+    if((req.body.email != "") && !(emailRegexp.test(req.body.email))){
         return res.status(500).send({status:false,message:"Please check your email"})
     }
-    if(req.body.phone == "" || String(req.body.phone).length !=10){
+    if(req.body.phone != "" && String(req.body.phone).length !=10){
         return res.status(500).send({status:false,message:"Please check Contact number"})
     }
     next()
@@ -83,7 +87,7 @@ module.exports.saveUser = async (req,res,next) =>{
 
 module.exports.bookTicket = async (req,res,next) =>{
     try{
-        const {bus_id,bus_name,departure_date,departure_time,pickup_location,drop_location,seats,total_ammount,passengerDetails} = req.body;
+        const {bus_id,bus_name,departure_date,departure_time,pickup_location,drop_location,seats,total_ammount,ticketEmail,ticketmobile_no,passengerDetails} = req.body;
         let seatArray = JSON.parse(seats);
         let passengerArray = JSON.parse(passengerDetails);
         if(!bus_id || bus_id == "" || bus_id == null || bus_id == undefined ||
@@ -96,6 +100,21 @@ module.exports.bookTicket = async (req,res,next) =>{
         ){
             return res.status(500).send({status:false,message:" required fields are mandatory"});
         }
+        if(ticketEmail == "" && ticketmobile_no == ""){
+            return res.status(500).send({status:false,message:"Atleast one contact details is needed to send ticket"});
+        }
+
+        if(ticketEmail !=""){
+            if(!(emailRegexp.test(ticketEmail))){
+                return res.status(500).send({status:false,message:"Please Enter a valid email in contact details"});
+            }
+        }
+        if(ticketmobile_no != ""){
+            if(isNaN(ticketmobile_no) ||  String(ticketmobile_no).length != 10){
+                return res.status(500).send({status:false,message:"Please Enter a valid 10 digit mobile number in contact details"});
+            }
+        }
+
         if(!seatArray || seatArray == null || seatArray == undefined || seatArray.length == 0){
             return res.status(500).send({status:false,message:"Seat selection is mandatory to book a bus"});
         }
@@ -111,9 +130,10 @@ module.exports.bookTicket = async (req,res,next) =>{
         if(bookingDetails.status == false){
             return res.status(500).send({status:false,message:"Error occur while booking seat"});
         }
-
-        if(bookingDetails.bookingDetails[0].bookedSeat.length > 0){
-            let bookedSeats = bookingDetails.bookingDetails[0].bookedSeat;
+        console.log("bookingDetails ",bookingDetails);
+        if(JSON.parse(bookingDetails.bookingDetails[0].bookedSeat).length > 0){
+            console.log("Inside this");
+            let bookedSeats = JSON.parse(bookingDetails.bookingDetails[0].bookedSeat);
             let allbookedSeatNo = [],alreadyBooked = [];
             seatArray.map(e =>{allbookedSeatNo.push(e.seatNo)});
             bookedSeats.map((cur_bookedSeat)=>{
@@ -122,9 +142,30 @@ module.exports.bookTicket = async (req,res,next) =>{
                 }
             })
             if(alreadyBooked.length > 0){
-                return res.status(500).send({status:false,message:"This seat no "+alreadyBooked.join() + "already booked"})
+                return res.status(500).send({status:false,message:"This seat no "+ alreadyBooked.join() + " already booked"})
             }
         }
+        next();
+    }catch(err){
+        return res.status(500).send({status:false,message:err.message})
+    }
+}
+
+module.exports.confirmBooking = async (req,res,next)=>{
+    try{
+        console.log("Body is here ",req.body);
+        const {razorpay_order_id} = req.body;
+        const findBooking = await bookingModel.findOne({"razorpayOrderId":razorpay_order_id,bookingStatus : "pending"});
+        console.log("findBooking ",findBooking);
+        if(!findBooking){
+            return res.status(500).send({status:false,message:"Booking not found or booking already confirmed"});
+        }
+        const busDetails = await busModel.findOne({_id:mongoose.Types.ObjectId(findBooking.busId),is_active:true});
+        if(!busDetails){
+            return res.status(500).send({status:false,message:"Bus not found or inactive now"});
+        }
+        req.bookingDetails = findBooking;
+        req.busDetails = busDetails;
         next();
     }catch(err){
         return res.status(500).send({status:false,message:err.message})

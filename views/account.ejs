@@ -21,6 +21,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'
 		type='text/css'>
+	<link href="css/toaster.css" rel="stylesheet"/>
 	<!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
 	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
 </head>
@@ -48,8 +49,8 @@
 					</li>
 					<li><a href="/partner" title="Partner">Partner</a></li>
 					<li><a title="user">user</a>
-						<ul>
-							<li><a href="/login" title="Login">Login</a></li>
+						<ul id="userMenu">
+							<li><a href="/user-login" title="Login">Login</a></li>
 							<li class="active"><a href="/account" title="My account">My account</a></li>
 							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
 						</ul>
@@ -135,7 +136,7 @@
 									</div>
 								</div>
 								<div class="f-row">
-									<input type="submit" value="Save Changes" id="submit1" name="submit"
+									<input type="submit" value="Save Changes" id="save_changes" name="submit"
 										class="btn color medium" />
 								</div>
 							</fieldset>
@@ -207,13 +208,19 @@
 	<!-- //Footer -->
 
 	<!-- jQuery -->
+    <script src="js/jquery.min.js"></script>
 	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+	<script src="js/toaster.min.js"></script>
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.slicknav.min.js"></script>
 	<script src="js/wow.min.js"></script>
 	<script src="js/scripts.js"></script>
 	<script>
+		const basicUrl = window.location.origin;
+		var userDetails = {};
 		$(document).ready(function () {
+			console.log("Its hitting here");
 			$('.single').hide().first().show();
 			$('.categories li:first').addClass('active');
 
@@ -222,18 +229,93 @@
 				$(this).closest('li').addClass('active').siblings().removeClass('active');
 				$($(this).attr('href')).show().siblings('.single').hide();
 			});
-
 			var hash = $.trim(window.location.hash);
 			if (hash) $('.categories a[href$="' + hash + '"]').trigger('click');
-		});
-	</script>
 
+			let userToken = window.localStorage.getItem("suvoyatratoken");
+			// console.log("userToken ",userToken);
+			if(!userToken || userToken == null || userToken == "" || userToken == undefined){
+				 window.location.href = basicUrl + "/user-login"
+			}else{
+				fetchUserDetails(userToken)
+			}
+			$("#save_changes").click(function(){
+
+				const data = {
+					name : $("#name").val() ? $("#name").val() : "",
+					email : $("#email").val() ? $("#email").val() : "",
+					phone : $("#number").val() ? $("#number").val() : "",
+					address : $("#address").val() ? $("#address").val() : "",
+					zipCode : $("#zip").val() ? $("#zip").val() : "",
+					city : $("#city").val() ? $("#city").val() : "",
+				}
+				console.log("data ",data);
+				console.log(_.isEqual(userDetails, data));
+				if(_.isEqual(userDetails, data)){
+					return toastr.info('No changes found');
+				}
+				$.ajax({
+					url:basicUrl+'/users/save-user-details',
+					type: "POST",
+					beforeSend: function(request) {
+						request.setRequestHeader("authorizationToken", userToken);
+					},
+					data: data,
+					dataType: "JSON",
+					success: function(result){
+						toastr.success('Data saved successfully');
+						console.log("result ",result);
+						if(result.status == true){
+							fetchUserDetails(userToken);
+						}
+					},
+					error: function(response) {
+						response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong please try again"); 
+						// toastr.error('some error is comming');
+						// console.log("Response ",response);
+						fetchUserDetails(userToken);
+					}
+				})
+			})
+
+		});
+		 function fetchUserDetails(userToken){
+			$.ajax({
+				url:basicUrl+'/users/check-user-status',
+				type: "POST",
+				data: {'token':userToken},
+				dataType: "JSON",
+				success: function(result){
+					console.log("result ",result);
+					console.log("Successfully validate");
+					const payload = result.payload;
+					$("#name").val(payload.userName);
+					$("#email").val(payload.userEmail);
+					$("#number").val(payload.user_Ph_Number);
+					$("#address").val(payload.streetAddress);
+					$("#zip").val(payload.zipCode);
+					$("#city").val(payload.city);
+					userDetails.name =  $("#name").val();
+					userDetails.email = $("#email").val();
+					userDetails.phone = $("#number").val();
+					userDetails.address = $("#address").val();
+					userDetails.zipCode = $("#zip").val();
+					userDetails.city = $("#city").val();
+					console.log("userDetails ",userDetails);
+				},
+				error: function(response) {
+					console.log("Its hitting here ",response);
+					localStorage.removeItem("suvoyatratoken");
+					window.location.href = basicUrl +'/user-login';
+				}
+			})   
+		}
+	</script>
 	<script src="js/styler.js"></script>
 	<script>
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";
 		}
-
 		function closeNav() {
 			document.getElementById("mySidenav").style.width = "0";
 		}

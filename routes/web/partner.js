@@ -48,7 +48,8 @@ router.post('/partner-login',
             intro:'Error !! ',
             message: partnerLogin.message
         }
-        return res.redirect('/partner-login')   
+        // return res.redirect('/partner-login')
+        res.status(500).send({"token":"",message:partnerLogin.message})   
     }else if(partnerLogin.status == true){
         req.session.message = {
             type:'success',
@@ -56,7 +57,7 @@ router.post('/partner-login',
             message: partnerLogin.message
         }
         let token = jwt.sign({'partnerInfo':partnerLogin.payload},config.get('LogintokenSecret'));
-        res.status(200).send({"token":token})
+        res.status(200).send({"token":token,message:partnerLogin.message})
         // return res.redirect('/partner-dashboard')
     }
 })

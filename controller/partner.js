@@ -44,7 +44,7 @@ const partnerLogin = async (partnerCredentials) =>{
     }
     try{
         console.log("partnerCredentials ",partnerCredentials);
-        let findPartner = await usersModel.findOne({$or:[{"email":partnerCredentials.username},{"ph_no":partnerCredentials.username}],is_Active:true});
+        let findPartner = await usersModel.findOne({$or:[{"email":partnerCredentials.username},{"ph_no":partnerCredentials.username}],is_Active:true,userType:2});
         console.log("findPartner ",findPartner);
         if(!findPartner){
             response.message = "Un authorised credentials or you are not verified yet!! Try to contact Admin";
@@ -109,7 +109,7 @@ const savePartnerDetails = async(curpartnerDeatails,oldPartnerDetails) =>{
     try{
         if(curpartnerDeatails.email != oldPartnerDetails.email){
             const fetchPartner = await usersModel.findOne({"email":curpartnerDeatails.email,is_Active:true});
-            if(fetchPartner == null || fetchPartner == undefined){
+            if(fetchPartner != null || fetchPartner != undefined){
                 console.log("Its inside this point");
                 response.message = "This email id is already associated with another acconut";
                 return response;

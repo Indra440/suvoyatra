@@ -76,6 +76,7 @@ const mongoose = require('mongoose');
   }
 
   module.exports.fetchBookedSeat = async (bus_id,departure_date)=>{
+    console.log("Departure date ",departure_date);
     return new Promise( async (resolve,reject)=>{
         try{
           const bookingDetails = await busModel.aggregate([
@@ -94,33 +95,76 @@ const mongoose = require('mongoose');
                 }
             },
             {
+              $unwind:{
+                path:"$bookingDetails",
+                preserveNullAndEmptyArrays: true
+              }
+            },
+            {
                 $project:{
                     _id:1,
                     totalseat : "$busFeature.noOfSeat",
                     seatTemplate : "$seatTemplate",
-                    bookingDetails : {
-                        $filter:{
-                            input: "$bookingDetails",
-                            as: "booking",
-                            cond: { $eq: [ "$$booking.bookingFor", new Date(departure_date) ] }
-                        }
-                    }
+                    bookingDetails : 1,
+                    bookingDates : {$cond:{ if: { $eq: [ "$bookingDetails", null ] }, then: null, else:
+                                {"bookingDateYear" : { $year: "$bookingDetails.bookingFor" },
+                                "bookingDateMonth": { $month: "$bookingDetails.bookingFor" },
+                                "bookingDateDay": { $dayOfMonth: "$bookingDetails.bookingFor" }}
+                                 }},
                 }
             },
+            {
+              $project:{
+                          _id:1,
+                          totalseat : 1,
+                          seatTemplate : 1,
+                          bookingDetails : {$cond:{ if: {
+                              $and:[
+                                  { $ne: [ "$bookingDetails", null ] },
+                                  { $eq:["$bookingDates.bookingDateYear" , Number(String(departure_date).split("-")[0])]},
+                                  { $eq:["$bookingDates.bookingDateMonth" , Number(String(departure_date).split("-")[1])]},
+                                  { $eq:["$bookingDates.bookingDateDay" , Number(String(departure_date  ).split("-")[2])]},
+                                  { $eq:["$bookingDetails.bookingStatus","confirmed"]}
+                              ]}, then: "$bookingDetails", else:null}
+                          }
+                      } 
+          },
             {
                 $project:{
                         _id:1,
                         totalseat : 1,
                         seatTemplate :1,
                         bookedSeat:{
-                                $cond:{if:{$gte:[{$size:"$bookingDetails"},1]},
-                                            then:{ $map:{ input: "$bookingDetails", as: "booking", in:{$sum: "$$booking.bookingSeatNo" }}},else:[]}
+                                $cond:{if:{$eq:["$bookingDetails",null]},
+                                            then:[],else:"$bookingDetails.bookingSeat"}
                             }
                     }
+            },
+            {
+              $group:{
+                _id:"$_id",
+                totalseat : {$first:"$totalseat"},
+                seatTemplate : {$first:"$seatTemplate"},
+                bookedSeat : {$addToSet:"$bookedSeat"}
+              }
             }
         ])
+        console.log("bookingDetails ",bookingDetails);
+          let bookedseats = bookingDetails[0].bookedSeat;
+          console.log("bookedseats ",bookedseats);
+          let finalBookedSeat = [];
+          if(bookedseats && bookedseats.length > 0 ){
+            bookedseats.map(async (cur_booking,index)=>{
+              cur_booking.map((cur_seat,index)=>{
+                finalBookedSeat.push(cur_seat)
+              })
+            })
+            console.log("finalBookedSeat ",finalBookedSeat);
+          }
+        bookingDetails[0].bookedSeat = JSON.stringify(finalBookedSeat);
         resolve({status:true,bookingDetails:bookingDetails}) 
       }catch(err){
+        console.log("Its hitting catch here ",err);
         reject({status:false,bookingDetails:err})
       }
     })

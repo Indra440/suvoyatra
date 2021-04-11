@@ -23,6 +23,7 @@
 		type='text/css'>
 	<!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
 	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+	<link href="css/toaster.css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -48,7 +49,7 @@
 					</li>
 					<li><a href="/partner" title="Partner">Partner</a></li>
 					<li><a title="user">user</a>
-						<ul>
+						<ul id="userMenu">
 							<li><a href="/user-login" title="Login">Login</a></li>
 							<li><a href="/account" title="My account">My account</a></li>
 							<li><a href="/booking-history" title="booking-history">Booking History</a></li>
@@ -106,7 +107,7 @@
 									<input type="password" id="password" />
 								</div>
 							</div>
-							<p><a href="forget-pass.html"  class="forget-pass">Forget Password ?</a></p>
+							<p><a href="/forget-pass"  class="forget-pass">Forget Password ?</a></p>
 							<div class="f-row">
 								<div class="full-width">
 									<input type="button" value="Login" class="btn color medium full" id="login" />
@@ -179,10 +180,13 @@
 	<!-- jQuery -->
 	<!-- <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
 	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	<script src="js/jquery.uniform.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/wow.min.js"></script>
-	<script src="js/scripts.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.uniform.min.js"></script>
+    <script src="js/jquery.slicknav.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+	<script src="js/toaster.min.js"></script>
+    <script src="js/scripts.js"></script>	
 	<script>
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";

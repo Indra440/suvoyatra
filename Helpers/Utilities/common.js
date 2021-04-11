@@ -139,7 +139,7 @@ module.exports.sendMail = async(mailDetails) =>{
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
         // Preview only available when sending through an Ethereal account
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
         return true;
     }catch(err){
         return err;
@@ -166,38 +166,47 @@ module.exports.createRazorpayOrder = async(ammount)=>{
                 key_secret: process.env.RAZORPAY_KEY_SECRET
               })
               var params = {
-                  ammount : Number(ammount) * 100,
+                  amount : Number(ammount) * 100,
                   currency : "INR",
                   receipt : "suvoyatra007",
                   payment_capture : "1"
               }
+              console.log("instance ",instance);
+              console.log("params ",params);
               instance.orders
                     .create(params)
                     .then((data)=>{
+                        console.log("Data ",data);
                         resolve({data:data,status:true})
                     })
                     .catch((err)=>{
+                        console.log("Its in razorpay catch ",err);
                         reject({data:err,status:false})
                     })
         }catch(err){
+            console.log("Its in catch blovck ",err);
             reject({data:err,status:false})
         }
     })
     
 }
 
-module.exports.verifyRazorpaSignature = async() =>{
+module.exports.verifyRazorpaSignature = async(paymentDetails) =>{
     try{
-        let body = oredr_id + "|" + payment_id;
+        var body = paymentDetails.razorpay_order_id + "|" + paymentDetails.razorpay_payment_id;
+        var expectedSignature = crypto
+        .createHmac("sha256",process.env.RAZORPAY_KEY_SECRET)
+        .update(body.toString())
+        .digest("hex");
 
-        let expectedSignature = crypto
-                .createHmac("sha256",process.env.RAZORPAY_KEY_SECRET)
-                .update(body.toString())
-                .digest("hex");
-        if(expectedSignature === payment_signature){
+        console.log("expectedSignature ",expectedSignature);
+        if(expectedSignature === paymentDetails.razorpay_signature){
             return true;
+        }else{
+            return false;
         }
     }catch(err){
+        console.log("Error ",err);
         return false;
     }
 }

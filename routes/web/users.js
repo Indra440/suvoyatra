@@ -89,7 +89,29 @@ router.post('/book-ticket',
             }
         }catch(e){
             console.log("Error during book a Ticket");
-            return res.status(500).send(e);
+            return res.status(500).send({status:false,message:e.message});
+        }
+    }
+)
+
+router.post('/confirm-booking',
+    middleware.api.users.validateUser,
+    middleware.api.users.confirmBooking,
+    async(req,res,next) =>{
+        try{
+            const curUserDetails = req.user;
+            const bookingDetails = req.bookingDetails;
+            const paymentDetails = req.body;
+            const busDetails = req.busDetails;
+            const confirmBooking = await controller.confirmBooking(curUserDetails,busDetails,bookingDetails,paymentDetails);
+            if(confirmBooking.status == false){
+                return res.status(500).send(confirmBooking);
+            }else if(confirmBooking.status == true){
+                return res.status(200).send(confirmBooking);
+            }
+        }catch(e){
+            console.log("Error while confirming booking");
+            return res.status(500).send({status:false,message:e.message});
         }
     }
 )
