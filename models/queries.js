@@ -30,6 +30,11 @@ let queriesSchema = new Schema({
     isPartner:{
         type:Boolean,
         default:false
+    },
+    queryStatus:{
+        type:String,
+        default:'pending',  //pending,resolved
+        required : false
     }
 },{
     timestamps:true

@@ -8,17 +8,30 @@ if(!partnerToken || partnerToken == null || partnerToken == undefined){
 }
 $(document).ready(function(){
     console.log("Its loading");
-    fetchPartnerDetails();
+    let queryValue = getUrlVars()["p"];
 
+    if(queryValue && queryValue !=null && queryValue !=undefined && queryValue !=""){
+        $("#helpMenu").addClass("hide");
+        $("#logout").addClass("hide");
+        $(".closePartnerAccount").removeClass("hide");
+    }
+
+    fetchPartnerDetails();
     $("#logout").click(function(){
         if (confirm('Are you sure you want to logout from this account ?')) {
             // Save it!
-            localStorage.removeItem("partnerToken");
+            localStorage.removeItem("suvoyatrausertoken");
             window.location.href = basicUrl +'/partner-login';
           } else {
             // Do nothing!
             return null;
           }
+    })
+
+    $(".closePartnerAccount").click(function(){
+        localStorage.removeItem("suvoyatrausertoken");
+        localStorage.removeItem("SCPADID");
+        window.top.close();
     })
 
     $("#savePartnerDetails").click(function(){
@@ -287,7 +300,7 @@ $(document).ready(function(){
             },
             error :function (response){
                 console.log("response ",response.responseJSON);   
-                response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong while fetching the bus list"); 
+                response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong.Please try again"); 
             } 
         })
     })
@@ -320,15 +333,35 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(result){
                 toastr.success('Message Sent successfully');
-                console.log("result ",result);
+                // console.log("result ",result);
+                $("#help_name").val("");
+                $("#help_sub").val("");
+                $("#help_comments").val("");
             },
             error: function(response) {
-                toastr.error('some error is comming');
+                response.responseJSON.message ? 
+                                        toastr.error(response.responseJSON.message) :
+                                         toastr.error("Something went wrong.Please try again"); 
+                // toastr.error('some error is comming');
             }
         })
     });
 
 })
+
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
 function moreLess(cur_button){
     $(cur_button).closest(".partner-bus-result").find(".moretext").toggle();
     if ($(cur_button).val() == "Read More") {
@@ -576,6 +609,7 @@ function fetchPartnerDetails(){
             console.log("Successfully validate");
             const payload = result.payload;
             $("#name").val(payload.name);
+            $("#help_name").val(payload.name);
             $("#email").val(payload.email);
             $("#username").val(payload.email);
             $("#password1").val("");

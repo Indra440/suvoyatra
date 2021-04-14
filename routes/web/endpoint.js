@@ -6,12 +6,15 @@ const userRouter = require('./users');
 const middleware = require('../../middleware/middleware');
 const controller = require('../../controller/buses');
 const _helper = require('../../Helpers/helpers');
+const session = require('express-session');
+const mongoose = require('mongoose');
+const config = require('config');
+const jwt = require('jsonwebtoken');
 const usersModel = require('../../models/users');
 const enduserModel = require('../../models/endusers');
 const busModel = require('../../models/buses');
 const bookingModel = require('../../models/bookings');
-const session = require('express-session');
-const mongoose = require('mongoose');
+const queryModel = require('../../models/queries');
 const userController = require('../../controller/users');
 
 
@@ -39,7 +42,7 @@ router.get('/forget-pass',function(req,res,next){
 })
 
 
-// From here all admin routes start
+// From here all admin routes start **********************************************************************************************************
 router.get('/admin', async function(req, res, next) {
     if(req.session.admin){
         try{
@@ -48,7 +51,9 @@ router.get('/admin', async function(req, res, next) {
             const toatalBuses = await busModel.find({is_active:true});
             const totalBookings = await bookingModel.find({});
             const recentPartnerRequest = await usersModel.find({userType:2,is_Active:false,verficationstatus:"pending"});
-            res.render('admin/index',{"partnerRequest":recentPartnerRequest,"toatalPartner":toatalPartner.length,
+            const fetchallQueries = await queryModel.find({queryStatus:"pending"});
+            console.log("fetchallQueries ",fetchallQueries);
+            res.render('admin/index',{"queries":fetchallQueries,"partnerRequest":recentPartnerRequest,"toatalPartner":toatalPartner.length,
                             "totalUser":totalUser.length,"toatalBuses":toatalBuses.length,"totalBookings":totalBookings.length});
         }catch(err){
             console.log("Admin error ",err);
@@ -143,6 +148,26 @@ router.post('/actionForPartner',async function(req,res){
     }
 })
 
+router.post('/resolveQuery',async function(req,res){
+    if(req.session.admin){
+        try{
+            let queryId = req.body.queryId;
+            let findQuery = await queryModel.findOne({_id:mongoose.Types.ObjectId(queryId),queryStatus:"pending"});
+            if(!findQuery){
+                return res.status(500).send({status:false,login:true,message:"Query not found or it's already resolved"})
+            }
+            findQuery.queryStatus = "resolved";
+            await findQuery.save();
+            return res.status(200).send({status:true,login:true,message:"Query resolved"})
+        }catch(err){
+            console.log("Admin error ",err);
+            return res.status(500).send({status:false,login:true,message:err.message})
+        }
+    }else{
+        return res.status(500).send({status:false,login:false,message:"You have loggedout from this session please login again"})
+    }
+})
+
 router.get('/allpartners',async function(req,res){
     if(req.session.admin){
         try{
@@ -150,7 +175,7 @@ router.get('/allpartners',async function(req,res){
                 {
                     $match:{
                         is_Active:true,
-                        userType : 2
+                        userType: "2"
                     }
                 },
                 {
@@ -161,12 +186,14 @@ router.get('/allpartners',async function(req,res){
                         ph_no : 1,
                         city : 1,
                         zipCode : 1,
+                        verficationstatus:1
                     }
                 }
             ]);
             if(!fetchAllPartners){
                 return res.render('admin/all-parners',{partners:[]});
             }
+            console.log("fetchAllPartners ",fetchAllPartners);
             return res.render('admin/all-partners',{partners:fetchAllPartners});
         }catch(err){
             console.log("Admin error ",err);
@@ -176,6 +203,28 @@ router.get('/allpartners',async function(req,res){
         return res.render('admin/page-login');
     }
 })
+
+router.post('/accessPartnerDashboard',async function(req,res){
+    if(req.session.admin){
+        try{
+            const  partnerId = req.body.partner_id;
+            const findPartner = await usersModel.findOne({_id:mongoose.Types.ObjectId(partnerId),userType:"2",is_Active :true })
+            if(!findPartner){
+                return res.status(500).send({status:false,login:true,message:"Partner not found or its not active now"})
+            }
+            const token = jwt.sign({'partnerInfo':findPartner},config.get('LogintokenSecret'));
+            return res.status(200).send({status:true,login:true,message:"Dashboard access successfully",token:token})
+        }catch(err){
+            console.log("Admin error ",err);
+            return res.status(500).send({status:false,login:true,message:err.message})
+        }
+    }else{
+        return res.status(500).send({status:false,login:false,message:"You have loggedout from this session please login again"})
+    }
+})
+
+
+
 
 router.get('/allusers',async function(req,res){
     if(req.session.admin){
@@ -274,7 +323,7 @@ router.get('/allbookings',async function(req,res){
 })
 
 
-//End all Admin routes
+//End all Admin routes **************************************************************************************************************************************
 
 router.get('/user-login', function(req, res, next) {
     res.render('login');

@@ -29,7 +29,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .hide{
-            display: none;
+            display: none !important;
         }
     </style>
 
@@ -334,42 +334,28 @@
                     <div class="col-lg-6">
                         <div class="card">
                             <div class="card-body ">
-                                <h4 class="card-title box-title">Queries From Partners</h4>
+                                <h4 class="card-title box-title">Queries List</h4>
                                 <div class="card-content">
                                     <div class="todo-list">
                                         <div class="tdl-holder">
                                             <div class="tdl-content">
                                                 <ul>
-                                                    <li>
-                                                        <label>
-                                                            <input type="checkbox"><i class="check-box"></i>
-                                                            <span>Subject</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input type="checkbox"><i class="check-box"></i>
-                                                            <span>Subject</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input type="checkbox"><i class="check-box"></i>
-                                                            <span>Subject</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input type="checkbox"><i class="check-box"></i>
-                                                            <span>Subject</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label>
-                                                            <input type="checkbox"><i class="check-box"></i>
-                                                            <span>Subject</span>
-                                                        </label>
-                                                    </li>
+                                                    <% if(queries && queries.length > 0){
+                                                        queries.map((cur_query,index)=>{ %>
+                                                        <li>
+                                                            <label>
+                                                                <input type="checkbox"><i class="check-box"></i>
+                                                                <span><%= cur_query.subject %></span>
+                                                                <input class="id hide" value="<%= cur_query._id %>" />
+                                                                <input class="username hide" value="<%= cur_query.name %>" />
+                                                                <input class="useremail hide" value="<%= cur_query.email %>" />
+                                                                <input class="queryMsg hide" value="<%= cur_query.message %>" />
+                                                                <input class="userType hide" value="<%= cur_query.isPartner %>" />
+                                                                <input type="button" class="btn btn-primary hide resolve" value="Resolve"/>
+                                                            </label>
+                                                        </li>
+                                                    <% }) 
+                                                     } %>
                                                 </ul>
                                             </div>
                                         </div>
@@ -379,34 +365,38 @@
                         </div><!-- /.card -->
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 hide" id="queryMsgShow">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title box-title">Live Chat</h4>
+                                <h4 class="card-title box-title">Query Message ( <span id="userinfo"> </span> )</h4>
                                 <div class="card-content">
                                     <div class="messenger-box">
                                         <ul>
+                                            <!-- /.msg-received -->
+
                                             <li>
                                                 <div class="msg-received msg-container">
-                                                    <div class="avatar">
+                                                    <!-- <div class="avatar">
                                                         <img src="images/avatar/64-1.jpg" alt="">
                                                         <div class="send-time">11.11 am</div>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="msg-box">
                                                         <div class="inner-box">
-                                                            <div class="name">
+                                                            <div class="name" id="userName">
                                                                 John Doe
                                                             </div>
-                                                            <div class="meg">
+                                                            <div class="meg" id="message">
                                                                 Lorem ipsum dolor sit amet, consectetur adipisicing
                                                                 elit. Perspiciatis sunt placeat velit ad reiciendis
                                                                 ipsam
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div><!-- /.msg-received -->
+                                                </div>
                                             </li>
-                                            <li>
+
+                                            <!-- /.msg-sent -->
+                                            <!-- <li>
                                                 <div class="msg-sent msg-container">
                                                     <div class="avatar">
                                                         <img src="images/avatar/64-2.jpg" alt="">
@@ -422,17 +412,19 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div><!-- /.msg-sent -->
-                                            </li>
+                                                </div>
+                                            </li> -->
                                         </ul>
-                                        <div class="send-mgs">
+
+                                        <!-- <div class="send-mgs">
                                             <div class="yourmsg">
                                                 <input class="form-control" type="text">
                                             </div>
                                             <button class="btn msg-send-btn">
                                                 <i class="pe-7s-paper-plane"></i>
                                             </button>
-                                        </div>
+                                        </div> -->
+
                                     </div><!-- /.messenger-box -->
                                 </div>
                             </div> <!-- /.card-body -->
@@ -583,6 +575,63 @@
             })
         }
 
+        $(document).ready(function(){
+            $('input[type="checkbox"]').click(function(){
+                if($(this).is(":checked")){
+                    $('input[type="checkbox"]').each(function(){
+                        $(this).prop('checked',false);
+                        $(this).closest('li').find('label').children('input.resolve').addClass("hide");
+                    })
+                    $(this).prop('checked',true)
+                    console.log("Checkbox is checked.");
+                    $(this).closest('li').find('label').children('input.resolve').removeClass("hide");
+                    $("#queryMsgShow").removeClass("hide");
+                    const username = $(this).closest('li').find('label').children('input.username').val();
+                    const useremail = $(this).closest('li').find('label').children('input.useremail').val();
+                    const querymsg = $(this).closest('li').find('label').children('input.queryMsg').val();
+                    const userType = $(this).closest('li').find('label').children('input.userType').val();
+                    const finalUserType = userType == "true" ? "Partner" : "User";
+                    $("#userinfo").html(finalUserType + " - "+useremail)
+                    $("#userName").html(username);
+                    $("#message").html(querymsg);
+                }
+                else if($(this).is(":not(:checked)")){
+                    console.log("Checkbox is unchecked.");
+                    $(this).closest('li').find('label').children('input.resolve').addClass("hide");
+                    $("#queryMsgShow").addClass("hide");
+                }
+            });
+            $(".resolve").click(function(){
+                const queryId = $(this).closest('li').find('label').children('input.id').val();
+                // console.log("Current id ",id);
+                let self = $(this);
+                if(!queryId || queryId == null || queryId == ""){
+                    return toastr.error('Some error occured,please reload and tray again');
+                }
+                $.ajax({
+                    url:basicUrl+'/resolveQuery',
+                    type:'POST',
+                    data:{queryId:queryId},
+                    dataType:'JSON',
+                    success:function(result){
+                        if(result.status == true){
+                            toastr.success(result.message);
+                            self.closest("li").addClass("hide");
+                        }
+                    },
+                    error :function (response){
+                        console.log("response ",response);
+                        response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong while fetching the bus list"); 
+                        if(response.responseJSON && response.responseJSON.login == false){
+                            setTimeout(function(){ 
+                                window.location.href = basicUrl + "/admin-login";
+                            }, 2000);
+                        }
+                    } 
+                })
+
+            })
+        });
 
     </script>
 

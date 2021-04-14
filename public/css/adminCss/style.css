@@ -319,8 +319,8 @@ Googel Fonts  */
       position: absolute;
       top: -16px;
       z-index: 2; }
-    .tdl-holder input[type="checkbox"]:checked ~ span {
-      text-decoration: line-through; }
+    /* .tdl-holder input[type="checkbox"]:checked ~ span {
+      text-decoration: line-through; } */
   .tdl-holder input[type="text"] {
     height: 60px;
     margin-top: 20px;

@@ -22,10 +22,16 @@
     <link rel="stylesheet" href="css/adminCss/cs-skin-elastic.css">
     <link rel="stylesheet" href="css/adminCss/lib/datatable/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="css/adminCss/style.css">
+    <link href="css/toaster.css" rel="stylesheet"/>
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
+    <style>
+        .hide{
+            display: none !important;
+        }
+    </style>
 
 </head>
 <body>
@@ -265,30 +271,46 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <strong class="card-title">All Users</strong>
+                                <strong class="card-title">All Partners</strong>
                             </div>
                             <div class="card-body">
                                 <table id="bootstrap-data-table" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
+                                            <th class="hide"></th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Ph-no</th>
                                             <th>City</th>
                                             <th>zip-code</th>
                                             <th>verification status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <% if(partners && partners.length > 0){ 
                                             partners.map((cur_partner) =>{ %>
                                              <tr>
-                                                <td><%= cur_partner.userName %></td>
-                                                <td><%= cur_partner.userEmail %></td>
-                                                <td><%= cur_partner.user_Ph_Number %></td>
+                                                <td class="hide"><input class="partnerId" value="<%= cur_partner._id %>" /></td>
+                                                <td><%= cur_partner.name %></td>
+                                                <td><%= cur_partner.email %></td>
+                                                <td><%= cur_partner.ph_no %></td>
                                                 <td><%= cur_partner.city %></td>
                                                 <td><%= cur_partner.zipCode %></td>
-                                                <td><%= cur_partner.Verification.verified %></td>
+                                                <td><%= cur_partner.verficationstatus %></td>
+                                                <!-- <td><input type="button" class="btn btn-primary dashboardAccess" value="Access Dashboard" /></td> -->
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                          Actions
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                          <a class="dropdown-item dashboardAccess" href="#">Access Dashboard</a>
+                                                          <a class="dropdown-item" href="#">Another action</a>
+                                                          <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+                                                        </div>
+                                                      </div>
+                                                </td>
                                              </tr>   
                                         <% }) } %>
                                     </tbody>
@@ -340,12 +362,60 @@
     <script src="js/adminJs/lib/data-table/buttons.print.min.js"></script>
     <script src="js/adminJs/lib/data-table/buttons.colVis.min.js"></script>
     <script src="js/adminJs/init/datatables-init.js"></script>
-
-
+    <script src="js/toaster.min.js"></script>
     <script type="text/javascript">
+        const basicUrl = window.location.origin;
         $(document).ready(function() {
           $('#bootstrap-data-table-export').DataTable();
-      } );
+            $(".dashboardAccess").click(async function(){
+                console.log("Its hitting here");
+                const partnerId = $(this).closest('tr').find(".partnerId").val();
+                if(!partnerId || partnerId == null || partnerId == undefined || partnerId == ""){
+                    return toastr.error('Some error occured,please reload and tray again');
+                }
+                const checkExistPartnerId = localStorage.getItem("SCPADID");
+                if(String(checkExistPartnerId) != String(partnerId)){
+                    const checkExistPartner = localStorage.getItem("suvoyatrausertoken");
+                    if(checkExistPartner && checkExistPartner !=null && checkExistPartner !=undefined){
+                        let accessCurrentPartner = confirm("You haven't close previous partner account.Would you like to overwrite that partner ?");
+                        if(accessCurrentPartner){
+                            await accessPartnerDashboard(partnerId);
+                        }
+                    }else{
+                        await accessPartnerDashboard(partnerId);
+                    }
+                }else{
+                    window.open(basicUrl+"/partner-dashboard?p="+ String(partnerId), "_blank");
+                }
+                
+            })
+        });
+
+        async function accessPartnerDashboard(partner_id){
+            $.ajax({
+                    url:basicUrl+'/accessPartnerDashboard',
+                    type:'POST',
+                    data:{partner_id:partner_id},
+                    dataType:'JSON',
+                    success:function(result){
+                        if(result.status == true){
+                            // toastr.success(result.message);
+                            window.localStorage.setItem("suvoyatrausertoken", result.token);
+                            window.localStorage.setItem("SCPADID",partner_id);
+                            window.open(basicUrl+"/partner-dashboard?p="+ String(partner_id), "_blank");
+                        }
+                    },
+                    error :function (response){
+                        console.log("response ",response);
+                        response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong while fetching the bus list"); 
+                        if(response.responseJSON && response.responseJSON.login == false){
+                            setTimeout(function(){ 
+                                window.location.href = basicUrl + "/admin-login";
+                            }, 2000);
+                        }
+                    } 
+                })
+        }
   </script>
 
 
