@@ -5,7 +5,7 @@ const busModel = require('../models/buses');
 const mongoose = require('mongoose');
 const queryModel = require('../models/queries');
 
-const addBus = async (user,busDetails,files) =>{
+const addBus = async (user,busDetails,files,existBusDetails) =>{
     let response = {
         status:false,
         message : "",
@@ -13,93 +13,145 @@ const addBus = async (user,busDetails,files) =>{
     try{
         console.log("busDetails ",busDetails);
         const {busName,busnumber,journeyForm,journeyTo,departureTime,
-            arrivalTime,viaRoot,noOfSeat,busType,acType,multimediaType,busDescription} = busDetails;
-            const noSpaceName = busName.replace(/\s/g, "_");
+                                arrivalTime,viaRoot,noOfSeat,busType,acType,multimediaType,busDescription} = busDetails;
+        const bus_id = busDetails.bus_id;
+
+        const noSpaceName = busName.replace(/\s/g, "_");
         const partner_id = user._id;
-        const front_side_fileContents = files.front_side_fileContent;
-        let front_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-front_side.png`;
-        var front_side_image_link = await _helper.utility.common.uploadImageToImagekit(front_side_fileContents,front_side_key)
-        if(!front_side_image_link){
-            response.message = "Error occur while uploading files"
-            return response;
+
+        if(files.front_side_fileContent != "" ){
+            const front_side_fileContents = files.front_side_fileContent;
+            let front_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-front_side.png`;
+            var front_side_image_link = await _helper.utility.common.uploadImageToImagekit(front_side_fileContents,front_side_key)
+            if(!front_side_image_link){
+                response.message = "Error occur while uploading files"
+                return response;
+            }
         }
-        const left_side_fileContents = files.left_side_fileContent;
-        let left_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-left_side.png`;
-        var left_side_image_link = await _helper.utility.common.uploadImageToImagekit(left_side_fileContents,left_side_key)
-        if(!left_side_image_link){
-            response.message = "Error occur while uploading files"
-            return response;
-        }
-        const right_side_fileContents = files.right_side_fileContent;
-        let right_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-right_side.png`;
-        var right_side_image_link = await _helper.utility.common.uploadImageToImagekit(right_side_fileContents,right_side_key)
-        if(!right_side_image_link){
-            response.message = "Error occur while uploading files"
-            return response;
-        }
-        const back_side_fileContents = files.back_side_fileContent;
-        let back_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-back_side.png`;
-        var back_side_image_link = await _helper.utility.common.uploadImageToImagekit(back_side_fileContents,back_side_key)
-        if(!back_side_image_link){
-            response.message = "Error occur while uploading files"
-            return response;
-        }
-        const driver_cabin_fileContent = files.driver_cabin_fileContent;
-        let driver_cabin_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-driver_cabin.png`;
-        var driver_cabin_image_link = await _helper.utility.common.uploadImageToImagekit(driver_cabin_fileContent,driver_cabin_key)
-        if(!driver_cabin_image_link){
-            response.message = "Error occur while uploading files"
-            return response;
-        }
-        const entire_inside_fileContent = files.entire_inside_fileContent;
-        let entire_inside_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-entire_inside.png`;
-        var entire_inside_image_link = await _helper.utility.common.uploadImageToImagekit(entire_inside_fileContent,entire_inside_key)
-        if(!entire_inside_image_link){
-            response.message = "Error occur while uploading files"
-            return response;
-        }
-        const payload = {
-            partnerId: mongoose.Types.ObjectId(partner_id),
-            busName : busName,
-            busNumber : busnumber,
-            busRoadMap:{
-                journeyForm : journeyForm,
-                journeyTo : journeyTo,
-                viaRoot : JSON.parse(viaRoot)
-            },
-            busTiming :{
-                departureTime : departureTime.includes("PM") || departureTime.includes("PM") ? _helper.utility.buses.convertTime12to24(departureTime) : departureTime,
-                arrivalTime : arrivalTime.includes("PM") || arrivalTime.includes("AM") ? _helper.utility.buses.convertTime12to24(arrivalTime) : arrivalTime,
-            },
-            busFeature : {
-                noOfSeat : Number(noOfSeat),
-                busType : busType,
-                acType : acType,
-                multimediaType : multimediaType
-            },
-            busDescription:busDescription,
-            busImages:{
-                front_side : front_side_image_link,
-                left_side : left_side_image_link,
-                right_side : right_side_image_link,
-                back_side : back_side_image_link,
-                driver_cabin : driver_cabin_image_link,
-                entire_inside : entire_inside_image_link
+        if(files.left_side_fileContent != "" ){
+            const left_side_fileContents = files.left_side_fileContent;
+            let left_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-left_side.png`;
+            var left_side_image_link = await _helper.utility.common.uploadImageToImagekit(left_side_fileContents,left_side_key)
+            if(!left_side_image_link){
+                response.message = "Error occur while uploading files"
+                return response;
             }
         }
 
-        let model = new busModel(payload);
-        console.log("payload ",payload);
-        const addBus = await model.save();
-            if(!addBus){
-                response.message = "Error occur while adding buses"
+        if(files.right_side_fileContent != "" ){
+            const right_side_fileContents = files.right_side_fileContent;
+            let right_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-right_side.png`;
+            var right_side_image_link = await _helper.utility.common.uploadImageToImagekit(right_side_fileContents,right_side_key)
+            if(!right_side_image_link){
+                response.message = "Error occur while uploading files"
                 return response;
             }
-            console.log("addBus ",addBus);
+        }
+        if(files.back_side_fileContent != "" ){
+            const back_side_fileContents = files.back_side_fileContent;
+            let back_side_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-back_side.png`;
+            var back_side_image_link = await _helper.utility.common.uploadImageToImagekit(back_side_fileContents,back_side_key)
+            if(!back_side_image_link){
+                response.message = "Error occur while uploading files"
+                return response;
+            }
+        }
+        if(files.driver_cabin_fileContent != "" ){
+            const driver_cabin_fileContent = files.driver_cabin_fileContent;
+            let driver_cabin_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-driver_cabin.png`;
+            var driver_cabin_image_link = await _helper.utility.common.uploadImageToImagekit(driver_cabin_fileContent,driver_cabin_key)
+            if(!driver_cabin_image_link){
+                response.message = "Error occur while uploading files"
+                return response;
+            }
+        }
+        if(files.entire_inside_fileContent != "" ){
+            const entire_inside_fileContent = files.entire_inside_fileContent;
+            let entire_inside_key = `busimages/${partner_id}-${noSpaceName}-${busnumber}-entire_inside.png`;
+            var entire_inside_image_link = await _helper.utility.common.uploadImageToImagekit(entire_inside_fileContent,entire_inside_key)
+            if(!entire_inside_image_link){
+                response.message = "Error occur while uploading files"
+                return response;
+            }
+        }
+        if(!bus_id || bus_id == null || bus_id == undefined || bus_id == ""){
+            const payload = {
+                partnerId: mongoose.Types.ObjectId(partner_id),
+                busName : busName,
+                busNumber : busnumber,
+                busRoadMap:{
+                    journeyForm : journeyForm,
+                    journeyTo : journeyTo,
+                    viaRoot : JSON.parse(viaRoot)
+                },
+                busTiming :{
+                    departureTime : departureTime.includes("PM") || departureTime.includes("PM") ? _helper.utility.buses.convertTime12to24(departureTime) : departureTime,
+                    arrivalTime : arrivalTime.includes("PM") || arrivalTime.includes("AM") ? _helper.utility.buses.convertTime12to24(arrivalTime) : arrivalTime,
+                },
+                busFeature : {
+                    noOfSeat : Number(noOfSeat),
+                    busType : busType,
+                    acType : acType,
+                    multimediaType : multimediaType
+                },
+                busDescription:busDescription,
+                busImages:{
+                    front_side : front_side_image_link,
+                    left_side : left_side_image_link,
+                    right_side : right_side_image_link,
+                    back_side : back_side_image_link,
+                    driver_cabin : driver_cabin_image_link,
+                    entire_inside : entire_inside_image_link
+                }
+            }
+    
+            let model = new busModel(payload);
+            console.log("payload ",payload);
+            const addBus = await model.save();
+                if(!addBus){
+                    response.message = "Error occur while adding buses"
+                    return response;
+                }
+                console.log("addBus ",addBus);
+                response.status = true;
+                response.message = "Bus added successfully";
+                console.log("Response is here ",response);
+                return response;
+        }else{
+            if(existBusDetails == ""){
+                response.status = false;
+                response.message = "Something went wrong while updating Bus";
+                return response;
+            }
+            // let existbusdetails = existBusDetails;
+            existBusDetails.busName = busName;
+
+            existBusDetails.busRoadMap.journeyForm = journeyForm;
+            existBusDetails.busRoadMap.journeyTo = journeyTo;
+            existBusDetails.busRoadMap.viaRoot = JSON.parse(viaRoot);
+
+            existBusDetails.busTiming.departureTime = departureTime.includes("PM") || departureTime.includes("PM") ? _helper.utility.buses.convertTime12to24(departureTime) : departureTime;
+            existBusDetails.busTiming.arrivalTime = arrivalTime.includes("PM") || arrivalTime.includes("AM") ? _helper.utility.buses.convertTime12to24(arrivalTime) : arrivalTime;
+
+            existBusDetails.busFeature.noOfSeat =  Number(noOfSeat);
+            existBusDetails.busFeature.busType =  busType;
+            existBusDetails.busFeature.acType =  acType;
+            existBusDetails.busFeature.multimediaType = multimediaType
+            
+            existBusDetails.busDescription = busDescription;
+
+            existBusDetails.busImages.front_side = (files.front_side_fileContent != "") ? front_side_image_link : existBusDetails.busImages.front_side;
+            existBusDetails.busImages.left_side = (files.left_side_fileContent != "") ? left_side_image_link : existBusDetails.busImages.left_side;
+            existBusDetails.busImages.right_side = (files.right_side_fileContent != "") ? right_side_image_link : existBusDetails.busImages.right_side;
+            existBusDetails.busImages.back_side = (files.back_side_fileContent != "") ? back_side_image_link : existBusDetails.busImages.back_side;
+            existBusDetails.busImages.driver_cabin = (files.driver_cabin_fileContent != "") ? driver_cabin_image_link : existBusDetails.busImages.driver_cabin;
+            existBusDetails.busImages.entire_inside = (files.entire_inside_fileContent != "") ? entire_inside_image_link : existBusDetails.busImages.entire_inside;
+            
+            await existBusDetails.save();
             response.status = true;
-            response.message = "Bus added successfully";
-            console.log("Response is here ",response);
+            response.message = "Bus updated successfully";
             return response;
+        }
     }catch(err){
         response.message = "Error occured while creating bus";
         response.payload = err;
@@ -210,6 +262,49 @@ const updateSeatTemplate= async(busdetails,updateTemplate) =>{
         response.payload = {
             "template":busdetails.seatTemplate
         };
+        return response;
+    }catch(err){
+        response.message = "Error occured while getting bus list";
+        response.payload = err;
+        return response;
+    }
+}
+
+const fetchBusDetails= async(busId) =>{
+    let response = {
+        status:false,
+        message : "",
+    }    
+    try{
+        let fetchBusDetails = await busModel.aggregate([
+            {
+                $match:{
+                    _id:mongoose.Types.ObjectId(String(busId)),
+                    is_active:true
+                }
+            },
+            {
+                $project:{
+                    _id:1,
+                    busName : 1,
+                    busNumber : 1,
+                    busRoadMap : 1,
+                    busTiming :1,
+                    busFeature : 1,
+                    busImages : 1,
+                    busDescription :1
+                }
+            }
+        ])
+        if(!fetchBusDetails || fetchBusDetails == null || fetchBusDetails == undefined || 
+                !fetchBusDetails[0] || fetchBusDetails[0] == null || fetchBusDetails[0] == undefined ){
+                    response.status = false;
+                    response.message = "Bus not found or deactivated";
+                    return response;
+                }
+        response.status = true;
+        response.message = "Bus details fetched successfully";
+        response.payload = fetchBusDetails[0];
         return response;
     }catch(err){
         response.message = "Error occured while getting bus list";
@@ -514,6 +609,7 @@ module.exports = {
     getBuslist,
     getSeatTemplate,
     updateSeatTemplate,
+    fetchBusDetails,
     sendQuery,
     addUserToBus,
     fetchUsersListForPartner,

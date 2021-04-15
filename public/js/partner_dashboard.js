@@ -63,26 +63,12 @@ $(document).ready(function(){
                 console.log("result ",result);
                 if(result.status == true){
                     fetchPartnerDetails();
-                    // let curpartnerDetails = result.payload;
-                    // $("#name").val(curpartnerDetails.name);
-                    // $("#email").val(curpartnerDetails.email);
-                    // $("#username").val(curpartnerDetails.email);
-                    // $("#number").val(curpartnerDetails.ph_no);
-                    // $("#address").val(curpartnerDetails.streetAddress);
-                    // $("#zip").val(curpartnerDetails.zipCode);
-                    // $("#city").val(curpartnerDetails.city);
                 }
             },
             error: function(response) {
                 toastr.error('some error is comming');
                 // console.log("Response ",response);
                 fetchPartnerDetails();
-                // $("#name").val(partnerDetails.name);
-                // $("#email").val(partnerDetails.email);
-                // $("#number").val(partnerDetails.phone);
-                // $("#address").val(partnerDetails.address);
-                // $("#zip").val(partnerDetails.zipCode);
-                // $("#city").val(partnerDetails.city);
             }
         })
     })
@@ -135,12 +121,16 @@ $(document).ready(function(){
         })
     })
 
+    $("#add-update-bus").click(function(){
+        resetingAddBusForm();
+    })
+
     $("#AddBus").click(async function(){
         console.log("Its clicking here");
         const getFormData = validateAndCreatedataForAddBusForm();
         console.log("getFormData ",getFormData);
         if(getFormData != false){
-            toastr.info("Please wait!!! We are adding your BUS ");
+            toastr.info("Please wait!!! We are processing your BUS details ");
             await addBus(getFormData);
         }
     })
@@ -194,6 +184,10 @@ $(document).ready(function(){
     //     //     $(this).text("Read more")
     //     // }
     // });
+
+    $("a.edit_bus_details").click(async function(){
+        console.log("Its hitting");
+    })
 
     $("#add-user").click( async function(){
         if(!$(this).hasClass("clicked")){
@@ -373,6 +367,7 @@ function moreLess(cur_button){
 
 function validateAndCreatedataForAddBusForm(){
     var fd = new FormData();
+        const busId = $("#busId").val();
         const front_side_photo = $("#Upload-front-Photo")[0].files[0];
         const left_side_photo = $("#Upload-left-Photo")[0].files[0];
         const right_side_photo = $("#Upload-right-Photo")[0].files[0];
@@ -391,13 +386,21 @@ function validateAndCreatedataForAddBusForm(){
         const multimediaType = $("#Mul-Type").val();
         const busDescription = $("#comments").val();
 
-        if(!front_side_photo || front_side_photo == null || front_side_photo == undefined||
-            !left_side_photo || left_side_photo == null || left_side_photo == undefined ||
-            !right_side_photo || right_side_photo == null || right_side_photo == undefined ||
-            !back_side_photo || back_side_photo == null || back_side_photo == undefined ||
-            !driver_cabin_photo || driver_cabin_photo == null || driver_cabin_photo == undefined ||
-            !entire_inside_photo || entire_inside_photo == null || entire_inside_photo == undefined ||
-            !busName || busName == "" ||
+        if(!busId || busId == null || busId == undefined || busId ==""){
+            if(!front_side_photo || front_side_photo == null || front_side_photo == undefined||
+                !left_side_photo || left_side_photo == null || left_side_photo == undefined ||
+                !right_side_photo || right_side_photo == null || right_side_photo == undefined ||
+                !back_side_photo || back_side_photo == null || back_side_photo == undefined ||
+                !driver_cabin_photo || driver_cabin_photo == null || driver_cabin_photo == undefined ||
+                !entire_inside_photo || entire_inside_photo == null || entire_inside_photo == undefined ){
+                    toastr.error('Please fill all the fields with valid data');
+                    return false;
+                }
+        }else{
+            fd.append( 'bus_id',busId);
+        }
+
+        if( !busName || busName == "" ||
             !busnumber || busnumber == "" ||
             !journeyForm || journeyForm == ""||
             !journeyTo || journeyTo == "" ||
@@ -454,9 +457,31 @@ function resetingAddBusForm(){
     $('input[type=time]', '#addBusForm').each(function() {
         $(this).val('--:--');
     });
-    $("#Bus-Type").val(" ");
-    $("#AC-Type").val(" ");
-    $("#Mul-Type").val(" ");
+    $("#bus-num").prop('disabled', false);
+    $('option:selected', 'select[name="Bus-Type"]').removeAttr('selected');
+    $('select[name="Bus-Type"]').find('option[value=""]').attr("selected",true);
+    $("#Bus-Type").closest('div').find('span').text("Select One")
+
+    $('option:selected', 'select[name="AC-Type"]').removeAttr('selected');
+    $('select[name="AC-Type"]').find('option[value=""]').attr("selected",true);
+    $("#AC-Type").closest('div').find('span').text("Select One")
+
+    $('option:selected', 'select[name="Mul-Type"]').removeAttr('selected');
+    $('select[name="Mul-Type"]').find('option[value=""]').attr("selected",true);
+    $("#Mul-Type").closest('div').find('span').text("Select One")
+
+    $(".input_fields_wrap").children('div.f-row').remove();
+
+    $("#front-Photo").attr("src","").addClass('hide');                    
+    $("#left-Photo").attr("src","").addClass('hide');
+    $("#right-Photo").attr("src","").addClass('hide');
+    $("#back-Photo").attr("src","").addClass('hide');
+    $("#driver-cabin-Photo").attr("src","").addClass('hide');
+    $("#entire-inside-Photo").attr("src","").addClass('hide');
+
+    $('input[type="file"]').css({"width":"100%","display":"block"});
+    $('#AddBus').val("ADD BUS")
+
 }
 
 async function fetchBusList(page){
@@ -510,7 +535,10 @@ async function fetchBusList(page){
                     busList += '<li><span class="icon icon-themeenergy_clock"></span><p>Estimated Time: ' + finalTimeDiff + '</p></li></ul></div>';
                     
                     busList += '<div class="one-fourth heightfix" style="height: 201px;"><div class="partner-edit-tab">';
-                    busList += '<a href="#" class="btn grey small partner-edit">Edit Seat</a><a href="#" class="btn grey small partner-edit">Edit Bus Detail</a><a href="#" class="btn grey small partner-edit">Track</a><input type="button" onclick="moreLess(this)" class="btn grey small partner-edit moreless-button" value ="Read More"/>';
+                    busList += '<input class="bus_id hide" value="'+ cur_bus._id +'" />';
+                    busList += '<a href="#" class="btn grey small partner-edit">Edit Seat</a>';
+                    busList += "<a href='#' class='btn grey small partner-edit' onclick='editBusDetails(`"+cur_bus._id +"`)'>Edit Bus Detail</a>";
+                    busList += '<a href="#" class="btn grey small partner-edit">Track</a><input type="button" onclick="moreLess(this)" class="btn grey small partner-edit moreless-button" value ="Read More"/>';
                     busList += '</div></div>';
                     
                     busList += '<div class="full-width  moretext"><p class="p-bus-e-date">Entry Date :<span> 10.12.2020</span></p>';
@@ -570,7 +598,93 @@ async function fetchBusList(page){
     }
  }
 
+ async function editBusDetails(self){
+     try{
+        let busId = String(self)
+        if(!busId || busId == null || busId == undefined || busId == ""){
+            toastr.error("Something went wrong please try again");
+        }
+        return new Promise((resolve,reject) =>{
+           $.ajax({
+               url:basicUrl+'/busRouter/fetchBusDetails',
+               type: "POST",
+               beforeSend: function(request) {
+                   request.setRequestHeader("authorizationToken", partnerToken);
+               },
+               data: {busId : String(self)},
+               success: function(result){
+                   console.log("result ",result);
+                   if(result.status == true){
+                       let busDetails = result.payload;
+                       $("#add-update-bus a").trigger("click");
+                       
+                       $("#busId").val(busDetails._id);
+                       $("#busname").val(busDetails.busName);
+                       $("#bus-num").val(busDetails.busNumber);
+                       $("#bus-num").prop('disabled', true);
+                       $("#journey-from").val(busDetails.busRoadMap.journeyForm);
+                       $("#journey-to").val(busDetails.busRoadMap.journeyTo);
+                       $("#Departure-time").val(busDetails.busTiming.departureTime);
+                       $("#Arrival-Time").val(busDetails.busTiming.arrivalTime);
+
+                       let viaRoot = busDetails.busRoadMap.viaRoot;
+                       if(viaRoot && viaRoot.length > 0){
+                           let extraField = viaRoot.length -2;
+                           if(extraField > 0){
+                               for(let i=extraField ; i>0; i=i-2){
+                                   $(".add_field_button").trigger("click")
+                               }
+                           }
+                            $(".viaroot_input").each(function(index){
+                                if($(this).children('input').val() ==""){
+                                    if(viaRoot[index]){
+                                        $(this).children('input').val(viaRoot[index].rootName) 
+                                    }
+                                }
+                            })
+                       }
+                       $("#seat-no").val(busDetails.busFeature.noOfSeat);
+
+                       $('option:selected', 'select[name="Bus-Type"]').removeAttr('selected');
+                       $('select[name="Bus-Type"]').find('option[value='+busDetails.busFeature.busType+']').attr("selected",true);
+                       $("#Bus-Type").closest('div').find('span').text(busDetails.busFeature.busType)
+
+                       $('option:selected', 'select[name="AC-Type"]').removeAttr('selected');
+                    //    $('select[name="AC-Type"]').find('option[value='+busDetails.busFeature.acType+']').attr("selected",true);
+                       $("#AC-Type").closest('div').find('span').text(busDetails.busFeature.acType)
+
+                       $('option:selected', 'select[name="Mul-Type"]').removeAttr('selected');
+                    //    $('select[name="Mul-Type"]').find('option[value='+busDetails.busFeature.multimediaType+']').attr("selected",true);
+                       $("#Mul-Type").closest('div').find('span').text(busDetails.busFeature.multimediaType)
+
+                       $('input[type="file"]').css({"width":"62%","display":"inline-block"});
+
+                       $("#front-Photo").attr("src",busDetails.busImages.front_side).removeClass('hide');                    
+                       $("#left-Photo").attr("src",busDetails.busImages.left_side).removeClass('hide');
+                       $("#right-Photo").attr("src",busDetails.busImages.right_side).removeClass('hide');
+                       $("#back-Photo").attr("src",busDetails.busImages.back_side).removeClass('hide');
+                       $("#driver-cabin-Photo").attr("src",busDetails.busImages.driver_cabin).removeClass('hide');
+                       $("#entire-inside-Photo").attr("src",busDetails.busImages.entire_inside).removeClass('hide');
+
+                       $("#comments").val(busDetails.busDescription);
+
+                       $("#AddBus").val("UPDATE BUS");
+                   }
+               },
+               error: function(response) {
+                   const responseJSon = response.responseJSON;
+                   toastr.error(responseJSon.message);
+                   console.log("Response ",response);
+               }
+           })
+       })
+     }catch(e){
+        toastr.error(e.message);
+     }
+ }
+
 async function addBus(formData){
+    console.log("Form data is here ",formData);
     return new Promise((resolve,reject) =>{
         $.ajax({
             url:basicUrl+'/busRouter/addBus',
@@ -584,7 +698,7 @@ async function addBus(formData){
             success: function(result){
                 console.log("result ",result);
                 if(result.status == true){
-                    toastr.success('Bus added successfully');
+                    toastr.success(result.message);
                     resetingAddBusForm();
                 }
             },

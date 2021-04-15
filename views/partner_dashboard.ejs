@@ -101,7 +101,7 @@
                     <div class="widget">
                         <ul class="categories">
                             <li class="active"><a href="#tab1">Account Details</a></li>
-                            <li><a href="#tab2">Add Bus</a></li>
+                            <li id="add-update-bus"><a href="#tab2">Add Bus</a></li>
                             <li id="seat-arrangement"><a href="#tab3">Seat Arrangment</a></li>
                             <li id="bus-List"><a href="#tab4">Bus List</a></li>
                             <li><a href="#tab5">Booking History</a></li>
@@ -207,6 +207,7 @@
                         <div class="box">
                             <h2>Bus Details</h2>
                             <fieldset id="addBusForm">
+                                <input type="text" class="hide" id="busId" value="" />
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="name">Bus Name</label>
@@ -256,31 +257,31 @@
                                     </div>
                                     <div class="one-half">
                                         <label for="bus-type">Bus Type</label>
-                                        <select id="Bus-Type">
-                                            <option selected disabled>Select One</option>
-                                            <option>Regular</option>
-                                            <option>Mini</option>
-                                            <option>Volvo</option>
-                                            <option>Deluxe</option>
+                                        <select id="Bus-Type" name="Bus-Type">
+                                            <option selected disabled value="">Select One</option>
+                                            <option value='Regular'>Regular</option>
+                                            <option value='Mini'>Mini</option>
+                                            <option value='Volvo'>Volvo</option>
+                                            <option value='Deluxe'>Deluxe</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="ac-non-ac">Air-condition Type</label>
-                                        <select id="AC-Type">
-                                            <option selected disabled>Select One</option>
-                                            <option>Ac</option>
-                                            <option>Non Ac</option>
+                                        <select id="AC-Type" name="AC-Type">
+                                            <option selected disabled value="">Select One</option>
+                                            <option value="Ac">Ac</option>
+                                            <option value="Non Ac">Non Ac</option>
                                         </select>
                                     </div>
                                     <div class="one-half">
                                         <label for="seat-no">Multimedia Type</label>
-                                        <select id="Mul-Type">
-                                            <option selected disabled>Select One</option>
-                                            <option>Tv And Sound System Both</option>
-                                            <option>Sound System Only</option>
-                                            <option>No Multimedia System</option>
+                                        <select id="Mul-Type" name="Mul-Type">
+                                            <option selected disabled value="">Select One</option>
+                                            <option value="Tv And Sound System Both">Tv And Sound System Both</option>
+                                            <option value="Sound System Only">Sound System Only</option>
+                                            <option value="No Multimedia System">No Multimedia System</option>
                                         </select>
                                     </div>
                                 </div>
@@ -289,20 +290,24 @@
                                         <label for="Upload-frontside-Photo">Upload Front Side Photo</label>
                                         <input type="file" id="Upload-front-Photo"
                                             placeholder="Upload Front Side Photo" />
+                                        <img class="hide" id="front-Photo" src="" style="height: 100px; width: 100px;">
                                     </div>
                                     <div class="one-half">
                                         <label for="Upload-left-Photo">Upload Left Side Photo</label>
                                         <input type="file" id="Upload-left-Photo" placeholder=" Left Side Photo" />
+                                        <img class="hide" id="left-Photo" src="" style="height: 100px; width: 100px;">
                                     </div>
                                 </div>
                                 <div class="f-row">
                                     <div class="one-half">
                                         <label for="Upload-right-Photo">Upload Right Side Photo</label>
                                         <input type="file" id="Upload-right-Photo" placeholder=" Right Side Photo" />
+                                        <img class="hide" id="right-Photo" src="" style="height: 100px; width: 100px;">
                                     </div>
                                     <div class="one-half">
                                         <label for="Upload-back-Photo">Upload Back Side Photo</label>
                                         <input type="file" id="Upload-back-Photo" placeholder=" Back Side Photo" />
+                                        <img class="hide" id="back-Photo" src="" style="height: 100px; width: 100px;">
                                     </div>
                                 </div>
                                 <div class="f-row">
@@ -310,11 +315,13 @@
                                         <label for="Upload-cabin-Photo">Upload Inside Driver Cabin Photo</label>
                                         <input type="file" id="Upload-cabin-Photo"
                                             placeholder="Inside Driver Cabin Photo" />
+                                        <img class="hide" id="driver-cabin-Photo" src="" style="height: 100px; width: 100px;">
                                     </div>
                                     <div class="one-half">
                                         <label for="Upload-Inside-Photo">Upload Entire Inside Photo</label>
                                         <input type="file" id="Upload-Inside-Photo"
                                             placeholder=" Entire Inside Photo" />
+                                        <img class="hide" id="entire-inside-Photo" src="" style="height: 100px; width: 100px;">
                                     </div>
                                 </div>
                                 <div class="f-row">
@@ -325,7 +332,7 @@
                                     </div>
                                 </div>
                                 <div class="f-row">
-                                    <input type="submit" value="Add Bus" id="AddBus" name="submit"
+                                    <input type="submit" value="Add BUS" id="AddBus" name="submit"
                                         class="btn color medium" />
                                 </div>
                             </fieldset>

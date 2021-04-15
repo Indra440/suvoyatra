@@ -14,15 +14,16 @@ router.post("/addBus",
 async (req,res) =>{
     
     let files = {
-        front_side_fileContent :fs.readFileSync(req.files.front_side[0].path),
-        left_side_fileContent : fs.readFileSync(req.files.left_side[0].path),
-        right_side_fileContent : fs.readFileSync(req.files.right_side[0].path),
-        back_side_fileContent : fs.readFileSync(req.files.back_side[0].path),
-        driver_cabin_fileContent : fs.readFileSync(req.files.driver_cabin[0].path),
-        entire_inside_fileContent : fs.readFileSync(req.files.entire_inside[0].path),
+        front_side_fileContent : req.files.front_side ? fs.readFileSync(req.files.front_side[0].path) : "",
+        left_side_fileContent : req.files.left_side ? fs.readFileSync(req.files.left_side[0].path) : "",
+        right_side_fileContent : req.files.right_side ? fs.readFileSync(req.files.right_side[0].path): "",
+        back_side_fileContent : req.files.back_side ? fs.readFileSync(req.files.back_side[0].path) : "",
+        driver_cabin_fileContent : req.files.driver_cabin ? fs.readFileSync(req.files.driver_cabin[0].path) : "", 
+        entire_inside_fileContent : req.files.entire_inside ? fs.readFileSync(req.files.entire_inside[0].path) : "",
     }
     try{
-        const addBus = await controller.addBus(req.user,req.body,files);
+        let existBusDetails = req.existBusDetails ? req.existBusDetails : ""
+        const addBus = await controller.addBus(req.user,req.body,files,existBusDetails);
         await _helper.utility.buses.remove_all_images_for_buses(req.files);
         console.log("addBus ",addBus);
         if(addBus.status == false){
@@ -86,6 +87,24 @@ router.post("/updateSeatTemplate",
             return res.status(500).send({status:false,message:err.message});
         }
     });
+
+router.post("/fetchBusDetails",
+    middleware.api.partner.validatePartner,
+    middleware.api.buses.fetchseatTemplateFoBus,
+async(req,res)=>{
+    try{
+        const busDetails = await controller.fetchBusDetails(req.body.busId);
+        if(busDetails.status == false){
+            return res.status(500).send(busDetails);
+        }else if(busDetails.status == true){
+            return res.status(200).send(busDetails);
+        }
+    }catch(err){
+        return res.status(500).send({status:false,message:err.message});
+    }
+});
+
+
 
 
 router.post("/sendQuery",

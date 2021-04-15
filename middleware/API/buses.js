@@ -54,6 +54,7 @@ module.exports.addBus = async(req,res,next) =>{
     try{
         const {busName,busnumber,journeyForm,journeyTo,departureTime,
             arrivalTime,viaRoot,noOfSeat,busType,acType,multimediaType,busDescription} = req.body;
+        const bus_id = req.body.bus_id;
         if(!busName || busName == "" || busName == undefined||
             !busnumber || busnumber == "" || busnumber == undefined ||
             !journeyForm || journeyForm == "" || journeyForm == undefined ||
@@ -69,13 +70,22 @@ module.exports.addBus = async(req,res,next) =>{
                 res.status(500).send({status:false,message:"Please fill all the fields with valid details"});
             }
 
+            const fetchBusDetails = await busModel.findOne({busNumber:String(busnumber)});
+
+            if(!bus_id || bus_id == null || bus_id == undefined || bus_id == ""){
+                if(fetchBusDetails && fetchBusDetails != null){
+                    await _helper.utility.buses.remove_all_images_for_buses(req.files);
+                    res.status(500).send({status:false,message:"This Bus Number is already exist"});
+                }
             if(!req.files.front_side || !req.files.left_side ||
                 !req.files.right_side || !req.files.back_side ||
                 !req.files.driver_cabin || !req.files.driver_cabin){
                     await _helper.utility.buses.remove_all_images_for_buses(req.files);
                     res.status(500).send({status:false,message:"Please send all the images properly"});
                 }
-            
+            }else{
+                req.existBusDetails = fetchBusDetails;
+            }
             if(Number(departureTime.split(":")[0]) < 0 || Number(departureTime.split(":")[0]) > 23 ||
                 Number(departureTime.split(":")[1]) < 0 || Number(departureTime.split(":")[1]) > 59 ||
                  isNaN(Number(departureTime.split(":")[0]))){
@@ -85,13 +95,6 @@ module.exports.addBus = async(req,res,next) =>{
                 Number(arrivalTime.split(":")[1]) < 0 || Number(arrivalTime.split(":")[1]) > 59 ||
                 isNaN(Number(arrivalTime.split(":")[0]))){
                 res.status(500).send({status:false,message:"Please selct a valid arrivalTime time"});
-            }
-            
-            const fetchBusDetails = await busModel.findOne({busNumber:String(busnumber),is_active:true});
-            console.log("fetchBusDetails ",fetchBusDetails);
-            if(fetchBusDetails && fetchBusDetails != null){
-                await _helper.utility.buses.remove_all_images_for_buses(req.files);
-                res.status(500).send({status:false,message:"This Bus Number is already exist"});
             }
             next();
     }catch(err){
