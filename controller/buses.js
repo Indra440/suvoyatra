@@ -370,7 +370,6 @@ const addUserToBus = async(busDetails,userDetails) =>{
             response.message = "User added but not able to send sms to that user."
             return response;
         }
-
         response.status = true;
         response.message = scenario + " added successfully";
         return response;

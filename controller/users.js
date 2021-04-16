@@ -270,6 +270,30 @@ const confirmBooking = async (userDetails,busDetails,bookingDetails,paymentDetai
                 }
             }
 
+            // var logotext = "",logoLink="";
+            // var preImage = req.protocol+"://"+req.get('host');
+            // var abbr = req.body.abbr;
+            // if(abbr == "PF"){
+            // logotext = "PostFilter Pro";
+            // // logoLink = preImage +"/images/PF_logo.png";
+            // logoLink = '<img src="'+preImage+'/images/PF_PRO_logo.png" alt="logo">';
+            // }else if(abbr == "FC"){
+            // logotext = "FriendConnector";
+            // // logoLink =  preImage +"/images/FC_logo.png";
+            // logoLink = '<img src="'+preImage+'/images/FC_logo.png" alt="logo" style="margin-left: 20px;">';   
+            // }
+            // var mailOptions = {
+            //     from: process.env.SERVICE_EMAIL,
+            //     to: req.body.email,
+            //     subject: 'Password Reset',
+            //     template:'emailtemplate',
+            //     context:{
+            //         password:user.newpassword,
+            //         text:logotext,
+            //         logo:logoLink
+            //     }
+            // };
+
             if(bookingDetails.ticketFor.mobile_no){
                 let MsgDetails = {
                     to:bookingDetails.ticketFor.mobile_no,
