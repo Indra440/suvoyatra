@@ -175,6 +175,8 @@ $(document).ready(function(){
         }
     })
 
+
+
     // $('.moreless-button').click(function () {
     //     console.log("Its clicking here");
     //     // $('.moretext').toggle();
@@ -185,9 +187,9 @@ $(document).ready(function(){
     //     // }
     // });
 
-    $("a.edit_bus_details").click(async function(){
-        console.log("Its hitting");
-    })
+    // $("a.edit_bus_details").click(async function(){
+    //     console.log("Its hitting");
+    // })
 
     $("#add-user").click( async function(){
         if(!$(this).hasClass("clicked")){
@@ -218,9 +220,65 @@ $(document).ready(function(){
         }
     })
 
+    $("#addDriver").click(async function(){
+        const bus_id = $("#driver_busname_dropdown").val();
+        const driver_name = $("#driver-name").val();
+        const driver_number = $("#driver-number").val();
+        if(!bus_id || bus_id == null || bus_id == undefined || bus_id == ""){
+            return toastr.error("Please select a Bus");
+        }
+        if(!driver_name || driver_name == null || driver_name == undefined || driver_name == ""||
+            !driver_number || driver_number == null || driver_number == undefined || driver_number == ""){
+            return toastr.error("Please fill all required fields");
+        }
+        if(driver_number.length != 10){
+            return toastr.error("Please enter a valid mobile no");
+        }
+        console.log("Its here ");
+        let result = await addusertobus(bus_id,driver_name,driver_number,"driver")
+        if(result.status == true){
+            $("#driver_busname_dropdown").val("").click()
+            $("#driver-name").val("");
+            $("#driver-number").val("")
+            toastr.success(result.message);
+            return await fetchUsersList();
+            
+        }
+    })
+
+    $("#addConductor").click(async function(){
+        const bus_id = $("#conductor_busname_dropdown").val();
+        const conductor_name = $("#conductor-name").val();
+        const conductor_number = $("#conductor-number").val();
+        if(!bus_id || bus_id == null || bus_id == undefined || bus_id == ""){
+            return toastr.error("Please select a Bus");
+        }
+        console.log("conductor_name ",conductor_name);
+        console.log("conductor_number ",conductor_number);
+
+        if(!conductor_name || conductor_name == null || conductor_name == undefined || conductor_name == ""||
+            !conductor_number || conductor_number == null || conductor_number == undefined || conductor_number == ""){
+            return toastr.error("Please fill all required fields");
+        }
+        if(conductor_number.length != 10){
+            return toastr.error("Please enter a valid mobile no");
+        }
+        console.log("Its here ");
+        let result = await addusertobus(bus_id,conductor_name,conductor_number,"conductor")
+        if(result.status == true){
+            $("#conductor_busname_dropdown").val("").click()
+            $("#conductor-name").val("");
+            $("#conductor-number").val("")
+            toastr.success(result.message);
+            return await fetchUsersList();
+            
+        }
+    })
+
+
+
     $("#busname_dropdown").change(function(){
         console.log("Its hitting here");
-        console.log("Bus id ",);
         if($(this).val() == ""||$(this).val() == undefined){
             toastr.error("Please select a valid Bus");
             return;
@@ -484,6 +542,35 @@ function resetingAddBusForm(){
 
 }
 
+async function addusertobus(bus_id,driver_name,driver_number,scenario){
+    let data = {
+        busId : bus_id,
+        name : driver_name,
+        mobileNo : driver_number,
+        scenario : scenario
+    }
+    return new Promise((resolve,reject) =>{
+        $.ajax({
+            url:basicUrl+'/busRouter/addUserToBus',
+            type:'POST',
+            beforeSend: function(request) {
+                request.setRequestHeader("authorizationToken", partnerToken);
+            },
+            data: data,
+            dataType:'JSON',
+            success:function(result){
+                if(result.status == true){
+                    resolve(result);
+                }
+            },
+            error :function (response){
+                const responseJSon = response.responseJSON;
+                toastr.error(responseJSon.message);
+            } 
+        })
+    })
+}
+
 async function fetchBusList(page){
     console.log("Page is here ",page);
      fetchBusListUrl = basicUrl+'/busRouter/fetchBuslist';
@@ -536,7 +623,7 @@ async function fetchBusList(page){
                     
                     busList += '<div class="one-fourth heightfix" style="height: 201px;"><div class="partner-edit-tab">';
                     busList += '<input class="bus_id hide" value="'+ cur_bus._id +'" />';
-                    busList += '<a href="#" class="btn grey small partner-edit">Edit Seat</a>';
+                    busList += '<a href="#" class="btn grey small partner-edit" onclick=" return editSeat(`'+cur_bus._id +'`)">Edit Seat</a>';
                     busList += "<a href='#' class='btn grey small partner-edit' onclick='editBusDetails(`"+cur_bus._id +"`)'>Edit Bus Detail</a>";
                     busList += '<a href="#" class="btn grey small partner-edit">Track</a><input type="button" onclick="moreLess(this)" class="btn grey small partner-edit moreless-button" value ="Read More"/>';
                     busList += '</div></div>';
@@ -597,6 +684,14 @@ async function fetchBusList(page){
         console.log("Error in getting bus list ",err);
     }
  }
+
+ async function editSeat(self){
+    $("#seat-arrangement a").trigger("click");
+    let bus_name = $('select[name="busname_dropdown"]').find('option[value='+self+']').text();
+    console.log($("#busname_dropdown").closest('div').find('span'));
+    $("#busname_dropdown").closest('div').find('span').text(bus_name);
+    $('#busname_dropdown').val(self).trigger('change');
+}
 
  async function editBusDetails(self){
      try{
@@ -777,6 +872,13 @@ const convertTime12to24 = time12h => {
     return `${hours}:${minutes}`;
   };
 
+  function reformatDate(date){
+    //   console.log("Date ",date);
+    let finalDatewithTime = date.replace(/T/, ' ').replace(/\..+/, '');
+    let finalDate = finalDatewithTime.split(" ")[0];
+    return finalDate;
+}
+
 
 async function fetchUsersList(){
     return new Promise((resolve,reject) =>{
@@ -800,7 +902,7 @@ async function fetchUsersList(){
                                     userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
                                     userList += '<td class="sorting_1">'+cur_driver.name+'</td>';
                                     userList += '<td class="sorting_1">Driver</td>';
-                                    userList += '<td class="sorting_1">10.2.2021</td>';
+                                    userList += '<td class="sorting_1">'+reformatDate(cur_driver.assignDate)+'</td>';
                                     cur_driver.is_active == true ? 
                                     userList += '<td class="sorting_1">Active</td>':
                                     userList += '<td class="sorting_1">Inactive</td>'
@@ -813,7 +915,7 @@ async function fetchUsersList(){
                                     userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
                                     userList += '<td class="sorting_1">'+cur_conductor.name+'</td>';
                                     userList += '<td class="sorting_1">Conductor</td>';
-                                    userList += '<td class="sorting_1">10.2.2021</td>';
+                                    userList += '<td class="sorting_1">'+reformatDate(cur_conductor.assignDate)+'</td>';
                                     cur_conductor.is_active == true ? 
                                     userList += '<td class="sorting_1">Active</td>':
                                     userList += '<td class="sorting_1">Inactive</td>'
