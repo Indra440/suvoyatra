@@ -361,6 +361,16 @@ const addUserToBus = async(busDetails,userDetails) =>{
         scenario == "driver" ? busDetails.drivers.push(payload) : scenario == "conductor" ? busDetails.conductors.push(payload) :"";
         console.log("After changing bus details ",busDetails);
         await busDetails.save();
+        let MsgDetails = {
+            to:mobileNo,
+            message : "Hey " + name + ",hope you are doing well. We are glad to inform you that you are added as "+ scenario + " in "+ busDetails.busName +" bus"   
+        }
+        const sendSMS = await _helper.utility.common.sendSms(MsgDetails);
+        if(sendSMS != true){
+            response.message = "User added but not able to send sms to that user."
+            return response;
+        }
+
         response.status = true;
         response.message = scenario + " added successfully";
         return response;

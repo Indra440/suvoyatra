@@ -24,8 +24,8 @@ module.exports.checkQueriesFrom = async (req,res,next) =>{
 module.exports.sendQuery = async (req,res,next) =>{
     var {name,phone,email,subject,message} = req.body;
     if(req.is_partner == false){
-        email,req.body.email = req.partner.email;
-        phone,req.body.phone = req.partner.ph_no;
+        // email,req.body.email = req.partner.email;
+        // phone,req.body.phone = req.partner.ph_no;
     
         if(!email || email == "" || email == undefined || !(emailRegexp.test(email)) || 
             !phone || phone == "" || phone == undefined || (phone.length !=10)) {

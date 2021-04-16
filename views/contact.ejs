@@ -19,6 +19,8 @@
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700">
 	<link rel="shortcut icon" href="images/favicon.ico">
 	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+    <link href="css/toaster.css" rel="stylesheet"/>
+
 
 </head>
 
@@ -126,7 +128,7 @@
 							</div>
 						</div>
 						<div class="f-row">
-							<input type="submit" value="Submit" id="submit" name="submit"
+							<input type="button" value="Submit" id="send_message" name="submit"
 								class="btn color medium right" />
 						</div>
 					</form>
@@ -208,6 +210,7 @@
 	<!-- //Footer -->
 
 	<!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.slicknav.min.js"></script>
@@ -215,6 +218,8 @@
 	<script src="js/infobox.js"></script>
 	<script src="js/wow.min.js"></script>
 	<script src="js/scripts.js"></script>
+    <script src="js/toaster.min.js"></script>
+
 
 	<script type="text/javascript">
 		function initialize() {
@@ -270,6 +275,61 @@
 		function closeNav() {
 			document.getElementById("mySidenav").style.width = "0";
 		}
+	</script>
+	<script>
+		const basicUrl = window.location.origin; 
+		$(document).ready(function(){
+			$("#send_message").click(function(){
+				console.log("Its clicking here");7
+				const name = $("#name").val();
+				const phone = $("#phone").val();
+				const email = $("#email").val();
+				const subject = $("#subject").val();
+				const message = $("#comments").val();
+
+				if(name == "" || name == null || name == undefined ||
+				phone == "" || phone == null || phone == undefined ||
+				email == "" || email == null || email == undefined ||
+				subject == "" || subject == null || subject == undefined || 
+				message == "" || message == null || message == undefined
+				){
+					toastr.error("Please fill all the fields with valid details");
+					return;
+				}
+
+				const data = {
+					name : name,
+					phone : phone,
+					email : email,
+					subject : subject,
+					message : message
+				}
+				console.log("Data ",data);
+				$.ajax({
+					url:basicUrl+'/busRouter/sendQuery',
+					type: "POST",
+					data: data,
+					dataType: "JSON",
+					success: function(result){
+						toastr.success('Message Sent successfully');
+						// console.log("result ",result);
+						$("#name").val("");
+						$("#phone").val("");
+						$("#email").val("");
+						$("#subject").val("");
+						$("#comments").val("");
+					},
+					error: function(response) {
+						response.responseJSON.message ? 
+												toastr.error(response.responseJSON.message) :
+												toastr.error("Something went wrong.Please try again");
+					}
+				})
+    		});
+
+
+		})
+
 	</script>
 	<script src="js/styler.js"></script>
 </body>

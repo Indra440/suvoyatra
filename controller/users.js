@@ -55,7 +55,7 @@ const userLogin = async (username,usernameType)=>{
             const sendMail = await _helper.utility.common.sendMail(EmailDetails);
             console.log("sendMail ",sendMail);
             if(sendMail != true){
-                response.message = "Not able to send an email"
+                response.message = "Not able to send an email.Please try again"
                 return response;
             }
         }
@@ -66,7 +66,7 @@ const userLogin = async (username,usernameType)=>{
             }
             const sendSMS = await _helper.utility.common.sendSms(MsgDetails);
             if(sendSMS != true){
-                response.message = "Not able to send an email"
+                response.message = "Not able to send an sms.Please try again"
                 return response;
             }
         }
@@ -265,7 +265,7 @@ const confirmBooking = async (userDetails,busDetails,bookingDetails,paymentDetai
                 const sendMail = await _helper.utility.common.sendMail(EmailDetails);
                 console.log("sendMail ",sendMail);
                 if(sendMail != true){
-                    response.message = "Not able to send an email"
+                    response.message = "Not able to send the ticket via email.Please contact with admin."
                     return response;
                 }
             }
@@ -273,11 +273,13 @@ const confirmBooking = async (userDetails,busDetails,bookingDetails,paymentDetai
             if(bookingDetails.ticketFor.mobile_no){
                 let MsgDetails = {
                     to:bookingDetails.ticketFor.mobile_no,
-                    message : "Hey User! Thank you for connecting with Suvoyatra.Your login Otp is " + otp + ". This Otp is valid for 10 minutes."    
+                    message : "Suvoyatra mTicket !!!   Route: "+ route + "  Ticket No: "+ ticketNo + "  Passenger: " + passenger + "  Travels: "+ Travels +
+                                "  Departure: "+ departureTime + "  Seat Numbers: "+ seatNo + "  Total fare paid: " + bookingDetails.bookingAmmount + "         " +
+                                "Thank you for using Suvoyatra. Have a safe and happy journey "    
                 }
                 const sendSMS = await _helper.utility.common.sendSms(MsgDetails);
                 if(sendSMS != true){
-                    response.message = "Not able to send an email"
+                    response.message = "Not able to send the ticket via sms.Please contact with admin."
                     return response;
                 }
             }

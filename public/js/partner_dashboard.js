@@ -901,6 +901,7 @@ async function fetchUsersList(){
                                     userList += '<tr role="row" class="odd bl-table-data">';
                                     userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
                                     userList += '<td class="sorting_1">'+cur_driver.name+'</td>';
+                                    userList += '<td class="sorting_1">'+cur_driver.mobile+'</td>';
                                     userList += '<td class="sorting_1">Driver</td>';
                                     userList += '<td class="sorting_1">'+reformatDate(cur_driver.assignDate)+'</td>';
                                     cur_driver.is_active == true ? 
@@ -914,6 +915,7 @@ async function fetchUsersList(){
                                     userList += '<tr role="row" class="odd bl-table-data">';
                                     userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
                                     userList += '<td class="sorting_1">'+cur_conductor.name+'</td>';
+                                    userList += '<td class="sorting_1">'+cur_conductor.mobile+'</td>';
                                     userList += '<td class="sorting_1">Conductor</td>';
                                     userList += '<td class="sorting_1">'+reformatDate(cur_conductor.assignDate)+'</td>';
                                     cur_conductor.is_active == true ? 
