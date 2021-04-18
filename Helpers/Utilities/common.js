@@ -115,13 +115,21 @@ module.exports.sendMail = async(mailDetails) =>{
     try{
         console.log("mailDetails ",mailDetails);
         let transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             service:'gmail',
             // host: "smtp.ethereal.email",
             // port: 587,
             // secure: false, // true for 465, false for other ports
             auth: {
-              user: process.env.EMAILUSER, // generated ethereal user
-              pass: process.env.EMAILPASSWORD, // generated ethereal password
+                type: "OAUTH2",
+                user: process.env.EMAILUSER, // generated ethereal user
+                //pass: process.env.EMAILPASSWORD, // generated ethereal password
+                clientId : process.env.OAUTH_CLIENT_ID,
+                clientSecret : process.env.OAUTH_CLIENT_SECRET,
+                refreshToken : process.env.OAUTH_REFRESH_TOKEN,
+                accessToken : process.env.OAUTH_ACCESS_TOKEN
             },
           });
           console.log("transporter ",transporter);

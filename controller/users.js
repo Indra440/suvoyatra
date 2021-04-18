@@ -4,6 +4,8 @@ const _helper = require('../Helpers/helpers');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const bookingModel = require('../models/bookings');
+const nodemailer = require('nodemailer');
+const hbs = require("nodemailer-express-handlebars");
 
 const userLogin = async (username,usernameType)=>{
     var isOldUser = true;
@@ -34,6 +36,10 @@ const userLogin = async (username,usernameType)=>{
             let model = new enduserModel(findAndSaveUserquery);
             var saveUser = await model.save();
         }else{
+            if(findUser.is_active == false){
+                response.message = "You are now an in-active user"
+                return response;
+            }
             findUser.Verification = {
                 last_otp : otp,
                 otp_generation_time : new Date(),
@@ -170,16 +176,22 @@ const saveUserDetails = async(curUserDeatails,oldUserDetails) =>{
     }
 }
 
-const bookTicket = async (userDetails,bookingDetails) =>{
+const bookTicket = async (userDetails,busDetails,bookingDetails) =>{
     let response = {
         status:false,
         message : "",
         payload : {}
     }
     try{
+        const bookingfor = new Date();
+        const departureTime = busDetails.busTiming.departureTime;
+        bookingfor.setHours(departureTime.split(":")[0]);
+        bookingfor.setMinutes(departureTime.split(":")[1]);
         let todayDate = new Date();
         todayDate.setHours(todayDate.getHours()+5);
         todayDate.setMinutes(todayDate.getMinutes()+30);
+        // console.log("Final booking details ",bookingDetails);
+        // console.log("todayDate ",todayDate);
 
         bookingPayload = {
             userId : userDetails._id,
@@ -187,14 +199,18 @@ const bookTicket = async (userDetails,bookingDetails) =>{
             dropLocation : bookingDetails.drop_location,
             busId : bookingDetails.bus_id,
             bookingAmmount : bookingDetails.total_ammount,
-            bookingFor : new Date(bookingDetails.departure_date),
+            bookingFor : bookingfor,
             bookingSeat : JSON.parse(bookingDetails.seats),
             passengersDetails : JSON.parse(bookingDetails.passengerDetails),
             ticketFor :{
                 email : bookingDetails.ticketEmail && bookingDetails.ticketEmail != "" ? bookingDetails.ticketEmail : null,
                 mobile_no : bookingDetails.ticketmobile_no && bookingDetails.ticketmobile_no != "" ? bookingDetails.ticketmobile_no : null  
-            }
+            },
+            createdAt : todayDate
         }
+
+        console.log("bookingPayload ",bookingPayload);
+
         let model = new bookingModel(bookingPayload);
         console.log("bookingPayload ",bookingPayload);
         const createBooking = await model.save();
@@ -252,19 +268,24 @@ const confirmBooking = async (userDetails,busDetails,bookingDetails,paymentDetai
                 seatNo += cur_seat.seatNo;
                 index != (bookingDetails.bookingSeat.length -1) ? seatNo += "," : "";
             })
-
+            let bookingId = String(bookingDetails._id)
             if(bookingDetails.ticketFor.email){
-                let finalEmail = "Suvoyatra mTicket !!! <br><br> Route: "+ route + "<br> Ticket No: "+ ticketNo + "<br>Passenger: " + passenger + "<br>Travels: "+ Travels +
-                                "<br>Departure: "+ departureTime + "<br>Seat Numbers: "+ seatNo + "<br>Total fare paid: " + bookingDetails.bookingAmmount + "<br><br><br>" +
-                                "Thank you for using Suvoyatra. Have a safe and happy journey "; 
-                let EmailDetails = {
-                    to:bookingDetails.ticketFor.email,
-                    subject : "Suvoyatra Ticket",
-                    message : finalEmail
-                }
-                const sendMail = await _helper.utility.common.sendMail(EmailDetails);
-                console.log("sendMail ",sendMail);
-                if(sendMail != true){
+                // let finalEmail = "Suvoyatra mTicket !!! <br><br> Route: "+ route + "<br> Ticket No: "+ ticketNo + "<br>Passenger: " + passenger + "<br>Travels: "+ Travels +
+                //                 "<br>Departure: "+ departureTime + "<br>Seat Numbers: "+ seatNo + "<br>Total fare paid: " + bookingDetails.bookingAmmount + "<br><br><br>" +
+                //                 "Thank you for using Suvoyatra. Have a safe and happy journey "; 
+                // let EmailDetails = {
+                //     to:bookingDetails.ticketFor.email,
+                //     subject : "Suvoyatra Ticket",
+                //     message : finalEmail
+                // }
+                // const sendMail = await _helper.utility.common.sendMail(EmailDetails);
+                // console.log("sendMail ",sendMail);
+                // if(sendMail != true){
+                //     response.message = "Not able to send the ticket via email.Please contact with admin."
+                //     return response;
+                // }
+                let sendTicketMail = await sendTicket(bookingDetails.ticketFor.email,departureTime,bookingDetails.pickupLocation,bookingDetails.dropLocation,bookingId,Travels,seatNo,ticketNo,bookingDetails.passengersDetails,bookingDetails.bookingAmmount)
+                if(sendTicketMail != true){
                     response.message = "Not able to send the ticket via email.Please contact with admin."
                     return response;
                 }
@@ -318,6 +339,143 @@ const confirmBooking = async (userDetails,busDetails,bookingDetails,paymentDetai
     }catch(err){
         response.message = err.message;
         return response;
+    }
+}
+
+async function sendTicket(toMail,departureTime,pickupLocation,dropLocation,bookingId,busName,seatNo,ticketNo,passangers,ammount){
+    try{
+        let finalPassanger = `<tr>`;
+        passangers.map((cur_passanger,index)=>{
+        if((index+1) % 2 != 0){
+            finalPassanger += `<tr> <th class="column-top" width="280"
+                style="font-size:0pt; line-height:0pt; padding:0; margin:0; font-weight:normal; vertical-align:top;">
+                <table width="100%" border="0"
+                    cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td valign="top">
+                            <table width="100%" border="0"
+                                cellspacing="0"
+                                cellpadding="0">
+                                <tr>
+                                    <td class="h5-black black"
+                                        style="font-family:'Raleway', Arial,sans-serif; font-size:14px; line-height:18px; text-align:left; padding-bottom:15px; text-transform:uppercase; font-weight:bold; color:#000000;">
+                                        <multiline> PASSENGER `+(index+1)+`  </multiline>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text grey pb10"
+                                        style="font-family:'Raleway', Arial,sans-serif; font-size:14px; line-height:22px; text-align:left; color:#a1a1a1; padding-bottom:10px;">
+                                        <multiline>`+cur_passanger.passengerName+`</multiline>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text"
+                                        style="color:#5d5c5c; font-family:'Raleway', Arial,sans-serif; font-size:14px; line-height:22px; text-align:left;">
+                                        <multiline>`+cur_passanger.passengerAge+`</multiline>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="img" valign="top"
+                            width="15"
+                            style="font-size:0pt; line-height:0pt; text-align:left;">
+                        </td>
+                    </tr>
+                </table>
+            </th>`;
+        }
+    
+        if((index != (passangers.length-1)) && ((index+1) % 2 != 0)){
+            finalPassanger += `<th class="column-empty" width="30"
+                        style="font-size:0pt; line-height:0pt; padding:0; margin:0; font-weight:normal; direction:ltr;">
+                    </th>`;
+        }
+    
+        if((index+1) % 2 == 0){
+            finalPassanger += `<th class="column-top" width="280"
+                style="font-size:0pt; line-height:0pt; padding:0; margin:0; font-weight:normal; vertical-align:top;">
+                <table width="100%" border="0"
+                    cellspacing="0" cellpadding="0"
+                    class="booking-dtls">
+                    <tr>
+                        <td class="h5-black black"
+                            style="font-family:'Raleway', Arial,sans-serif; font-size:14px; line-height:18px; text-align:left; padding-bottom:15px; text-transform:uppercase; font-weight:bold; color:#000000;">
+                            <multiline> PASSENGER `+(index+1)+`  </multiline>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text grey pb10"
+                            style="font-family:'Raleway', Arial,sans-serif; font-size:14px; line-height:22px; text-align:left; color:#a1a1a1; padding-bottom:10px;">
+                            <multiline>`+cur_passanger.passengerName+`</multiline>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text"
+                            style="color:#5d5c5c; font-family:'Raleway', Arial,sans-serif; font-size:14px; line-height:22px; text-align:left;">
+                            <multiline>`+cur_passanger.passengerAge+`</multiline>
+                        </td>
+                    </tr>
+                </table>
+            </th> </tr>`
+        }
+    
+        })
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            service:'gmail',
+            auth: {
+              type: "OAUTH2",
+              user: process.env.EMAILUSER, // generated ethereal user
+              pass: process.env.EMAILPASSWORD, // generated ethereal password
+              clientId : process.env.OAUTH_CLIENT_ID,
+              clientSecret : process.env.OAUTH_CLIENT_SECRET,
+              refreshToken : process.env.OAUTH_REFRESH_TOKEN,
+              accessToken : process.env.OAUTH_ACCESS_TOKEN,
+            //   expires: 3599
+            }
+          });
+        
+        const handlebarOptions = {
+          viewEngine: {
+            extName: '.hbs',
+            partialsDir: 'views/templete',
+            layoutsDir: 'views/templete',
+            defaultLayout: 'tickettemplate.hbs',
+          },
+          viewPath: 'views/templete',
+          extName: '.hbs',
+        };
+        
+        transporter.use('compile',hbs(handlebarOptions));
+    
+        var mailOptions = {
+            from: process.env.EMAILUSER,
+            to: toMail,
+            subject: 'Suvoyatra Ticket',
+            template:'tickettemplate',
+            context:{
+                departureTime : departureTime,
+                pickupLocation : pickupLocation,
+                dropLocation : dropLocation,
+                bookingId : bookingId,
+                busName : busName,
+                seatNo : seatNo,
+                ticketNo : ticketNo,
+                passangerDetails : finalPassanger,
+                ammount : ammount
+            }
+        };
+        console.log("Final mail option",mailOptions);
+        console.log("Final transporter",transporter);
+        let info = await transporter.sendMail(mailOptions);
+        console.log("Info is here ",info);
+        return true
+    }catch(e){
+        console.log("Error is here ",e);
+        return false;
     }
 }
 

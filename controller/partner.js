@@ -1,6 +1,8 @@
 
 const usersModel = require('../models/users');
 const _helper = require('../Helpers/helpers');
+const bookingModel = require('../models/bookings');
+const mongoose = require('mongoose');
 
 
 const addPartner = async (partnerDetails) =>{
@@ -158,11 +160,94 @@ const changepasswordForPartner = async (curPasswordDetails,partnerDetails) =>{
     }
 }
 
+const fetchBookingHistory = async (partnerDetails,page,startDate,endDate,bus_id) =>{
+    let response = {
+        status:false,
+        message : "",
+    }
+    try{
+        const partnerId = partnerDetails._id;
+        let Page = page ? page : 1;
+        const limit = 3
+        let final_startDate = new Date(String(startDate));
+        let final_endDate = new Date(String(endDate));
+        final_endDate.setDate(final_endDate.getDate()+1)
+        let bookingHistoryQuery =[
+            {
+                $match:{createdAt :{$gte :final_startDate ,$lt :final_endDate }}
+            },
+            {
+                $lookup:{
+                    from: "buses",
+                    localField: "busId",
+                    foreignField: "_id",
+                    as: "busDetails"
+                }
+            },
+            {
+               $unwind:{
+                    path: "$busDetails",
+                    preserveNullAndEmptyArrays: false
+               } 
+            },
+            {
+                $match:{"busDetails.partnerId":mongoose.Types.ObjectId(String(partnerId))}
+            }
+        ];
+
+        if(bus_id && bus_id != null && bus_id != "" && bus_id != undefined){
+            bookingHistoryQuery.push(
+                {
+                    $match : {"busDetails._id": mongoose.Types.ObjectId(bus_id)}
+                }
+
+            )
+        }
+
+        bookingHistoryQuery.push(
+            {
+               $project:{
+                   _id:1,
+                   bookingFor : 1,
+                   pickupLocation : 1,
+                   dropLocation : 1,
+                   bookingStatus :1,
+                   bookingSeat : 1,
+                   "busDetails.busName" : 1
+               } 
+            }
+        )
+        var totalBookingHistoryList  = (await bookingModel.aggregate(bookingHistoryQuery)).length
+        console.log("totalBookingHistoryList ",totalBookingHistoryList);
+
+        if(Page && Page != null && Page !="" && Page !=undefined){
+            bookingHistoryQuery = [...bookingHistoryQuery,{ $skip: (Page-1) * limit},{ $limit: limit }]
+        }
+        console.log("Page is ",page);
+        console.log("bookingHistoryQuery ",bookingHistoryQuery);
+        var busList = await bookingModel.aggregate(bookingHistoryQuery);
+        if(!busList){
+            response.message = "Error occured while getting booking history list"
+            return response;
+        }
+        response.status = true;
+        response.message = "Bookinghistory list fetch successfully";
+        response.payload = busList;
+        response.totalPages = Math.ceil(totalBookingHistoryList/limit);
+        response.currentPage = Number(page);
+        return response;
+    }catch(err){
+        response.message = err.message;
+        return response;
+    }
+}
+
 
 module.exports = {
     addPartner,
     partnerLogin,
     checkActivePartner,
     savePartnerDetails,
-    changepasswordForPartner
+    changepasswordForPartner,
+    fetchBookingHistory
 }

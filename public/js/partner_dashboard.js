@@ -175,6 +175,52 @@ $(document).ready(function(){
         }
     })
 
+    $("#booking-hitory").click(async function(){
+        var todayDate = new Date();
+        var day = ("0" + todayDate.getDate()).slice(-2);
+        var month = ("0" + (todayDate.getMonth() + 1)).slice(-2);
+        var todaysetDate = todayDate.getFullYear()+"-"+(month)+"-"+(day) ;
+        $("#end_date").val(todaysetDate);
+        let pastDay = ("0" + (todayDate.getDate()-7)).slice(-2);
+        let pastMonth = ("0" + (todayDate.getMonth() + 1)).slice(-2);
+        let pastsetDate = todayDate.getFullYear()+"-"+(pastMonth)+"-"+(pastDay) ;
+        $("#start_date").val(pastsetDate);
+        console.log("todaysetDate ",todaysetDate);
+        console.log("pastsetDate ",pastsetDate);
+        try{
+            const result = await fetchBusList();
+                console.log("result ",result);
+                if(result != false){
+                    console.log("Result is here");
+                    // console.log("result ",result);
+                    let busList = '<option selected disabled value="">Select One</option>';
+                    if(result.payload && result.payload.length > 0){
+                        result.payload.map((cur_bus)=>{
+                            busList += '<option value="'+ cur_bus._id +'">'+cur_bus.busName+'</option>';
+                        })
+                    }
+                    // console.log("Bus list is here ",busList);
+                    $("#bookingHistory_bus_dropdown").html(busList);
+                    $("#bookingHistory_bus_dropdown").val("").click();
+                }
+            
+            await showBookingHistory(pastsetDate,todaysetDate,1,"");
+        }catch(e){
+            console.log("Error in getting bus list ",e);
+        }
+    })
+
+    $("#start_date").change( async function(){
+        await filterBookingHistory();
+    })
+
+    $("#end_date").change(async function(){
+        await filterBookingHistory();
+    })
+
+    $("#bookingHistory_bus_dropdown").change(async function(){
+        await filterBookingHistory();
+    })
 
 
     // $('.moreless-button').click(function () {
@@ -573,7 +619,7 @@ async function addusertobus(bus_id,driver_name,driver_number,scenario){
 
 async function fetchBusList(page){
     console.log("Page is here ",page);
-     fetchBusListUrl = basicUrl+'/busRouter/fetchBuslist';
+    let fetchBusListUrl = basicUrl+'/busRouter/fetchBuslist';
     if(page != undefined){
         console.log("Its inside");
         fetchBusListUrl = fetchBusListUrl + '?page='+page;
@@ -613,7 +659,7 @@ async function fetchBusList(page){
 
                     busList += '<div class="one-half heightfix" style="height: 201px;">';
                     busList += '<h3>'+cur_bus.busName +'  ('+ cur_bus.busRoadMap.journeyForm +'-'+ cur_bus.busRoadMap.journeyTo +') </h3>';
-                    busList += '<ul><li><span class="icon icon-themeenergy_user-3"></span><a href="seat-booking/seat-arangment.html" class="bus-list-sear-check">Check Seat available</a></li>';
+                    busList += '<ul><li><span class="icon icon-themeenergy_user-3"></span><a href="#" class="selectDate bus-list-sear-check">Check Seat available</a></li>';
                     busList += '<li><span class="icon icon-themeenergy_travel-bag"></span><p>Departure Time: '+cur_bus.busTiming.departureTime+ (Number(cur_bus.busTiming.departureTime.split(":")[0]) < 12 ? ' AM' :' PM')+'</p></li>';
                     let timeDifference = diff(cur_bus.busTiming.departureTime,cur_bus.busTiming.arrivalTime).split(":");
                     let  finalTimeDiff = Number(timeDifference[0]) > 0 ? Number(timeDifference[0])+ "hrs " : " ";
@@ -645,6 +691,8 @@ async function fetchBusList(page){
                     busList += '<img src="'+cur_bus.busImages.driver_cabin+'"><img src="'+cur_bus.busImages.entire_inside+'"><img src="'+cur_bus.busImages.back_side+'"></div>'; 
                     busList += '</div></article>';
                 })
+            }else{
+                busList += 'No Bus Found'
             }
             let pages = Number(result.totalPages);
             let current = Number(result.currentPage);
@@ -682,6 +730,104 @@ async function fetchBusList(page){
         }
     }catch(err){
         console.log("Error in getting bus list ",err);
+    }
+ }
+
+ async function filterBookingHistory(){
+     const startDate = $("#start_date").val();
+     const endDate = $("#end_date").val();
+     const bus_id = $("#bookingHistory_bus_dropdown").val() ? $("#bookingHistory_bus_dropdown").val() : "";
+     await showBookingHistory(startDate,endDate,1,bus_id);
+ } 
+
+ async function fetchBookingHistory(startDate,endDate,page,bus_id){
+    
+    let fetchbookingHistorytUrl = basicUrl+'/partnerRouter/fetch-booking-history';
+    fetchbookingHistorytUrl = fetchbookingHistorytUrl + '?page='+page+'&startDate='+startDate+'&endDate='+endDate+'&bus_id='+bus_id;
+    //    console.log("fetchBooking history ",fetchbookingHistorytUrl);
+   return new Promise((resolve,reject) =>{
+       $.ajax({
+           url:fetchbookingHistorytUrl,
+           type:'GET',
+           beforeSend: function(request) {
+               request.setRequestHeader("authorizationToken", partnerToken);
+           },
+           dataType:'JSON',
+           success:function(result){
+               if(result.status == true){
+                   resolve(result);
+               }
+           },
+           error :function (response){
+               console.log("response ",response);
+               toastr.error("Something went wrong while fetching the booking history list");
+               reject(false);
+           } 
+       })
+   })
+ }
+ function reformatDateTime(date){
+    //   console.log("Date ",date);
+    let finalDatewithTime = date.replace(/T/, ' ').replace(/\..+/, '');
+    // let finalDate = finalDatewithTime.split(" ")[0];
+    return finalDatewithTime;
+}
+
+ async function showBookingHistory(startDate,endDate,page,bus_id){
+    try{
+        const result = await fetchBookingHistory(startDate,endDate,page,bus_id);
+        console.log("result booking history ",result);
+        if(result != false){
+            let bookingList = "";
+            if(result.payload && result.payload.length > 0){
+                result.payload.map(cur_booking =>{
+                    let cur_booking_dateTime = reformatDateTime(cur_booking.bookingFor);
+                    bookingList += '<div class="box history">';
+                    bookingList += '<h6>'+cur_booking_dateTime.split(" ")[0]+ '<small> at </small>'+ cur_booking_dateTime.split(" ")[1] + '<br>';
+                    bookingList += cur_booking.pickupLocation + '<small> to </small>'+cur_booking.dropLocation+'</h6>';
+                    bookingList += '<div class="row"><div class="one-third"><p><span>Vehicle:</span>'+cur_booking.busDetails.busName+'</p>';
+                    bookingList += '</div><div class="two-third"><p><span>No Of passanger :</span>'+cur_booking.bookingSeat.length+'</p>';
+                    bookingList += '</div></div></div>';
+                })
+            }else{
+                bookingList += '<h1 style="text-align: center;"> No Booking Found</h1>';
+            }
+            let pages = Number(result.totalPages);
+            let current = Number(result.currentPage);
+            let paginationDetails = "";
+            if (pages > 0) {
+                paginationDetails +='<ul class="pagination text-center" style="margin : 20px 20px;">';   
+                if (current == 1) { 
+                    paginationDetails += '<li class="disabled"><a>First</a></li>';
+                } else { 
+                    paginationDetails += '<li><a href="javascript:showBookingHistory(`'+startDate+'`,`'+endDate+'`,1,`'+bus_id+'`)">First</a></li>';
+                } 
+                var i = (Number(current) > 3 ? Number(current) - 2 : 1) 
+                if (i !== 1) { 
+                    paginationDetails += '<li class="disabled"><a>...</a></li>';
+                } 
+                for (; i <= (Number(current) + 4) && i <= pages; i++) { 
+                    if (i == current) { 
+                        paginationDetails += '<li class="active"><a>'+i+'</a></li>';
+                    } else { 
+                        paginationDetails += '<li><a href="javascript:showBookingHistory(`'+startDate+'`,`'+endDate+'`,'+i+',`'+bus_id+'`)">'+ i +'</a></li>';
+                    } 
+                    if (i == Number(current) + 4 && i < pages) { 
+                        paginationDetails += '<li class="disabled"><a>...</a></li>';
+                    }
+                } 
+                if (current == pages) { 
+                    paginationDetails += '<li class="disabled"><a>Last</a></li>';
+                } else { 
+                    paginationDetails += '<li><a href="javascript:showBookingHistory(`'+startDate+'`,`'+endDate+'`,`'+pages+'`,`'+bus_id+'`)">Last</a></li>';
+                } 
+                paginationDetails += '</ul>';
+            }  
+            $(".partner-booking-history").html(bookingList);
+            $("#hitoryPagination").html(paginationDetails);
+        }
+    }catch(err){
+        console.log("Error in Booking list ",err);
     }
  }
 

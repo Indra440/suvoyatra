@@ -8,6 +8,7 @@ const controller = require('../../controller/buses');
 const _helper = require('../../Helpers/helpers');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const moment = require('moment');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const usersModel = require('../../models/users');
@@ -282,37 +283,41 @@ router.get('/allbookings',async function(req,res){
                 },
                 {
                     $unwind:{
-                        path:"enduser_details",
+                        path:"$enduser_details",
                         preserveNullAndEmptyArrays : true
                     }
                 },
                 {
                     $unwind:{
-                        path:"bus_details",
+                        path:"$bus_details",
                         preserveNullAndEmptyArrays : true
                     }
                 },    
                 {
                     $project:{
                         _id:1,
+                        ticketNo:1,
                         username: "$enduser_details.userName",
                         userEmail : "$enduser_details.userEmail",
                         pickupLocation :1,
                         dropLocation : 1,
                         returnProcess : 1,
-                        busname : bus_details.busName,
-                        partnerId : bus_details.partnerId,
+                        busname : "$bus_details.busName",
+                        partnerId : "$bus_details.partnerId",
                         bookingAmmount : 1,
                         bookingStatus : 1,
                         bookingFor : 1,
-                        bookingSeatNo : 1 
+                        bookingSeat : 1,
+                        passengersDetails : 1,
+                        createdAt : 1 
                     }
                 }
             ]);
             if(!fetchAllBookings){
                 return res.render('admin/all-bookings',{bookings:[]});
             }
-            return res.render('admin/all-bookings',{bookings:fetchAllBookings});
+            console.log("fetchAllBookings ",fetchAllBookings);
+            return res.render('admin/all-bookings',{bookings:fetchAllBookings,moment:moment});
         }catch(err){
             console.log("Admin error ",err);
             return res.render('admin/all-bookings',{bookings:[]});

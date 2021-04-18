@@ -81,7 +81,8 @@ router.post('/book-ticket',
             const curUserDetails = req.user;
             console.log("Body ",req.body);
             console.log("Seats ",JSON.parse(req.body.seats).length);
-            const createBooking = await controller.bookTicket(curUserDetails,req.body);
+            const busDetails = req.busDetails
+            const createBooking = await controller.bookTicket(curUserDetails,busDetails,req.body);
             if(createBooking.status == false){
                 return res.status(500).send(createBooking);
             }else if(createBooking.status == true){

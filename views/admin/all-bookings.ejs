@@ -271,23 +271,37 @@
                                 <table id="bootstrap-data-table" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>UserName</th>
-                                            <th>UserEmail</th>
-                                            <th>Busname</th>
-                                            <th>PickupLocation</th>
-                                            <th>DropLocation</th>
-                                            <th>ReturnProcess</th>
-                                            <th>BookingAmmount</th>
-                                            <th>BookingSeatNo</th>
-                                            <th>BookingFor</th>
-                                            <th>BookingStatus</th>
+                                            <th>Booking Id</th>
+                                            <th>Journey Date</th>
+                                            <th>Ticket No</th>
+                                            <th>User Name</th>
+                                            <th>User Email</th>
+                                            <th>Bus Name</th>
+                                            <th>Pickup Location</th>
+                                            <th>Drop Location</th>
+                                            <th>Return Process</th>
+                                            <th>Booking Ammount</th>
+                                            <th>Booking Seat-No</th>
+                                            <th>Passanger Info</th>
+                                            <th>Booking Date</th>
+                                            <th>Booking Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% if(bookings && bookings.length > 0){ 
+                                        <% if(bookings && bookings.length > 0){
+                                            function reformatDate(date){
+                                                //   console.log("Date ",date);
+                                                let finalDatewithTime = date.replace(/T/, ' ').replace(/\..+/, '');
+                                                <!-- let finalDate = finalDatewithTime.split(" ")[0]; -->
+                                                return finalDatewithTime;
+                                            }
+                                            
                                             bookings.map((cur_booking) =>{ 
                                                 let seats = "" %>
                                              <tr>
+                                                <td><%= cur_booking._id %></td>
+                                                <td><%= moment(cur_booking.bookingFor).subtract(30,"minutes").subtract(5,"hours").format( 'DD-MMM-YYYY,h:mm:ss a') %></td>
+                                                <td><%= cur_booking.ticketNo %></td>
                                                 <td><%= cur_booking.username %></td>
                                                 <td><%= cur_booking.userEmail %></td>
                                                 <td><%= cur_booking.busname %></td>
@@ -295,13 +309,21 @@
                                                 <td><%= cur_booking.dropLocation %></td>
                                                 <td><%= cur_booking.returnProcess %></td>
                                                 <td><%= cur_booking.bookingAmmount %></td>
-                                                <% if(cur_booking.bookingSeatNo && cur_booking.bookingSeatNo.length > 0){
-                                                    cur_booking.bookingSeatNo.map((cur_seat) =>{
-                                                        seats += cur_seat.seatNo;    
+                                                <% if(cur_booking.bookingSeat && cur_booking.bookingSeat.length > 0){
+                                                    cur_booking.bookingSeat.map((cur_seat,index) =>{
+                                                        seats += cur_seat.seatNo;
+                                                        if(index != (cur_booking.bookingSeat.length-1)){
+                                                            seats += ",";
+                                                        }    
                                                     }) } %>
-
                                                 <td><%= seats %></td>
-                                                <td><%= cur_booking.bookingFor %></td>
+                                                <td>
+                                                    <% if(cur_booking.passengersDetails && cur_booking.passengersDetails.length > 0){
+                                                        cur_booking.passengersDetails.map((cur_passanger,index) =>{ %>
+                                                            <p><%= cur_passanger.passengerName %> (<%= cur_passanger.passengerAge %>)</p>    
+                                                        <% }) } %>
+                                                </td>
+                                                <td><%= moment(cur_booking.createdAt).format( 'DD-MMM-YYYY,h:mm:ss a') %></td>
                                                 <td><%= cur_booking.bookingStatus %></td>
                                              </tr>   
                                         <% }) } %>

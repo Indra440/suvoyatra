@@ -145,6 +145,7 @@ module.exports.bookTicket = async (req,res,next) =>{
                 return res.status(500).send({status:false,message:"This seat no "+ alreadyBooked.join() + " already booked"})
             }
         }
+        req.busDetails = findBus;
         next();
     }catch(err){
         return res.status(500).send({status:false,message:err.message})

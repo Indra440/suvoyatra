@@ -26,12 +26,13 @@
     <script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
 
     <link rel="stylesheet" href="css/seat.css" type="text/css" />
-
     <!-- data table css -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
     " />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" />
 </head>
 
 <body>
@@ -104,7 +105,7 @@
                             <li id="add-update-bus"><a href="#tab2">Add Bus</a></li>
                             <li id="seat-arrangement"><a href="#tab3">Seat Arrangment</a></li>
                             <li id="bus-List"><a href="#tab4">Bus List</a></li>
-                            <li><a href="#tab5">Booking History</a></li>
+                            <li id="booking-hitory"><a href="#tab5">Booking History</a></li>
                             <li id="add-user"><a href="#tab6">Add User</a></li>
                             <li id="helpMenu"><a href="#tab7">Help</a></li>
                             <li id="logout"><a href="">Logout</a></li>
@@ -695,26 +696,28 @@
                         <div class="partner-booking-filter">
                             <div>
                                 <label>From</label>
-                                <input type="date">
+                                <input type="date" id="start_date">
                             </div>
 
                             <div>
                                 <label>To</label>
-                                <input type="date">
+                                <input type="date" id="end_date">
                             </div>
                             <div>
                                 <label>Fliter With Bus Name</label>
-                                <select>
+                                <select id="bookingHistory_bus_dropdown">
+                                    <!-- <option>XXAABB</option>
                                     <option>XXAABB</option>
-                                    <option>XXAABB</option>
-                                    <option>XXAABB</option>
+                                    <option>XXAABB</option> -->
                                 </select>
                             </div>
                         </div>
                         <!-- Item -->
-                        <div class="box history">
-                            <h6>28.08.2014 <small>at</small> 10:00<br>Berlin Schonefeld Airport <small>to</small>
-                                Central Train Station</h6>
+                        <div class="partner-booking-history">
+
+                        </div>
+                        <!-- <div class="box history">
+                            <h6>28.08.2014 <small>at</small> 10:00<br>Berlin Schonefeld Airport <small>to</small>Central Train Station</h6>
                             <div class="row">
                                 <div class="one-third">
                                     <p><span>Vehicle:</span> Private shuttle</p>
@@ -723,9 +726,9 @@
                                     <p><span>No Of Tickit :</span>3</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- //Item -->
-                        <div class="box history">
+                        <!-- <div class="box history">
                             <h6>28.08.2014 <small>at</small> 10:00<br>Berlin Schonefeld Airport <small>to</small>
                                 Central Train Station</h6>
                             <div class="row">
@@ -736,9 +739,9 @@
                                     <p><span>No Of Tickit :</span>1</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- //Item -->
-                        <div class="box history">
+                        <!-- <div class="box history">
                             <h6>28.08.2014 <small>at</small> 10:00<br>Berlin Schonefeld Airport <small>to</small>
                                 Central Train Station</h6>
                             <div class="row">
@@ -749,6 +752,9 @@
                                     <p><span>No Of Tickit :</span>2</p>
                                 </div>
                             </div>
+                        </div> -->
+                        <div id="hitoryPagination">
+
                         </div>
                     </article>
                     <!-- Tab -->
@@ -976,12 +982,14 @@
     <script>
         $(document).ready(function () {
             $('#example').DataTable();
+            $("li.selectDate").datepicker();
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
     <script src="js/toaster.min.js"></script>
     <script src="js/partner_dashboard.js"></script>
 </body>

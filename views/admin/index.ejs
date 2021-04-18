@@ -331,39 +331,41 @@
                 <!-- /.orders -->
                 <!-- To Do and Live Chat -->
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body ">
-                                <h4 class="card-title box-title">Queries List</h4>
-                                <div class="card-content">
-                                    <div class="todo-list">
-                                        <div class="tdl-holder">
-                                            <div class="tdl-content">
-                                                <ul>
-                                                    <% if(queries && queries.length > 0){
-                                                        queries.map((cur_query,index)=>{ %>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox"><i class="check-box"></i>
-                                                                <span><%= cur_query.subject %></span>
-                                                                <input class="id hide" value="<%= cur_query._id %>" />
-                                                                <input class="username hide" value="<%= cur_query.name %>" />
-                                                                <input class="useremail hide" value="<%= cur_query.email %>" />
-                                                                <input class="queryMsg hide" value="<%= cur_query.message %>" />
-                                                                <input class="userType hide" value="<%= cur_query.isPartner %>" />
-                                                                <input type="button" class="btn btn-primary hide resolve" value="Resolve"/>
-                                                            </label>
-                                                        </li>
-                                                    <% }) 
-                                                     } %>
-                                                </ul>
+                    <% if(queries && queries.length > 0){ %>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body ">
+                                    <h4 class="card-title box-title">Queries List</h4>
+                                    <div class="card-content">
+                                        <div class="todo-list">
+                                            <div class="tdl-holder">
+                                                <div class="tdl-content">
+                                                    <ul>
+                                                        <% if(queries && queries.length > 0){
+                                                            queries.map((cur_query,index)=>{ %>
+                                                            <li>
+                                                                <label>
+                                                                    <input type="checkbox"><i class="check-box"></i>
+                                                                    <span><%= cur_query.subject %></span>
+                                                                    <input class="id hide" value="<%= cur_query._id %>" />
+                                                                    <input class="username hide" value="<%= cur_query.name %>" />
+                                                                    <input class="useremail hide" value="<%= cur_query.email %>" />
+                                                                    <input class="queryMsg hide" value="<%= cur_query.message %>" />
+                                                                    <input class="userType hide" value="<%= cur_query.isPartner %>" />
+                                                                    <input type="button" class="btn btn-primary hide resolve" value="Resolve"/>
+                                                                </label>
+                                                            </li>
+                                                        <% }) 
+                                                        } %>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div> <!-- /.todo-list -->
-                                </div>
-                            </div> <!-- /.card-body -->
-                        </div><!-- /.card -->
-                    </div>
+                                        </div> <!-- /.todo-list -->
+                                    </div>
+                                </div> <!-- /.card-body -->
+                            </div><!-- /.card -->
+                        </div>
+                    <% } %>
 
                     <div class="col-lg-6 hide" id="queryMsgShow">
                         <div class="card">
