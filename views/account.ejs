@@ -232,6 +232,8 @@
 			var hash = $.trim(window.location.hash);
 			if (hash) $('.categories a[href$="' + hash + '"]').trigger('click');
 
+
+			
 			let userToken = window.localStorage.getItem("suvoyatratoken");
 			// console.log("userToken ",userToken);
 			if(!userToken || userToken == null || userToken == "" || userToken == undefined){

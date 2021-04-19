@@ -23,7 +23,8 @@
         type='text/css'>
     <!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
     <script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
+    " />
     <link rel="stylesheet" href="css/seat.css" type="text/css" />
 </head>
 
@@ -93,7 +94,7 @@
                     <div class="widget">
                         <ul class="categories">
                             <li class="active"><a href="#tab1">History</a></li>
-                            <li><a href="#tab2">Notifications</a></li>
+                            <!-- <li><a href="#tab2">Notifications</a></li> -->
                         </ul>
                     </div>
 
@@ -109,15 +110,18 @@
                         <div class="user-booking-filter">
                             <div>
                                 <label>From</label>
-                                <input type="date">
+                                <input type="date" id="start_date">
                             </div>
                             <p class="filter-booking">Filter Your Bookings</p>
                             <div>
                                 <label>To</label>
-                                <input type="date">
+                                <input type="date" id="end_date">
                             </div>
                         </div>
-                        <div class="box history">
+                        <div class="user-booking-history">
+
+                        </div>
+                        <!-- <div class="box history">
                             <h6>28.08.2014 <small>at</small> 10:00<br />Berlin Schonefeld Airport <small>to</small>
                                 Central Train Station</h6>
                             <div class="row">
@@ -129,8 +133,11 @@
                                 </div>
                             </div>
                             <a href="#" title="Cancel">Cancel</a> 
-                        </div>
+                        </div> -->
                         <!-- //Item -->
+                        <div id="hitoryPagination">
+
+                        </div>
 
                     </article>
                     <!-- //Tab -->
@@ -225,7 +232,11 @@
     <script src="js/jquery.slicknav.min.js"></script>
     <script src="js/wow.min.js"></script>
     <script src="js/scripts.js"></script>
+    <script src="js/toaster.min.js"></script>
+
     <script>
+        const basicUrl = window.location.origin;
+        let userToken = window.localStorage.getItem("suvoyatratoken");
         $(document).ready(function () {
             $('.single').hide().first().show();
             $('.categories li:first').addClass('active');
@@ -235,10 +246,165 @@
                 $(this).closest('li').addClass('active').siblings().removeClass('active');
                 $($(this).attr('href')).show().siblings('.single').hide();
             });
-
             var hash = $.trim(window.location.hash);
             if (hash) $('.categories a[href$="' + hash + '"]').trigger('click');
+
+
+
+			// console.log("userToken ",userToken);
+			if(!userToken || userToken == null || userToken == "" || userToken == undefined){
+				 window.location.href = basicUrl + "/user-login"
+			}else{
+				fetchUserDetails(userToken)
+			}
+            defaultBooking();
+
+            $("#start_date").change( async function(){
+                await filterBookingHistory();
+            }) 
+
+            $("#end_date").change(async function(){
+                await filterBookingHistory();
+            })
+            
         });
+
+
+        function fetchUserDetails(userToken){
+			$.ajax({
+				url:basicUrl+'/users/check-user-status',
+				type: "POST",
+				data: {'token':userToken},
+				dataType: "JSON",
+				success: function(result){
+                    console.log("Sucessfully validate");
+				},
+				error: function(response) {
+					console.log("Its hitting here ",response);
+					localStorage.removeItem("suvoyatratoken");
+					window.location.href = basicUrl +'/user-login';
+				}
+			})   
+		}
+
+        async function defaultBooking(){
+            console.log("Its calling");
+            var todayDate = new Date();
+            var day = ("0" + todayDate.getDate()).slice(-2);
+            var month = ("0" + (todayDate.getMonth() + 1)).slice(-2);
+            var todaysetDate = todayDate.getFullYear()+"-"+(month)+"-"+(day) ;
+            $("#end_date").val(todaysetDate);
+            let pastDay = ("0" + (todayDate.getDate()-7)).slice(-2);
+            let pastMonth = ("0" + (todayDate.getMonth() + 1)).slice(-2);
+            let pastsetDate = todayDate.getFullYear()+"-"+(pastMonth)+"-"+(pastDay) ;
+            $("#start_date").val(pastsetDate);
+            console.log("todaysetDate ",todaysetDate);
+            console.log("pastsetDate ",pastsetDate);
+            try{
+                await showBookingHistory(pastsetDate,todaysetDate,1);
+            }catch(e){
+                console.log("Error in getting bus list ",e);
+            }
+        }
+
+
+    async function filterBookingHistory(){
+        const startDate = $("#start_date").val();
+        const endDate = $("#end_date").val();
+        await showBookingHistory(startDate,endDate,1);
+    } 
+
+ async function fetchBookingHistory(startDate,endDate,page){
+    
+    let fetchbookingHistorytUrl = basicUrl+'/users/fetch-booking-history';
+    fetchbookingHistorytUrl = fetchbookingHistorytUrl + '?page='+page+'&startDate='+startDate+'&endDate='+endDate;
+    //    console.log("fetchBooking history ",fetchbookingHistorytUrl);
+   return new Promise((resolve,reject) =>{
+       $.ajax({
+           url:fetchbookingHistorytUrl,
+           type:'GET',
+           beforeSend: function(request) {
+               request.setRequestHeader("authorizationToken", userToken);
+           },
+           dataType:'JSON',
+           success:function(result){
+               if(result.status == true){
+                   resolve(result);
+               }
+           },
+           error :function (response){
+               console.log("response ",response);
+               toastr.error("Something went wrong while fetching the booking history list");
+               reject(false);
+           } 
+       })
+   })
+ }
+ function reformatDateTime(date){
+    //   console.log("Date ",date);
+    let finalDatewithTime = date.replace(/T/, ' ').replace(/\..+/, '');
+    // let finalDate = finalDatewithTime.split(" ")[0];
+    return finalDatewithTime;
+}
+
+ async function showBookingHistory(startDate,endDate,page,bus_id){
+    try{
+        const result = await fetchBookingHistory(startDate,endDate,page,bus_id);
+        console.log("result booking history ",result);
+        if(result != false){
+            let bookingList = "";
+            if(result.payload && result.payload.length > 0){
+                result.payload.map(cur_booking =>{
+                    let cur_booking_dateTime = reformatDateTime(cur_booking.bookingFor);
+                    bookingList += '<div class="box history">';
+                    bookingList += '<h6>'+cur_booking_dateTime.split(" ")[0]+ '<small> at </small>'+ cur_booking_dateTime.split(" ")[1] + '<br>';
+                    bookingList += cur_booking.pickupLocation + '<small> to </small>'+cur_booking.dropLocation+'</h6>';
+                    bookingList += '<div class="row"><div class="one-third"><p><span>Vehicle:</span>'+cur_booking.busDetails.busName+'</p>';
+                    bookingList += '</div><div class="two-third"><p><span>Price: :</span>'+cur_booking.bookingAmmount+'</p>';
+                    bookingList += '</div></div><a href="#" title="Cancel">Cancel</a></div>';
+                })
+            }else{
+                bookingList += '<h1 style="text-align: center;"> No Booking Found</h1>';
+            }
+            let pages = Number(result.totalPages);
+            let current = Number(result.currentPage);
+            let paginationDetails = "";
+            if (pages > 0) {
+                paginationDetails +='<ul class="pagination text-center" style="margin : 20px 20px;">';   
+                if (current == 1) { 
+                    paginationDetails += '<li class="disabled"><a>First</a></li>';
+                } else { 
+                    paginationDetails += '<li><a href="javascript:showBookingHistory(`'+startDate+'`,`'+endDate+'`,1)">First</a></li>';
+                } 
+                var i = (Number(current) > 3 ? Number(current) - 2 : 1) 
+                if (i !== 1) { 
+                    paginationDetails += '<li class="disabled"><a>...</a></li>';
+                } 
+                for (; i <= (Number(current) + 4) && i <= pages; i++) { 
+                    if (i == current) { 
+                        paginationDetails += '<li class="active"><a>'+i+'</a></li>';
+                    } else { 
+                        paginationDetails += '<li><a href="javascript:showBookingHistory(`'+startDate+'`,`'+endDate+'`,'+i+')">'+ i +'</a></li>';
+                    } 
+                    if (i == Number(current) + 4 && i < pages) { 
+                        paginationDetails += '<li class="disabled"><a>...</a></li>';
+                    }
+                } 
+                if (current == pages) { 
+                    paginationDetails += '<li class="disabled"><a>Last</a></li>';
+                } else { 
+                    paginationDetails += '<li><a href="javascript:showBookingHistory(`'+startDate+'`,`'+endDate+'`,`'+pages+')">Last</a></li>';
+                } 
+                paginationDetails += '</ul>';
+            }  
+            $(".user-booking-history").html(bookingList);
+            $("#hitoryPagination").html(paginationDetails);
+        }
+    }catch(err){
+        console.log("Error in Booking list ",err);
+    }
+ }
+
     </script>
     <script>
         function openNav() {

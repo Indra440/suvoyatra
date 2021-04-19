@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const bookingModel = require('../models/bookings');
 const nodemailer = require('nodemailer');
 const hbs = require("nodemailer-express-handlebars");
+const mongoose = require("mongoose");
 
 const userLogin = async (username,usernameType)=>{
     var isOldUser = true;
@@ -479,6 +480,74 @@ async function sendTicket(toMail,departureTime,pickupLocation,dropLocation,booki
     }
 }
 
+const fetchBookingHistory = async (userDetails,page,startDate,endDate) =>{
+    let response = {
+        status:false,
+        message : "",
+        payload : {}
+    }
+    try{
+        const userId = userDetails._id;
+        let Page = page ? page : 1;
+        const limit = 3
+        let final_startDate = new Date(String(startDate));
+        let final_endDate = new Date(String(endDate));
+        final_endDate.setDate(final_endDate.getDate()+1)
+        let bookingHistoryQuery =[
+            {
+                $match:{createdAt :{$gte :final_startDate ,$lt :final_endDate },userId:mongoose.Types.ObjectId(userId)}
+            },
+            {
+                $lookup:{
+                    from: "buses",
+                    localField: "busId",
+                    foreignField: "_id",
+                    as: "busDetails"
+                }
+            },
+            {
+               $unwind:{
+                    path: "$busDetails",
+                    preserveNullAndEmptyArrays: false
+               } 
+            },
+            {
+                $project:{
+                    _id:1,
+                    bookingFor : 1,
+                    pickupLocation : 1,
+                    dropLocation : 1,
+                    bookingStatus :1,
+                    bookingAmmount :1,
+                    "busDetails.busName" : 1
+                } 
+             }
+        ];
+        console.log("bookingHistoryQuery ",bookingHistoryQuery);
+        var totalBookingHistoryList  = (await bookingModel.aggregate(bookingHistoryQuery)).length
+        console.log("totalBookingHistoryList ",totalBookingHistoryList);
+
+        if(Page && Page != null && Page !="" && Page !=undefined){
+            bookingHistoryQuery = [...bookingHistoryQuery,{ $skip: (Page-1) * limit},{ $limit: limit }]
+        }
+        console.log("Page is ",page);
+        console.log("bookingHistoryQuery ",bookingHistoryQuery);
+        var bookingList = await bookingModel.aggregate(bookingHistoryQuery);
+        if(!bookingList){
+            response.message = "Error occured while getting booking history list"
+            return response;
+        }
+        response.status = true;
+        response.message = "Bookinghistory list fetch successfully";
+        response.payload = bookingList;
+        response.totalPages = Math.ceil(totalBookingHistoryList/limit);
+        response.currentPage = Number(page);
+        return response;
+    }catch(err){
+        response.message = err.message;
+        return response;
+    }
+}
 
 module.exports = {
     userLogin,
@@ -486,5 +555,6 @@ module.exports = {
     checkActiveUser,
     saveUserDetails,
     bookTicket,
-    confirmBooking
+    confirmBooking,
+    fetchBookingHistory
 }

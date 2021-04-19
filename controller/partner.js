@@ -225,14 +225,14 @@ const fetchBookingHistory = async (partnerDetails,page,startDate,endDate,bus_id)
         }
         console.log("Page is ",page);
         console.log("bookingHistoryQuery ",bookingHistoryQuery);
-        var busList = await bookingModel.aggregate(bookingHistoryQuery);
-        if(!busList){
+        var bookingList = await bookingModel.aggregate(bookingHistoryQuery);
+        if(!bookingList){
             response.message = "Error occured while getting booking history list"
             return response;
         }
         response.status = true;
         response.message = "Bookinghistory list fetch successfully";
-        response.payload = busList;
+        response.payload = bookingList;
         response.totalPages = Math.ceil(totalBookingHistoryList/limit);
         response.currentPage = Number(page);
         return response;

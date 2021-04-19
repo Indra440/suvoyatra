@@ -117,6 +117,28 @@ router.post('/confirm-booking',
     }
 )
 
+router.get('/fetch-booking-history',
+    middleware.api.users.validateUser,
+    async(req,res) =>{
+        try{
+            console.log("Its comming here");
+            const curUserDetails = req.user;
+            const page = req.query.page;
+            const startDate = req.query.startDate;
+            const endDate = req.query.endDate;
+            const bookingHistory = await controller.fetchBookingHistory(curUserDetails,page,startDate,endDate);
+            console.log("bookingHistory ",bookingHistory);
+            if(bookingHistory.status == false){
+                return res.status(500).send(bookingHistory);
+            }else{
+                return res.status(200).send(bookingHistory);
+            }
+        }catch(err){
+            console.log("Err ",err);
+            return res.status(500).send(err);
+        }
+    });
+
 
 // router.post('/book-ticket',
 //     middleware.api.users.validateUser,
