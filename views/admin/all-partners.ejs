@@ -283,6 +283,7 @@
                                             <th>Ph-no</th>
                                             <th>City</th>
                                             <th>zip-code</th>
+                                            <th>is-active</th>
                                             <th>verification status</th>
                                             <th>Action</th>
                                         </tr>
@@ -297,6 +298,7 @@
                                                 <td><%= cur_partner.ph_no %></td>
                                                 <td><%= cur_partner.city %></td>
                                                 <td><%= cur_partner.zipCode %></td>
+                                                <td class="is_active"><%= cur_partner.is_Active %></td>
                                                 <td><%= cur_partner.verficationstatus %></td>
                                                 <!-- <td><input type="button" class="btn btn-primary dashboardAccess" value="Access Dashboard" /></td> -->
                                                 <td>
@@ -306,7 +308,11 @@
                                                         </button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                           <a class="dropdown-item dashboardAccess" href="#">Access Dashboard</a>
-                                                          <a class="dropdown-item" href="#">Another action</a>
+                                                        <% if((cur_partner.is_Active == true) && (cur_partner.verficationstatus == "approved")){ %>
+                                                            <a class="dropdown-item deactive_partner" href="#">De-Active</a>
+                                                        <% }else if((cur_partner.is_Active == false) && (cur_partner.verficationstatus == "approved")){ %>
+                                                            <a class="dropdown-item active_partner" href="#">Active</a>
+                                                        <% } %>
                                                           <!-- <a class="dropdown-item" href="#">Something else here</a> -->
                                                         </div>
                                                       </div>
@@ -367,6 +373,7 @@
         const basicUrl = window.location.origin;
         $(document).ready(function() {
           $('#bootstrap-data-table-export').DataTable();
+
             $(".dashboardAccess").click(async function(){
                 console.log("Its hitting here");
                 const partnerId = $(this).closest('tr').find(".partnerId").val();
@@ -386,10 +393,69 @@
                     }
                 }else{
                     window.open(basicUrl+"/partner-dashboard?p="+ String(partnerId), "_blank");
-                }
-                
+                } 
             })
+
+            $(".active_partner").click( async function(){
+                console.log("Its hitted active");
+                const partnerId = $(this).closest('tr').find(".partnerId").val();
+                if(!partnerId || partnerId == null || partnerId == undefined || partnerId == ""){
+                    return toastr.error('Some error occured,please reload and tray again');
+                }
+                await activeDeactivePartner(partnerId,"true");
+            })
+
+            $(".deactive_partner").click(async function(){
+                console.log("Its hitted deactive");
+                const partnerId = $(this).closest('tr').find(".partnerId").val();
+                if(!partnerId || partnerId == null || partnerId == undefined || partnerId == ""){
+                    return toastr.error('Some error occured,please reload and tray again');
+                }
+                await activeDeactivePartner(partnerId,"false");
+            })
+
         });
+
+        async function activeDeactivePartner(partner_id,action){
+            let data = {
+                partner_id:partner_id,
+                action : action
+            }
+            console.log("Data ",data);
+            $.ajax({
+                    url:basicUrl+'/active-deactive-partner',
+                    type:'POST',
+                    data:data,
+                    dataType:'JSON',
+                    success:function(result){
+                        if(result.status == true){
+                            toastr.success(result.message);
+                            // self.closest('tr').find(".is_active").html(action);
+                            // if(action == "true"){
+                            //     self.html("De-Active")
+                            //     self.removeClass("active_partner")
+                            //     self.addClass("deactive_partner")
+                            // }else{
+                            //     self.html("Active")
+                            //     self.removeClass("deactive_partner")
+                            //     self.addClass("active_partner")
+                            // }
+                            setTimeout(function(){ 
+                                window.location.href=basicUrl + "/allpartners";
+                            }, 1500);Active
+                        }
+                    },
+                    error :function (response){
+                        console.log("response ",response);
+                        response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong to perform this action"); 
+                        if(response.responseJSON && response.responseJSON.login == false){
+                            setTimeout(function(){ 
+                                window.location.href = basicUrl + "/admin-login";
+                            }, 2000);
+                        }
+                    } 
+            })
+        }
 
         async function accessPartnerDashboard(partner_id){
             $.ajax({
@@ -407,7 +473,7 @@
                     },
                     error :function (response){
                         console.log("response ",response);
-                        response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong while fetching the bus list"); 
+                        response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong while accesssing the partner's dashboard"); 
                         if(response.responseJSON && response.responseJSON.login == false){
                             setTimeout(function(){ 
                                 window.location.href = basicUrl + "/admin-login";
@@ -415,7 +481,7 @@
                         }
                     } 
                 })
-        }
+            }
   </script>
 
 

@@ -22,11 +22,15 @@
     <link rel="stylesheet" href="css/adminCss/cs-skin-elastic.css">
     <link rel="stylesheet" href="css/adminCss/lib/datatable/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="css/adminCss/style.css">
-
+    <link href="css/toaster.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
-
+    <style>
+        .hide{
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
     <!-- Left Panel -->
@@ -276,19 +280,38 @@
                                             <th>Ph-no</th>
                                             <th>City</th>
                                             <th>zip-code</th>
+                                            <th>is-active</th>
                                             <th>verification status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <% if(users && users.length > 0){ 
                                             users.map((cur_user) =>{ %>
                                              <tr>
+                                                <td class="hide"><input class="userId" value="<%= cur_user._id %>" /></td>
                                                 <td><%= cur_user.userName %></td>
                                                 <td><%= cur_user.userEmail %></td>
                                                 <td><%= cur_user.user_Ph_Number %></td>
                                                 <td><%= cur_user.city %></td>
                                                 <td><%= cur_user.zipCode %></td>
+                                                <td><%= cur_user.is_active %></td>
                                                 <td><%= cur_user.Verification.verified %></td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                          Actions
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <% if((cur_user.is_active == true)){ %>
+                                                            <a class="dropdown-item deactive_user" href="#">De-Active</a>
+                                                        <% }else if((cur_user.is_active == false)){ %>
+                                                            <a class="dropdown-item active_user" href="#">Active</a>
+                                                        <% } %>
+                                                          <!-- <a class="dropdown-item" href="#">Something else here</a> -->
+                                                        </div>
+                                                      </div>
+                                                </td>
                                              </tr>   
                                         <% }) } %>
                                     </tbody>
@@ -340,12 +363,72 @@
     <script src="js/adminJs/lib/data-table/buttons.print.min.js"></script>
     <script src="js/adminJs/lib/data-table/buttons.colVis.min.js"></script>
     <script src="js/adminJs/init/datatables-init.js"></script>
-
-
+    <script src="js/toaster.min.js"></script>
     <script type="text/javascript">
+        const basicUrl = window.location.origin;
+
         $(document).ready(function() {
           $('#bootstrap-data-table-export').DataTable();
-      } );
+
+          $(".active_user").click( async function(){
+                console.log("Its hitted active");
+                const userId = $(this).closest('tr').find(".userId").val();
+                if(!userId || userId == null || userId == undefined || userId == ""){
+                    return toastr.error('Some error occured,please reload and tray again');
+                }
+                await activeDeactiveUser(userId,"true");
+            })
+
+            $(".deactive_user").click(async function(){
+                console.log("Its hitted deactive");
+                const userId = $(this).closest('tr').find(".userId").val();
+                if(!userId || userId == null || userId == undefined || userId == ""){
+                    return toastr.error('Some error occured,please reload and tray again');
+                }
+                await activeDeactiveUser(userId,"false");
+            })
+      });
+
+      async function activeDeactiveUser(user_id,action){
+            let data = {
+                user_id:user_id,
+                action : action
+            }
+            console.log("Data ",data);
+            $.ajax({
+                    url:basicUrl+'/active-deactive-user',
+                    type:'POST',
+                    data:data,
+                    dataType:'JSON',
+                    success:function(result){
+                        if(result.status == true){
+                            toastr.success(result.message);
+                            // self.closest('tr').find(".is_active").html(action);
+                            // if(action == "true"){
+                            //     self.html("De-Active")
+                            //     self.removeClass("active_partner")
+                            //     self.addClass("deactive_partner")
+                            // }else{
+                            //     self.html("Active")
+                            //     self.removeClass("deactive_partner")
+                            //     self.addClass("active_partner")
+                            // }
+                            setTimeout(function(){ 
+                                window.location.href=basicUrl + "/allusers";
+                            }, 1500);
+                        }
+                    },
+                    error :function (response){
+                        console.log("response ",response);
+                        response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong to perform this action"); 
+                        if(response.responseJSON && response.responseJSON.login == false){
+                            setTimeout(function(){ 
+                                window.location.href = basicUrl + "/admin-login";
+                            }, 2000);
+                        }
+                    } 
+            })
+        }
   </script>
 
 

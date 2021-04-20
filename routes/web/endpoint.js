@@ -175,7 +175,6 @@ router.get('/allpartners',async function(req,res){
             let fetchAllPartners =  await usersModel.aggregate([
                 {
                     $match:{
-                        is_Active:true,
                         userType: "2"
                     }
                 },
@@ -187,6 +186,7 @@ router.get('/allpartners',async function(req,res){
                         ph_no : 1,
                         city : 1,
                         zipCode : 1,
+                        is_Active : 1,
                         verficationstatus:1
                     }
                 }
@@ -224,6 +224,34 @@ router.post('/accessPartnerDashboard',async function(req,res){
     }
 })
 
+router.post('/active-deactive-partner',async function(req,res){
+    if(req.session.admin){
+        try{
+            const  partnerId = String(req.body.partner_id);
+            const action = req.body.action;
+            console.log("action ", action);
+            const final_action = (action == "true") ? false : true;
+            console.log("final_action ",final_action);
+            const findPartner = await usersModel.findOne({_id:mongoose.Types.ObjectId(partnerId),userType:"2",is_Active : final_action})
+            let msg = (action == "true") ? "activated" : "de-activated";
+            console.log("findPartner ",findPartner);
+            if(!findPartner){
+                return res.status(500).send({status:false,login:true,message:"Partner not found or its already  "+ msg})
+            }
+            findPartner.is_Active = action;
+            await findPartner.save();
+            return res.status(200).send({status:true,login:true,message:"Partner successfully  "+msg})
+        }catch(err){
+            console.log("Admin error ",err);
+            return res.status(500).send({status:false,login:true,message:err.message})
+        }
+    }else{
+        return res.status(500).send({status:false,login:false,message:"You have loggedout from this session please login again"})
+    }
+})
+
+
+
 
 
 
@@ -231,11 +259,11 @@ router.get('/allusers',async function(req,res){
     if(req.session.admin){
         try{
             let fetchAllUsers =  await enduserModel.aggregate([
-                {
-                    $match:{
-                        is_active:true
-                    }
-                },
+                // {
+                //     $match:{
+                //         is_active:true
+                //     }
+                // },
                 {
                     $project:{
                         _id:1,
@@ -244,6 +272,7 @@ router.get('/allusers',async function(req,res){
                         user_Ph_Number : 1,
                         city : 1,
                         zipCode : 1,
+                        is_active : 1,
                         Verification : 1 
                     }
                 }
@@ -258,6 +287,32 @@ router.get('/allusers',async function(req,res){
         }
     }else{
         return res.render('admin/page-login');
+    }
+})
+
+router.post('/active-deactive-user',async function(req,res){
+    if(req.session.admin){
+        try{
+            const  userId = String(req.body.user_id);
+            const action = req.body.action;
+            console.log("action ", action);
+            const final_action = (action == "true") ? false : true;
+            console.log("final_action ",final_action);
+            const findUser = await enduserModel.findOne({_id:mongoose.Types.ObjectId(userId),is_active : final_action})
+            let msg = (action == "true") ? "activated" : "de-activated";
+            console.log("findUser ",findUser);
+            if(!findUser){
+                return res.status(500).send({status:false,login:true,message:"user not found or its already  "+ msg})
+            }
+            findUser.is_active = action;
+            await findUser.save();
+            return res.status(200).send({status:true,login:true,message:"user successfully  "+msg})
+        }catch(err){
+            console.log("Admin error ",err);
+            return res.status(500).send({status:false,login:true,message:err.message})
+        }
+    }else{
+        return res.status(500).send({status:false,login:false,message:"You have loggedout from this session please login again"})
     }
 })
 
