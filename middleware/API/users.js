@@ -26,7 +26,7 @@ module.exports.validateUser = async (req,res,next) =>{
 module.exports.userLogin = async (req,res,next) =>{
     console.log("Body ",req.body);
     if(req.body.username =="" || req.body.username == null || req.body.username == undefined){
-        res.status(500).send({status:false,message:"Please enter a valid username"});
+        return res.status(500).send({status:false,message:"Please enter a valid username"});
     }
     let flag;
     if(!_helper.utility.common.validateEmail(req.body.username)){
@@ -35,7 +35,7 @@ module.exports.userLogin = async (req,res,next) =>{
         flag = "email";
     }
     if(!flag || flag == null || flag == undefined){
-        res.status(500).send({status:false,message:"Please enter a valid mobile no or email"});
+        return res.status(500).send({status:false,message:"Please enter a valid mobile no or email"});
     }
     req.flag = flag;
     next()

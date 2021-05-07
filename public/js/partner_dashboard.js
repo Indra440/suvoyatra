@@ -17,6 +17,7 @@ $(document).ready(function(){
     }
 
     fetchPartnerDetails();
+    fetchUsersList();
     $("#logout").click(function(){
         if (confirm('Are you sure you want to logout from this account ?')) {
             // Save it!
@@ -319,6 +320,24 @@ $(document).ready(function(){
             return await fetchUsersList();
             
         }
+    })
+
+    $(".active_user").click( async function(){
+        console.log("Its hitted active");
+        const userId = $(this).closest('tr').find(".userId").val();
+        if(!userId || userId == null || userId == undefined || userId == ""){
+            return toastr.error('Some error occured,please reload and tray again');
+        }
+        await activeDeactiveBusUser(userId,"true");
+    })
+
+    $(".deactive_user").click(async function(){
+        console.log("Its hitted deactive");
+        const userId = $(this).closest('tr').find(".userId").val();
+        if(!userId || userId == null || userId == undefined || userId == ""){
+            return toastr.error('Some error occured,please reload and tray again');
+        }
+        await activeDeactiveBusUser(userId,"false");
     })
 
 
@@ -982,7 +1001,7 @@ function fetchPartnerDetails(){
         },
         error: function(response) {
             console.log("Its hitting here ",response);
-            localStorage.removeItem("partnerToken");
+            localStorage.removeItem("suvoyatrausertoken");
             window.location.href = basicUrl +'/partner-login';
         }
     })   
@@ -1045,28 +1064,41 @@ async function fetchUsersList(){
                             if(drivers.length > 0){
                                 drivers.map((cur_driver) =>{
                                     userList += '<tr role="row" class="odd bl-table-data">';
+                                    userList += '<td class="hide"><input class="partnerId" value="'+cur_driver._id+'" /></td>';
                                     userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
                                     userList += '<td class="sorting_1">'+cur_driver.name+'</td>';
                                     userList += '<td class="sorting_1">'+cur_driver.mobile+'</td>';
                                     userList += '<td class="sorting_1">Driver</td>';
                                     userList += '<td class="sorting_1">'+reformatDate(cur_driver.assignDate)+'</td>';
+                                    userList += '<td class="sorting_1">'+cur_driver.is_active+'</td>';
+
+                                    userList += '<td><div class="dropdown"><button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>';
+                                    userList += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
                                     cur_driver.is_active == true ? 
-                                    userList += '<td class="sorting_1">Active</td>':
-                                    userList += '<td class="sorting_1">Inactive</td>'
+                                    userList += '<a class="dropdown-item deactive_user" href="#">In-Active</a>' :
+                                    userList += '<a class="dropdown-item active_user" href="#">Active</a>';
+                                    userList += '</div></div></td></tr>';
                                 }) 
                             }
                             const conductors = cur_bus.conductors;
                             if(conductors.length > 0){
                                 conductors.map((cur_conductor) =>{
                                     userList += '<tr role="row" class="odd bl-table-data">';
+                                    userList += '<td class="hide"><input class="partnerId" value="'+cur_conductor._id+'" /></td>';
                                     userList += '<td class="sorting_1">'+cur_bus.busName+'</td>';
                                     userList += '<td class="sorting_1">'+cur_conductor.name+'</td>';
                                     userList += '<td class="sorting_1">'+cur_conductor.mobile+'</td>';
                                     userList += '<td class="sorting_1">Conductor</td>';
                                     userList += '<td class="sorting_1">'+reformatDate(cur_conductor.assignDate)+'</td>';
+                                    userList += '<td class="sorting_1">'+cur_conductor.is_active+'</td>';
+
+                                    userList += '<td><div class="dropdown"><button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>';
+                                    userList += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
                                     cur_conductor.is_active == true ? 
-                                    userList += '<td class="sorting_1">Active</td>':
-                                    userList += '<td class="sorting_1">Inactive</td>'
+                                    userList += '<a class="dropdown-item deactive_user" href="#">In-Active</a>' :
+                                    userList += '<a class="dropdown-item active_user" href="#">Active</a>';
+                                    userList += '</div></div></td></tr>';
+                                    
                                 })
                             }
                         })
@@ -1080,5 +1112,36 @@ async function fetchUsersList(){
                 const responseJSon = response.responseJSON;
             }
         }) 
+    })
+}
+
+async function activeDeactiveBusUser(user_id,action){
+    let data = {
+        partner_id:user_id,
+        action : action
+    }
+    console.log("Data ",data);
+    $.ajax({
+            url:basicUrl+'/active-deactive-partner',
+            type:'POST',
+            data:data,
+            dataType:'JSON',
+            success:function(result){
+                if(result.status == true){
+                    toastr.success(result.message);
+                    setTimeout(function(){ 
+                        window.location.href=basicUrl + "/allpartners";
+                    }, 1500);Active
+                }
+            },
+            error :function (response){
+                console.log("response ",response);
+                response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong to perform this action"); 
+                if(response.responseJSON && response.responseJSON.login == false){
+                    setTimeout(function(){ 
+                        window.location.href = basicUrl + "/admin-login";
+                    }, 2000);
+                }
+            } 
     })
 }

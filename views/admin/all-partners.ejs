@@ -302,20 +302,20 @@
                                                 <td><%= cur_partner.verficationstatus %></td>
                                                 <!-- <td><input type="button" class="btn btn-primary dashboardAccess" value="Access Dashboard" /></td> -->
                                                 <td>
+
                                                     <div class="dropdown">
-                                                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                          Actions
-                                                        </button>
+                                                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                           <a class="dropdown-item dashboardAccess" href="#">Access Dashboard</a>
                                                         <% if((cur_partner.is_Active == true) && (cur_partner.verficationstatus == "approved")){ %>
-                                                            <a class="dropdown-item deactive_partner" href="#">De-Active</a>
+                                                            <a class="dropdown-item deactive_partner" href="#">In-Active</a>
                                                         <% }else if((cur_partner.is_Active == false) && (cur_partner.verficationstatus == "approved")){ %>
                                                             <a class="dropdown-item active_partner" href="#">Active</a>
                                                         <% } %>
                                                           <!-- <a class="dropdown-item" href="#">Something else here</a> -->
                                                         </div>
                                                       </div>
+
                                                 </td>
                                              </tr>   
                                         <% }) } %>

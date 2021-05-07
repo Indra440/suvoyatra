@@ -184,7 +184,7 @@ const bookTicket = async (userDetails,busDetails,bookingDetails) =>{
         payload : {}
     }
     try{
-        const bookingfor = new Date();
+        const bookingfor = new Date(bookingDetails.departure_date);
         const departureTime = busDetails.busTiming.departureTime;
         bookingfor.setHours(departureTime.split(":")[0]);
         bookingfor.setMinutes(departureTime.split(":")[1]);

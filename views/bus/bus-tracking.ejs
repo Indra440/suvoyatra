@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live-Bus-Tracking</title>
+    <link href="../css/toaster.css" rel="stylesheet"/>
+    <style>
+        #map {
+          height: 100%;
+        }
+        html, body {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="map"></div>
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../js/toaster.min.js"></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAF0pZyqjrMSgapmgr8NU-UX9HWFvpqWd0&callback=initMap">
+    </script>
+    <script>
+        var currentLocation = {};
+        var busMarker;
+        const positionOptions = {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout:5000
+        }
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(pos=>{
+                console.log("pos ",pos);
+                console.log("Positions ",pos.coords);
+                var crd = pos.coords;
+                currentLocation.lat = crd.latitude;
+                currentLocation.long = crd.longitude;
+            },err =>{
+                toastr.info("Not able to fetch your location.Please allow location");
+                console.error("error in getting location ",err);
+            },positionOptions)
+        }
+
+        let queryValue = getUrlVars()["b"];
+
+        const socket = io();
+        socket.on('connect',function(){
+            console.log("Connected to server");
+        })
+        console.log("queryValue ",queryValue);
+
+        setInterval(() => {
+            console.log("Print 1");
+            socket.emit('fetchLocation',{id:queryValue})
+        }, 3000);
+
+        socket.on('getLocation'+String(queryValue),(position)=>{
+            changeMarkerPosition(busMarker,position);
+        })
+        socket.on('fetchLocationError',(message)=>{
+            console.log("message ",message);
+            toastr.error(message.msg);
+        })
+
+        function initMap() {
+            var options = {
+                center: { lat: currentLocation.lat, lng: currentLocation.long },
+                zoom: 13,
+                mapTypeControl: true,
+                navigationControlOptions: {
+                    style: google.maps.NavigationControlStyle.SMALL
+                },
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            var map = new google.maps.Map(document.getElementById("map"),options);
+
+            // Add Marker
+
+            busMarker = new google.maps.Marker({
+                position:{lat:currentLocation.lat,lng : currentLocation.long},
+                map:map
+            })
+        }
+
+        function changeMarkerPosition(marker,position) {
+            console.log("position",position);
+            var latlng = new google.maps.LatLng(position.lat, position.lang);
+            marker.setPosition(latlng);
+        }
+
+        function getUrlVars()
+        {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+    </script>
+</body>
+</html>

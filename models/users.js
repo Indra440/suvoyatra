@@ -34,7 +34,7 @@ let partnersSchema = new Schema({
     },
     password:{
         type:String,
-        default:'one way',
+        default:'',
         required:true
     },
     streetAddress:{

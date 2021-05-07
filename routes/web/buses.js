@@ -159,6 +159,10 @@ router.get("/fetchUsersList",
     }
 )
 
+router.get("/trackBus",async(req,res)=>{
+    res.render('bus/bus-tracking');
+})
+
 
 
 module.exports = router;

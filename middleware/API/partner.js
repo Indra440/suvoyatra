@@ -134,7 +134,7 @@ module.exports.changepassword = async (req,res,next) =>{
         return res.status(500).send({status:false,message:"Old password sould not be less than 6 digit"})
     }
     if(req.body.newPassword == "" || req.body.newPassword.length < 6 ){
-        return res.status(500).send({status:false,message:"New password should be 6 or more digit"})
+        return res.status(500).send({status:false,message:"New password should have 6 or more digit"})
     }
     if(req.body.currentPassword == req.body.newPassword){
         return res.status(500).send({status:false,message:"Old and new password should not be same"})

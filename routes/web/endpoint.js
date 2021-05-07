@@ -3,6 +3,7 @@ var router = express.Router();
 const partnerRouter = require('./partner');
 const busRouter = require('./buses');
 const userRouter = require('./users');
+const bususerRouter = require('./bususer');
 const middleware = require('../../middleware/middleware');
 const controller = require('../../controller/buses');
 const _helper = require('../../Helpers/helpers');
@@ -551,6 +552,42 @@ router.get('/partner-dashboard', function(req, res, next) {
 router.use('/partnerRouter', partnerRouter);
 router.use('/busRouter',busRouter);
 router.use('/users',userRouter);
+
+
+router.get('/fetch-bus-list',async function(req,res){
+    try{
+        const fetchBuslist = await busModel.aggregate([
+            {
+                $match:{is_active:true}
+            },
+            {
+                $project:{
+                    _id:1,
+                    busName : 1
+                }
+            }
+        ])
+        if(!fetchBuslist){
+            return res.status(500).send({status:false,message:"Not able to fetch bus list please reload again",buslist:[]})
+        }
+        return res.status(200).send({status:true,login:true,message:"bus list fetched successfully",buslist :fetchBuslist})
+    }catch(err){
+        return res.status(500).send({status:false,message:"",buslist:[]})
+    }
+})
+
+router.use('/bususer',bususerRouter)
+
+
+
+router.get('/users', function(req, res, next) {
+    res.render('bus-user/bus-user-dashboard');
+});
+
+router.get('/users-login',function(req,res,next){
+    res.render('bus-user/bus-user-login');
+})
+
 
 
 module.exports = router;

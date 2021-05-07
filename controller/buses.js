@@ -353,9 +353,11 @@ const addUserToBus = async(busDetails,userDetails) =>{
     try{
         console.log("Bus details ",busDetails);
         const{busId,name,mobileNo,scenario} = userDetails;
+        const hash =  await _helper.utility.common.encryptPassword(10,'123456');
         let payload = {
             name : name,
             mobile : mobileNo,
+            password : hash
         }
         console.log("Payload ",payload);
         scenario == "driver" ? busDetails.drivers.push(payload) : scenario == "conductor" ? busDetails.conductors.push(payload) :"";

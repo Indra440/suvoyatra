@@ -7,6 +7,10 @@
 var app = require('../app');
 var debug = require('debug')('suvoyatra-project:server');
 var http = require('http');
+const socketIo = require('socket.io');
+const busModel = require('../models/buses');
+const _helper = require('../Helpers/helpers');
+const mongoose = require('mongoose');
 
 /**
  * Get port from environment and store in Express.
@@ -21,10 +25,86 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+
+/**
+ * Socket.io initialization 
+ */
+ let io = socketIo(server);
+
+io.on('connection',(socket)=>{
+  console.log("A new user just joined");
+
+  socket.on('updateLocation',async (locationInfo)=>{
+    try{
+      const decodedData = await _helper.utility.common.decodeToken(locationInfo.token);
+      let bususerInfo = decodedData.bususerInfo;
+      const fetChBus = await busModel.findOne({_id:bususerInfo.busId,is_active:true});
+      let flag = bususerInfo.flag == "conductor" ? "conductors" : bususerInfo.flag == "driver" ? "drivers" : "";
+      fetChBus[flag].map(async function(cur_user){
+        if(String(cur_user._id) == String(bususerInfo._id)){
+          cur_user.currentPosition.lat = String(locationInfo.pos.lat);
+          cur_user.currentPosition.long = String(locationInfo.pos.long);
+        }
+      })
+      // console.log("Final bus ",fetChBus);
+      await fetChBus.save();
+    }catch(err){
+      console.log("Error in update location ",err);
+    }
+  })
+
+  socket.on('fetchLocation',async(bus)=>{
+    try{
+      const fetchBus = await busModel.findOne({_id:mongoose.Types.ObjectId(String(bus.id)),is_active : true});
+      if(!fetchBus){
+        socket.emit('fetchLocationError',{msg:"Unable to fetch the bus or it's not active"})
+      }
+      let final_location = {
+        lat : "",
+        lang : ""
+      };
+      const conductors =  fetchBus.conductors;
+      const drivers = fetchBus.drivers;
+      conductors.map((cur_conduct)=>{
+        if(cur_conduct.is_active == true && cur_conduct.currentPosition.lat != null && cur_conduct.currentPosition.lat != null ){
+          final_location.lat = cur_conduct.currentPosition.lat;
+          final_location.lang = cur_conduct.currentPosition.long;
+        }
+      })
+      if(final_location.lat =="" || final_location.lang ==""){
+        drivers.map((cur_deriver)=>{
+          if(cur_deriver.is_active == true && cur_deriver.currentPosition.lat != null && cur_deriver.currentPosition.lat != null ){
+            final_location.lat = cur_deriver.currentPosition.lat;
+            final_location.lang = cur_deriver.currentPosition.long;
+          }
+        })
+      }
+      console.log("final_location ",final_location);
+      if(final_location.lat == "" || final_location.lang == ""){
+        socket.emit('fetchLocationError',{msg:"Unable to fetch bus location"})
+      }else{
+        socket.emit('getLocation'+String(bus.id),final_location)
+      }
+      // await fetChBus.save();
+    }catch(err){
+      console.log("Error in fetch location ",err);
+      socket.emit('fetchLocationError',{msg:err.message})
+    }
+  })
+
+  socket.on('disconnect',()=>{
+    console.log("User got disconnected");
+  })
+})
+
+
+
+
+
+
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);

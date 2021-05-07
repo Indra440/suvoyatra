@@ -129,16 +129,54 @@ let busesSchema = new Schema({
         {
             name:{
                 type:String,
-                default:''
+                default:'',
             },
             mobile:{
                 type:String,
-                default:''
+                default:'',
+                require:true
+            },
+            email:{
+                type:String,
+                default :'',
+                required : false
+            },
+            password:{
+                type:String,
+                default:'',
+                required : true
+            },
+            streetAddress:{
+                type:String,
+                default:'',
+                required:false
+            },
+            zipCode:{
+                type:String,
+                default:'',
+                required:false
+            },
+            city:{
+                type:String,
+                default:'',
+                required:false
             },
             is_active:{
                 type:Boolean,
                 default:true,
                 required:false
+            },
+            currentPosition:{
+                lat:{
+                    type:String,
+                    default:null,
+                    required : false
+                },
+                long:{
+                    type:String,
+                    default:null,
+                    required:false
+                }
             },
             assignDate:{
                 type:Date,
@@ -156,10 +194,47 @@ let busesSchema = new Schema({
                 type:String,
                 default:''
             },
+            email:{
+                type:String,
+                default :'',
+                required : false
+            },
+            password:{
+                type:String,
+                default:'',
+                required : true
+            },
+            streetAddress:{
+                type:String,
+                default:'',
+                required:false
+            },
+            zipCode:{
+                type:String,
+                default:'',
+                required:false
+            },
+            city:{
+                type:String,
+                default:'',
+                required:false
+            },
             is_active:{
                 type:Boolean,
                 default:true,
                 required:false
+            },
+            currentPosition:{
+                lat:{
+                    type:String,
+                    default:null,
+                    required : false
+                },
+                long:{
+                    type:String,
+                    default:null,
+                    required:false
+                }
             },
             assignDate:{
                 type:Date,

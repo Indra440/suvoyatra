@@ -107,17 +107,15 @@ router.post('/change-password',
         }catch(err){
             return res.status(500).send(err);
         }
-    });
+});
 
 router.get('/fetch-booking-history',
     middleware.api.partner.validatePartner,
     async(req,res) =>{
         try{
             const curpartnerDeatails = req.user;
-            const page = req.query.page;
             const startDate = req.query.startDate;
             const endDate = req.query.endDate;
-            const bus_id = req.query.bus_id;
             const bookingHistory = await controller.fetchBookingHistory(curpartnerDeatails,page,startDate,endDate,bus_id);
             console.log("bookingHistory ",bookingHistory);
             if(bookingHistory.status == false){
@@ -128,6 +126,6 @@ router.get('/fetch-booking-history',
         }catch(err){
             return res.status(500).send(err);
         }
-    });
+});
 
 module.exports = router;

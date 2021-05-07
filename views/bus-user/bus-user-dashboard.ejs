@@ -100,12 +100,7 @@
                     <div class="widget">
                         <ul class="categories">
                             <li class="active"><a href="#tab1">Account Details</a></li>
-                            <li id="add-update-bus"><a href="#tab2">Add Bus</a></li>
-                            <li id="seat-arrangement"><a href="#tab3">Seat Arrangment</a></li>
-                            <li id="bus-List"><a href="#tab4">Bus List</a></li>
-                            <li id="booking-hitory"><a href="#tab5">Booking History</a></li>
-                            <li id="add-user"><a href="#tab6">Add User</a></li>
-                            <li id="helpMenu"><a href="#tab7">Help</a></li>
+                            <li id="booking-list"><a href="#tab2">Today's Booking list</a></li>
                             <li id="logout"><a href="">Logout</a></li>
                         </ul>
                     </div>
@@ -161,7 +156,7 @@
                                     </div>
                                 </div>
                                 <div class="f-row">
-                                    <input type="submit" value="Save Changes" id="savePartnerDetails" name="submit"
+                                    <input type="submit" value="Save Changes" id="savebususerDetails" name="submit"
                                         class="btn color medium" />
                                 </div>
                             </fieldset>
@@ -204,137 +199,8 @@
                     <!-- Tab -->
                     <article class="single hentry" id="tab2">
                         <div class="box">
-                            <h2>Bus Details</h2>
-                            <fieldset id="addBusForm">
-                                <input type="text" class="hide" id="busId" value="" />
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="name">Bus Name</label>
-                                        <input type="text" id="busname" placeholder="Enter Bus Name" />
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="bus-number">Bus Number</label>
-                                        <input type="text" id="bus-num" placeholder="Enter Bus Number" />
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="journey-from">From</label>
-                                        <input type="text" id="journey-from" placeholder="Journey From" />
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="journey-to">To</label>
-                                        <input type="text" id="journey-to" placeholder="Journey To" />
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="Departure-Time">Departure Time</label>
-                                        <input type="time" id="Departure-time" placeholder="Departure Time" />
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="Arrival-Time">Arrival Time</label>
-                                        <input type="time" id="Arrival-Time" placeholder="Arrival Time" />
-                                    </div>
-                                </div>
-
-                                <div class="f-row input_fields_wrap">
-                                    <div class="one-half viaroot_input">
-                                        <label for="via-root-1">Via Root 1</label>
-                                        <input type="text" id="via-root-1" placeholder="Via Root 1(Optional)" />
-                                    </div>
-                                    <div class="one-half viaroot_input">
-                                        <label for="via-root-2">Via Root 2</label>
-                                        <input type="text" id="via-root-2" placeholder="Via Root 2(Optional)" />
-                                    </div>
-                                </div>
-                                <button class="add_field_button">Add More Fields</button>
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="seat-no">No Of Seats</label>
-                                        <input type="text" id="seat-no" placeholder="No Of Seats" />
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="bus-type">Bus Type</label>
-                                        <select id="Bus-Type" name="Bus-Type">
-                                            <option selected disabled value="">Select One</option>
-                                            <option value='Regular'>Regular</option>
-                                            <option value='Mini'>Mini</option>
-                                            <option value='Volvo'>Volvo</option>
-                                            <option value='Deluxe'>Deluxe</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="ac-non-ac">Air-condition Type</label>
-                                        <select id="AC-Type" name="AC-Type">
-                                            <option selected disabled value="">Select One</option>
-                                            <option value="Ac">Ac</option>
-                                            <option value="Non Ac">Non Ac</option>
-                                        </select>
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="seat-no">Multimedia Type</label>
-                                        <select id="Mul-Type" name="Mul-Type">
-                                            <option selected disabled value="">Select One</option>
-                                            <option value="Tv And Sound System Both">Tv And Sound System Both</option>
-                                            <option value="Sound System Only">Sound System Only</option>
-                                            <option value="No Multimedia System">No Multimedia System</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="Upload-frontside-Photo">Upload Front Side Photo</label>
-                                        <input type="file" id="Upload-front-Photo"
-                                            placeholder="Upload Front Side Photo" />
-                                        <img class="hide" id="front-Photo" src="" style="height: 100px; width: 100px;">
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="Upload-left-Photo">Upload Left Side Photo</label>
-                                        <input type="file" id="Upload-left-Photo" placeholder=" Left Side Photo" />
-                                        <img class="hide" id="left-Photo" src="" style="height: 100px; width: 100px;">
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="Upload-right-Photo">Upload Right Side Photo</label>
-                                        <input type="file" id="Upload-right-Photo" placeholder=" Right Side Photo" />
-                                        <img class="hide" id="right-Photo" src="" style="height: 100px; width: 100px;">
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="Upload-back-Photo">Upload Back Side Photo</label>
-                                        <input type="file" id="Upload-back-Photo" placeholder=" Back Side Photo" />
-                                        <img class="hide" id="back-Photo" src="" style="height: 100px; width: 100px;">
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <div class="one-half">
-                                        <label for="Upload-cabin-Photo">Upload Inside Driver Cabin Photo</label>
-                                        <input type="file" id="Upload-cabin-Photo"
-                                            placeholder="Inside Driver Cabin Photo" />
-                                        <img class="hide" id="driver-cabin-Photo" src="" style="height: 100px; width: 100px;">
-                                    </div>
-                                    <div class="one-half">
-                                        <label for="Upload-Inside-Photo">Upload Entire Inside Photo</label>
-                                        <input type="file" id="Upload-Inside-Photo"
-                                            placeholder=" Entire Inside Photo" />
-                                        <img class="hide" id="entire-inside-Photo" src="" style="height: 100px; width: 100px;">
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <div class="full-width">
-                                        <label for="comments">Bus Description</label>
-                                        <textarea id="comments" spellcheck="false"
-                                            placeholder="Type Bus Description Here"></textarea>
-                                    </div>
-                                </div>
-                                <div class="f-row">
-                                    <input type="submit" value="Add BUS" id="AddBus" name="submit"
-                                        class="btn color medium" />
-                                </div>
-                            </fieldset>
+                            <h2>Today's booking List</h2>
+                            
                         </div>
                     </article>
                     <!-- //Tab -->
@@ -992,7 +858,11 @@
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
     <script src="js/toaster.min.js"></script>
-    <script src="js/partner_dashboard.js"></script>
+    <!-- <script src="https://cdn.socket.io/socket.io-3.0.0.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous"></script> -->
+    <script src="js/bus_user_dashboard.js"></script>
 </body>
 
 </html>

@@ -369,7 +369,7 @@
 								<article class="result">
 									<div class="one-fourth heightfix"><img src="<%= cur_bus.busImages.front_side %>" alt="" /></div>
 									<div class="one-half heightfix">
-										<h3><%= cur_bus.busName %><a href="javascript:void(0)" class="trigger color" title="track bus">Track</a>
+										<h3><%= cur_bus.busName %><a href="/busRouter/trackBus?b=<%= cur_bus._id %>" class="trigger color" target="_blank" title="track bus">Track</a>
 										</h3>
 										<ul>
 											<li>
