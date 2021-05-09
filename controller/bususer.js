@@ -94,6 +94,8 @@ const checkActiveBususer = async(token) =>{
         findUser[0].busId = bususerInfo.busId;
         findUser[0].flag = bususerInfo.flag;
         response.payload = findUser[0];
+        response.busId = bususerInfo.busId;
+        response.flag = bususerInfo.flag;
         response.status = true;
         response.message = "Token Validate";
         return response;
@@ -177,12 +179,17 @@ const fetchBookingList = async (bususerDetails) =>{
         final_endDate.setDate(final_endDate.getDate()+1)
         final_startDate.setHours(final_startDate.getHours()+5);
         final_startDate.setMinutes(final_startDate.getMinutes()+30);
-        final_startDate.setHours(0,0,0);
+        console.log(" Before set final_startDate ",final_startDate);
+
+        // final_startDate.setHours(0,0,0);
 
         final_endDate.setHours(final_endDate.getHours()+5);
         final_endDate.setMinutes(final_endDate.getMinutes()+30);
-        final_endDate.setHours(0,0,0);
-        
+        console.log(" Before final_endDate ",final_endDate);
+
+        // final_endDate.setHours(0,0,0);
+        console.log("final_startDate ",final_startDate);
+        console.log("final_endDate ",final_endDate);
         const fetchBookingList = await bookingModel.aggregate([
             {
                 $match:{

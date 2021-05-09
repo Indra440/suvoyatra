@@ -18,6 +18,7 @@ const busModel = require('../../models/buses');
 const bookingModel = require('../../models/bookings');
 const queryModel = require('../../models/queries');
 const userController = require('../../controller/users');
+const {nanoid}  = require("nanoid");
 
 
 /* GET home page. */
@@ -41,6 +42,10 @@ router.get('/partner', function(req, res, next) {
 
 router.get('/forget-pass',function(req,res,next){
     res.render('forget-pass');
+})
+
+router.get('/blog',function(req,res,next){
+    res.render('blog')
 })
 
 
@@ -550,10 +555,72 @@ router.get('/partner-dashboard', function(req, res, next) {
 // })
 
 router.use('/partnerRouter', partnerRouter);
+router.post('/forgot-password',async function(req,res){
+    try{
+        let findPartner = await usersModel.findOne({$or:[{"email":req.body.username},{"ph_no":req.body.username}],is_Active:true,userType:2});
+        if(!findPartner){
+            return res.status(500).send({status:false,message:"User not found"});
+        }
+        let passwordResetId = nanoid(8).toUpperCase();
+        findPartner.resetPasswordLink = passwordResetId;
+        await findPartner.save();
+        const basicUrl = config.get('basicUrl');
+        let message = "<p>To Reset your password <a href='"+basicUrl+"/reset-password?rpc="+passwordResetId+"'> Click </a> here</p>";
+        let EmailDetails = {
+            to:findPartner.email,
+            subject : "Reset password",
+            message : message
+        }
+        const sendMail = await _helper.utility.common.sendMail(EmailDetails);
+        console.log("sendMail ",sendMail);
+        if(sendMail != true){
+            return res.status(200).send({status:false,message:"Not able to send mail.Please try again"})
+        }
+        res.status(200).send({status:true,message:"We have sent you a reset password link in your registered Email"});
+    }catch(error){
+        console.log("Error is here ",error.message);
+        return res.status(500).send({status:false,message:"Something went wrong. please try again"});
+    }
+})
+
+router.get('/reset-password',function(res,res,next){
+    res.render('reset-password')
+})
+
+router.post('/reset-password',async function(req,res,next){
+    try{
+        const rpc = req.body.rpc;
+        const newPass = req.body.newPass;
+        const confirmPass = req.body.confirmPass;
+        if(!rpc || rpc == null || rpc== undefined || rpc == ""){
+            return res.status(500).send({status:false,message:"You are request is invalid"});
+        }
+        if(!newPass || newPass == null || newPass == undefined ||newPass=="" || 
+                        !confirmPass || confirmPass == null || confirmPass == undefined ||confirmPass==""){
+            return res.status(500).send({status:false,message:"New and confirm both password are need to be valid"});
+		}
+        if(newPass.length < 6){
+            return res.status(500).send({status:false,message:"More than 6 character required"});
+        }
+        if(newPass != confirmPass){
+            return res.status(500).send({status:false,message:"New and confirm password are not matched"});
+        }
+        let findPartner = await usersModel.findOne({resetPasswordLink: String(rpc),is_Active:true,userType:2});
+        if(!findPartner){
+            return res.status(500).send({status:false,message:"User not found or inactive"});
+        }
+        const hash =  await _helper.utility.common.encryptPassword(10,String(newPass));
+        findPartner.password = hash;
+        await findPartner.save();
+        return res.status(200).send({status:true,message:"Password reset successfully"});
+    }catch(err){
+        console.log("Error is here ",err);
+        return res.status(500).send({status:false,message:"Something went wrong. please try again"});
+    }
+})
+
 router.use('/busRouter',busRouter);
 router.use('/users',userRouter);
-
-
 router.get('/fetch-bus-list',async function(req,res){
     try{
         const fetchBuslist = await busModel.aggregate([

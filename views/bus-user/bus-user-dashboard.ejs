@@ -31,6 +31,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" />
+    <style>
+        .bookingList-table{
+            text-transform: none !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -77,11 +82,11 @@
         <header class="site-title color">
             <div class="wrap">
                 <div class="container">
-                    <h1>Partner Account</h1>
+                    <h1><span class="account-type"></span> Account</h1>
                     <nav role="navigation" class="breadcrumbs">
                         <ul>
                             <li><a href="/" title="Home">Home</a></li>
-                            <li>Partner Account</li>
+                            <li><span class="account-type"></span> Account</li>
                         </ul>
                     </nav>
                 </div>
@@ -200,7 +205,23 @@
                     <article class="single hentry" id="tab2">
                         <div class="box">
                             <h2>Today's booking List</h2>
-                            
+                            <table  id ="example" class="table table-striped table-bordered bookingList-table">
+                                <thead>
+                                    <tr role="row">
+                                        <th>Booking id</th>
+                                        <th>Ticket no</th>
+                                        <th>Pick-up Location</th>
+                                        <th>Drop Location</th>
+                                        <th>Booking Ammount</th>
+                                        <th>Seat no</th>
+                                        <th>Passangers details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="today-booking-list">
+
+                                </tbody>
+                            </table>
+
                         </div>
                     </article>
                     <!-- //Tab -->
@@ -798,14 +819,15 @@
                 <p>Copyright 2020, suvoyatra. All rights reserved. </p>
 
                 <nav role="navigation" class="foot-nav">
-                    <ul>
-                        <li><a href="/" title="Home">Home</a></li>
-                        <li><a href="about.html" title="About us">About us</a></li>
-                        <li><a href="partner.html" title="partner">Partner</a></li>
-                        <li><a href="contact.html" title="Contact us">Get In Touch</a></li>
-                        <li><a href="#" title="Terms of use">Terms & Conditions</a></li>
-                    </ul>
-                </nav>
+					<ul>
+						<li><a href="/" title="Home">Home</a></li>
+						<li><a href="/blog" title="Blog">Blog</a></li>
+						<li><a href="/about" title="About us">About us</a></li>
+						<li><a href="/partner" title="partner">Partner</a></li>
+						<li><a href="/contact" title="Contact us">Get In Touch</a></li>
+						<li><a href="#" title="Terms of use">Terms & Conditions</a></li>
+					</ul>
+				</nav>
             </div>
         </div>
     </footer>

@@ -19,10 +19,12 @@
 	<link rel="stylesheet" href="css/animate.css" />
 	<link rel="stylesheet" href="css/icons.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'
-		type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600,700|Montserrat:400,700' rel='stylesheet'type='text/css'>
 	<!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
 	<script src="../../../../use.fontawesome.com/e808bf9397.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link href="css/toaster.css" rel="stylesheet"/>
+
 </head>
 
 <body>
@@ -96,7 +98,7 @@
 							</div>
 							<div class="f-row">
 								<div class="full-width">
-									<input type="submit" value="Submit" class="btn color medium full" />
+									<input type="button" value="Submit" class="btn color medium full" id="sendusername" />
 								</div>
 							</div>
 						</form>
@@ -152,9 +154,10 @@
 				<nav role="navigation" class="foot-nav">
 					<ul>
 						<li><a href="/" title="Home">Home</a></li>
-						<li><a href="about.html" title="About us">About us</a></li>
-						<li><a href="partner.html" title="partner">Partner</a></li>
-						<li><a href="contact.html" title="Contact us">Get In Touch</a></li>
+						<li><a href="/blog" title="Blog">Blog</a></li>
+						<li><a href="/about" title="About us">About us</a></li>
+						<li><a href="/partner" title="partner">Partner</a></li>
+						<li><a href="/contact" title="Contact us">Get In Touch</a></li>
 						<li><a href="#" title="Terms of use">Terms & Conditions</a></li>
 					</ul>
 				</nav>
@@ -164,11 +167,13 @@
 	<!-- //Footer -->
 
 	<!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="js/jquery.min.js"></script>
-	<script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<!-- <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.slicknav.min.js"></script>
 	<script src="js/wow.min.js"></script>
+    <script src="js/toaster.min.js"></script>
 	<script src="js/scripts.js"></script>
 	<script>
 		function openNav() {
@@ -180,6 +185,50 @@
 		}
 	</script>
 	<script src="js/styler.js"></script>
+	<script>
+		const basicUrl = window.location.origin;
+		const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		$(document).ready(function(){
+			$("#sendusername").click(async function(){
+				let username = $("#username").val();
+				if(username==""){
+					return toastr.error("Please provide your valid registered email or phone no");
+				}
+				if(username.length > 10){
+					if(!emailRegexp.test(username)){
+						return toastr.error("Please provide your valid registered email or phone no");
+					}
+				}else if(username.length !=10){
+					return toastr.error("Please provide your valid registered email or phone no");
+				}
+				await fogotPass(username);
+			})
+		})
+
+		async function fogotPass(username){
+			let data={
+				username : username
+			}
+			$.ajax({
+				url:basicUrl+'/forgot-password',
+				type:'POST',
+				data:data,
+				dataType:'JSON',
+				success:function(result){
+					if(result.status == true){
+						toastr.success(result.message);
+						setTimeout(function(){ 
+							window.location.href=basicUrl + "/";
+						}, 5000);
+					}
+				},
+				error :function (response){
+					console.log("response ",response);
+					response.responseJSON.message ? toastr.error(response.responseJSON.message) : toastr.error("Something went wrong to perform this action"); 
+				} 
+    		})
+		}
+	</script>
 </body>
 
 </html>

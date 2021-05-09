@@ -177,7 +177,32 @@ $(document).ready(function(){
                 success:function(result){
                     console.log("Result ",result);
                     if(result.status == true){
-                        
+                        let bookingList = "";
+                        if(result.payload && result.payload.length > 0){
+                            result.payload.map((cur_booking)=>{
+                                bookingList += "<tr>";
+                                bookingList += "<td>"+cur_booking._id+"</td>";
+                                bookingList += "<td>"+cur_booking.ticketNo+"</td>";
+                                bookingList += "<td>"+cur_booking.pickupLocation+"</td>";
+                                bookingList += "<td>"+cur_booking.dropLocation+"</td>";
+                                bookingList += "<td>"+cur_booking.bookingAmmount+"</td>";
+                                let seats = "";
+                                cur_booking.bookingSeat.map(cur_seat =>{
+                                    seats += cur_seat.seatNo + " "
+                                })
+                                bookingList += "<td>"+seats+"</td>";
+                                let passanger = "";
+                                cur_booking.passengersDetails.map(cur_passenger =>{
+                                    passanger += cur_passenger.passengerName + "("+cur_passenger.passengerAge+ ")"+"\n";
+                                })
+                                bookingList += "<td>"+passanger+"</td>";
+                                bookingList += "</tr>";
+                            });
+                        }else{
+                            bookingList += "<tr><td colspan='7' style='text-align:center'><h4> No Booking Found </h4></td></tr>"
+                        }
+                        console.log("bookingList ",bookingList);
+                        $("#today-booking-list").html(bookingList);
                     }
                 },
                 error :function (response){
@@ -275,6 +300,7 @@ function fetchbususerDetails(){
             $("#address").val(payload.streetAddress);
             $("#zip").val(payload.zipCode);
             $("#city").val(payload.city);
+            $(".account-type").html(result.flag);
             bususerDetails.name =  $("#name").val();
             bususerDetails.email = $("#email").val();
             bususerDetails.mobile = $("#number").val();

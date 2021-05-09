@@ -116,6 +116,8 @@ router.get('/fetch-booking-history',
             const curpartnerDeatails = req.user;
             const startDate = req.query.startDate;
             const endDate = req.query.endDate;
+            const page = req.query.page;
+            const bus_id = req.query.bus_id;
             const bookingHistory = await controller.fetchBookingHistory(curpartnerDeatails,page,startDate,endDate,bus_id);
             console.log("bookingHistory ",bookingHistory);
             if(bookingHistory.status == false){
@@ -124,6 +126,7 @@ router.get('/fetch-booking-history',
                 return res.status(200).send(bookingHistory);
             }
         }catch(err){
+            console.log("Error ",err);
             return res.status(500).send(err);
         }
 });

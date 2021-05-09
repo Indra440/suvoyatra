@@ -37,6 +37,11 @@ let partnersSchema = new Schema({
         default:'',
         required:true
     },
+    resetPasswordLink:{
+        type:String,
+        default : '',
+        required: false
+    },
     streetAddress:{
         type:String,
         default:'',

@@ -23,29 +23,27 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="../js/toaster.min.js"></script>
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAF0pZyqjrMSgapmgr8NU-UX9HWFvpqWd0&callback=initMap">
-    </script>
+    
     <script>
         var currentLocation = {};
-        var busMarker;
+        var busMarker,userMarker;
         const positionOptions = {
             enableHighAccuracy: true,
             maximumAge: 0,
             timeout:5000
         }
-        if(navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(pos=>{
-                console.log("pos ",pos);
-                console.log("Positions ",pos.coords);
-                var crd = pos.coords;
-                currentLocation.lat = crd.latitude;
-                currentLocation.long = crd.longitude;
-            },err =>{
-                toastr.info("Not able to fetch your location.Please allow location");
-                console.error("error in getting location ",err);
-            },positionOptions)
-        }
+        // if(navigator.geolocation){
+        //     navigator.geolocation.getCurrentPosition(pos=>{
+        //         console.log("pos ",pos);
+        //         console.log("Positions ",pos.coords);
+        //         var crd = pos.coords;
+        //         currentLocation.lat = Number(crd.latitude);
+        //         currentLocation.long = Number(crd.longitude);
+        //     },err =>{
+        //         toastr.info("Not able to fetch your location.Please allow location");
+        //         console.error("error in getting location ",err);
+        //     },positionOptions)
+        // }
 
         let queryValue = getUrlVars()["b"];
 
@@ -70,8 +68,8 @@
 
         function initMap() {
             var options = {
-                center: { lat: currentLocation.lat, lng: currentLocation.long },
-                zoom: 13,
+                center: { lat: 22.9868, lng: 87.8550 },
+                zoom: 9,
                 mapTypeControl: true,
                 navigationControlOptions: {
                     style: google.maps.NavigationControlStyle.SMALL
@@ -81,10 +79,19 @@
             var map = new google.maps.Map(document.getElementById("map"),options);
 
             // Add Marker
-
+            var icon = {
+                path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+                fillColor: '#FF0000',
+                fillOpacity: .6,
+                anchor: new google.maps.Point(0,0),
+                strokeWeight: 0,
+                scale: 1
+            }
             busMarker = new google.maps.Marker({
-                position:{lat:currentLocation.lat,lng : currentLocation.long},
-                map:map
+                position:{lat:22.9868,lng : 87.8550},
+                map:map,
+                draggable: false,
+                // icon: icon
             })
         }
 
@@ -106,6 +113,9 @@
             }
             return vars;
         }
+    </script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAF0pZyqjrMSgapmgr8NU-UX9HWFvpqWd0&callback=initMap">
     </script>
 </body>
 </html>
